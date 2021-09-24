@@ -1,0 +1,14 @@
+{
+  "name": "realms-api",
+  "version": "0.0.1",
+  "description": "Handles all the requests to and from Mojang Realms API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lukas Scheuerle",
+  "license": "ISC",
+  "dependencies": {
+    "xmlhttprequest": "^1.8.0"
+  }
+}
