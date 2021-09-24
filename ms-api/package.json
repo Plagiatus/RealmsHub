@@ -1,0 +1,14 @@
+{
+  "name": "ms-to-mc-api",
+  "version": "0.0.1",
+  "description": "Handles all the requests needed to authenticate with the Mojang Realms API from Microsoft login",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lukas Scheuerle",
+  "license": "ISC",
+  "dependencies": {
+    "xmlhttprequest": "^1.8.0"
+  }
+}
