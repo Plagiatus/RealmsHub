@@ -1,12 +1,12 @@
 import express from "express";
-import AuthenticationHandler from "../../ms-api";
+import { AuthenticationHandler } from "../../ms-api";
 import JavaRealmsApiClient from "../../realms-api";
 
 const app = express();
 
 const clientId = "cf8b68fc-eb1a-442f-ae01-5fa94adce065";
 const clientSecret = "Kn7e34~A0-_Yu__u8KTn295OtC5vZW30-E";
-const redirectUri = "http://localhost:3000/redirect";
+const redirectUri = "http://localhost:3000/login-redirect";
 
 const ah = new AuthenticationHandler(clientId, clientSecret, redirectUri);
 
@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 	res.redirect(ah.forwardUrl);
 });
 
-app.get("/redirect", async (req, res) => {
+app.get("/login-redirect", async (req, res) => {
 	let code: string = req.query.code as string;
 	if (!code) {
 		res.send("Error, code could not be retrieved.");
@@ -108,7 +108,7 @@ app.get("/redirect", async (req, res) => {
 
 app.listen(3000);
 
-async function fixedTest(){
+async function fixedTest() {
 	const token = "eyJhbGciOiJIUzI1NiJ9.eyJ4dWlkIjoiMjUzNTQwODU1MjA4MTAwNyIsInN1YiI6IjJiOTRjNmQ5LWY5MjktNGZmNy05ODFlLTQyNzhlYTMyZjk0NCIsIm5iZiI6MTYzMjQ4MzE1OSwiYXV0aCI6IlhCT1giLCJyb2xlcyI6W10sImlzcyI6ImF1dGhlbnRpY2F0aW9uIiwiZXhwIjoxNjMyNTY5NTU5LCJpYXQiOjE2MzI0ODMxNTksInBsYXRmb3JtIjoiVU5LTk9XTiIsInl1aWQiOiJlOWM3YjlmYzNjNTU0MTg5ODlhZDZiZjcxNmVmNTk0YSJ9.BqwUDZdBkU8cleFU3z1MRoPe2ripHfZI_UK3EJPRFoc";
 	const uuid = "e75e2d263b724a93a3e7a2491f4c454f";
 	const name = "Plagiatus";

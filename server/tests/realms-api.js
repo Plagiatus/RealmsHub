@@ -40,17 +40,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var ms_api_1 = __importDefault(require("../../ms-api"));
+var ms_api_1 = require("../../ms-api");
 var realms_api_1 = __importDefault(require("../../realms-api"));
 var app = express_1.default();
 var clientId = "cf8b68fc-eb1a-442f-ae01-5fa94adce065";
 var clientSecret = "Kn7e34~A0-_Yu__u8KTn295OtC5vZW30-E";
-var redirectUri = "http://localhost:3000/redirect";
-var ah = new ms_api_1.default(clientId, clientSecret, redirectUri);
+var redirectUri = "http://localhost:3000/login-redirect";
+var ah = new ms_api_1.AuthenticationHandler(clientId, clientSecret, redirectUri);
 app.get("/", function (req, res) {
     res.redirect(ah.forwardUrl);
 });
-app.get("/redirect", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+app.get("/login-redirect", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var code, result, worldId, token, uuid, name, realmsClient, _a, _b, _c, invCount, invs, accepted;
     return __generator(this, function (_d) {
         switch (_d.label) {
