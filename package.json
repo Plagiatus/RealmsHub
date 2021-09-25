@@ -8,12 +8,20 @@
   "keywords": [],
   "author": "Lukas Scheuerle",
   "license": "ISC",
-  "description": "",
+  "description": "The sourcecode for realmshub.com",
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/node": "^16.9.1"
   },
   "dependencies": {
     "express": "^4.17.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Plagiatus/RealmsHub.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Plagiatus/RealmsHub/issues"
+  },
+  "homepage": "https://github.com/Plagiatus/RealmsHub#readme"
 }
