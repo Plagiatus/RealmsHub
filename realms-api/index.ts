@@ -270,7 +270,7 @@ export default class JavaRealmsApiClient {
 	// 	return result;
 	// }
 
-	public async agreeToTos(_worldId: number): Promise<any> {
+	public async agreeToTos(): Promise<any> {
 		let result = await this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/mco/tos/agreed");
 		return result;
 	}
@@ -291,9 +291,9 @@ export default class JavaRealmsApiClient {
 
 type RequestMethod = "GET" | "POST" | "PUT" | "DELETE";
 type Compatible = "COMPATIBLE" | "OUTDATED" | "OTHER";
-type WorldType = "NORMAL" | "ADVENTUREMAP" | "MINIGAME";
-type TemplateType = "MINIGAME" | "ADVENTUREMAP" | "EXERIENCE" | "NORMAL" | "INSPIRATION";
-type SlotNumber = 1 | 2 | 3;
+export type WorldType = "NORMAL" | "ADVENTUREMAP" | "MINIGAME";
+export type TemplateType = "MINIGAME" | "ADVENTUREMAP" | "EXERIENCE" | "NORMAL" | "INSPIRATION";
+export type SlotNumber = 1 | 2 | 3;
 /**
  * 0: default  
  * 1: superflat  
@@ -412,14 +412,14 @@ interface Invite {
 	date: number
 }
 
-interface Templates {
+export interface Templates {
 	templates: Template[],
 	page: number,
 	size: number,
 	total: number
 }
 
-interface Template {
+export interface Template {
 	id: number,
 	name: string,
 	version: string,

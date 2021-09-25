@@ -45,7 +45,7 @@ interface MCCapeInfo extends MCInfo {
 	alias: string,
 }
 
-interface AuthInfo {
+export interface AuthInfo {
 	auth_token: AuthorizationTokenResponse,
 	xbox_token: XboxServiceTokenResponse,
 	xsts_token: XboxServiceTokenResponse,
@@ -59,7 +59,7 @@ interface DisplayClaim {
 	}[]
 }
 
-export default class AuthenticationHandler {
+export class AuthenticationHandler {
 	private clientId: string;
 	private clientSecret: string;
 	private redirectUri: string;

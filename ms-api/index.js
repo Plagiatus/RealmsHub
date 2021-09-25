@@ -196,4 +196,4 @@ var AuthenticationHandler = /** @class */ (function () {
     };
     return AuthenticationHandler;
 }());
-exports.default = AuthenticationHandler;
+exports.AuthenticationHandler = AuthenticationHandler;
