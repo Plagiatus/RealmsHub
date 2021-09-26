@@ -20,7 +20,7 @@ export class DB {
 	}
 
 	public async saveToken(_token: AuthTokenInDB): Promise<void> {
-		this.tokens?.findOneAndUpdate({ id: _token.id }, _token, { upsert: true });
+		this.tokens?.updateOne({ id: _token.id }, {$set: {id: _token.id, auth_token: _token.auth_token, mc_info: _token.mc_info, mc_token: _token.mc_token, xbox_token: _token.xbox_token, xsts_token: _token.xsts_token}}, { upsert: true });
 	}
 
 	public async getToken(_id: string): Promise<AuthTokenInDB | null | undefined> {
