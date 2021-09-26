@@ -65,6 +65,7 @@ var realms_api_1 = __importDefault(require("../../realms-api"));
 var db_1 = require("./db");
 var https = __importStar(require("https"));
 var hat_1 = __importDefault(require("hat"));
+var cors_1 = __importDefault(require("cors"));
 if (process.argv[2] == "--local") {
     exports.config = config_1.configTesting;
 }
@@ -78,6 +79,19 @@ var clients = new Map();
 var latestVersion;
 var app = express_1.default();
 app.use(bodyParser.json());
+// app.use((req, res, next)=>{
+// 	let origin: string = (req.headers.origin == "http://localhost:8080") ? "http://localhost:8080" : "https://realmshub.com";
+// 	res.set("Access-Control-Allow-Origin", origin);
+// 	res.set("Access-Control-Allow-Methods","GET, POST");
+// 	res.set("Access-Control-Allow-Headers","X-Requested-With,Content-Type");
+// 	return next();
+// })
+// const corsOptions = {
+// 	origin: "*",
+// 	methods: "GET,POST",
+// 	preflightContinue: false
+// }
+app.use(cors_1.default());
 var authHandler = new ms_api_1.AuthenticationHandler(exports.config.clientId, exports.config.clientSecret, exports.config.redirectUri);
 function checkAndInitAuth(req, res, next) {
     var _a;
@@ -128,8 +142,8 @@ app.route("/login")
     .get(function (req, res) {
     res.send(authHandler.forwardUrl);
 })
-    .post(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var code, authInfo, id;
+    .post(function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var code, authInfo, id, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -138,12 +152,21 @@ app.route("/login")
                     res.sendStatus(400);
                     return [2 /*return*/];
                 }
-                return [4 /*yield*/, authHandler.getAuthCodes(code)];
+                _a.label = 1;
             case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, authHandler.getAuthCodes(code)];
+            case 2:
                 authInfo = _a.sent();
                 id = hat_1.default(512, 32) + "." + hat_1.default(512, 32);
                 initAuth(id, authInfo);
-                return [2 /*return*/];
+                res.send({ id: id, username: authInfo.mc_info.name });
+                return [3 /*break*/, 4];
+            case 3:
+                error_1 = _a.sent();
+                anErrorOccured(error_1, res);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); })
@@ -156,6 +179,11 @@ app.route("/logout")
         return;
     }
     logoutEverywhere(id);
+    res.sendStatus(200);
+})
+    .all(wrongMethod);
+app.route("/check-login")
+    .post(checkAndInitAuth, function (req, res) {
     res.sendStatus(200);
 })
     .all(wrongMethod);
@@ -600,6 +628,14 @@ function getLatestVersion() {
 }
 function wrongMethod(req, res) {
     res.sendStatus(405);
+}
+function anErrorOccured(error, res) {
+    res.send({
+        error: {
+            code: 500,
+            message: error.message
+        }
+    });
 }
 var templateMap = new Map();
 function getTemplates(type, page, size, clientId) {

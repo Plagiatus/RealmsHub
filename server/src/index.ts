@@ -6,6 +6,7 @@ import JavaRealmsClient, { SlotNumber, Template, Templates, TemplateType } from 
 import { AuthTokenInDB, DB } from "./db";
 import * as https from "https";
 import hat from "hat";
+import cors from "cors";
 
 export let config: Config;
 if (process.argv[2] == "--local") {
@@ -22,6 +23,19 @@ let latestVersion: string;
 
 const app = express();
 app.use(bodyParser.json());
+// app.use((req, res, next)=>{
+// 	let origin: string = (req.headers.origin == "http://localhost:8080") ? "http://localhost:8080" : "https://realmshub.com";
+// 	res.set("Access-Control-Allow-Origin", origin);
+// 	res.set("Access-Control-Allow-Methods","GET, POST");
+// 	res.set("Access-Control-Allow-Headers","X-Requested-With,Content-Type");
+// 	return next();
+// })
+// const corsOptions = {
+// 	origin: "*",
+// 	methods: "GET,POST",
+// 	preflightContinue: false
+// }
+app.use(cors());
 
 const authHandler = new AuthenticationHandler(config.clientId, config.clientSecret, config.redirectUri);
 
@@ -64,16 +78,21 @@ app.route("/login")
 	.get((req, res) => {
 		res.send(authHandler.forwardUrl);
 	})
-	.post(async (req, res) => {
+	.post(async (req, res, next) => {
 		let code: string = req.body.code;
 		if (!code || typeof code != "string") {
 			res.sendStatus(400);
-			return;
+			return; 
 		}
-
-		let authInfo: AuthInfo = await authHandler.getAuthCodes(code);
-		let id: string = hat(512, 32) + "." + hat(512, 32);
-		initAuth(id, authInfo);
+		try {
+			let authInfo: AuthInfo = await authHandler.getAuthCodes(code);
+			let id: string = hat(512, 32) + "." + hat(512, 32);
+			initAuth(id, authInfo);
+			
+			res.send({id: id, username: authInfo.mc_info.name});
+		} catch (error) {
+			anErrorOccured(<Error>error, res);
+		}
 	})
 	.all(wrongMethod);
 
@@ -86,6 +105,11 @@ app.route("/logout")
 			return;
 		}
 		logoutEverywhere(id);
+		res.sendStatus(200);
+	})
+	.all(wrongMethod);
+app.route("/check-login")
+	.post(checkAndInitAuth, (req, res) => {
 		res.sendStatus(200);
 	})
 	.all(wrongMethod);
@@ -312,7 +336,6 @@ app.route("/:command")
 	})
 	.all(wrongMethod);
 
-
 // Catch-all
 app.all("*", (req, res) => {
 	res.sendStatus(404);
@@ -346,6 +369,15 @@ async function getLatestVersion() {
 
 function wrongMethod(req: express.Request, res: express.Response) {
 	res.sendStatus(405);
+}
+
+function anErrorOccured(error: Error, res: express.Response) {
+	res.send({
+		error: {
+			code: 500,
+			message: error.message
+		}
+	})
 }
 
 const templateMap: Map<TemplateType, Template[]> = new Map<TemplateType, Template[]>();
