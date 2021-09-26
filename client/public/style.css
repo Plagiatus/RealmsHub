@@ -1,0 +1,46 @@
+body {
+	--foreground: #fff;
+	--background: #eff3f4;
+	--highlight: #1e9386;
+	--red: #FF6453;
+	--expired: #DBBFBD;
+	--gold: #b09d30;
+
+	--highlight-filter: invert(41%) sepia(59%) saturate(510%) hue-rotate(124deg) brightness(102%) contrast(92%);
+	--red-filter: invert(50%) sepia(66%) saturate(1744%) hue-rotate(326deg) brightness(100%) contrast(103%);
+	--gold-filter: invert(59%) sepia(58%) saturate(489%) hue-rotate(14deg) brightness(93%) contrast(88%);
+
+	
+	background: linear-gradient(var(--highlight) 50%, var(--background )50%);
+	min-height: 100vh;
+	box-sizing: border-box;
+	margin: 0;
+	padding:0;
+}
+
+
+
+@keyframes loading {
+  to {transform: rotate(360deg);}
+}
+ 
+.loading:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  margin-top: -15px;
+  margin-left: -15px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  border-top-color: var(--highlight);
+  animation: loading .6s linear infinite;
+}
+
+.center-wrapper {
+	display: grid;
+  place-items: center;
+}
