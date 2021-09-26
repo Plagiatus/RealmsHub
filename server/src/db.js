@@ -44,8 +44,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongo = __importStar(require("mongodb"));
+var index_1 = require("./index");
 var options = { useNewUrlParser: true, useUnifiedTopology: true };
-var client = new mongo.MongoClient("mongodb://localhost:27017", options);
 var DB = /** @class */ (function () {
     function DB() {
         this.client = null;
@@ -53,12 +53,18 @@ var DB = /** @class */ (function () {
     }
     DB.prototype.connect = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a;
+            var clientUrl, client, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         if (this.client)
                             return [2 /*return*/];
+                        clientUrl = "mongodb://";
+                        if (index_1.config.db.user || index_1.config.db.password) {
+                            clientUrl = "mongodb+srv://" + index_1.config.db.user + ":" + index_1.config.db.password + "@";
+                        }
+                        clientUrl += index_1.config.db.url;
+                        client = new mongo.MongoClient(clientUrl, options);
                         _a = this;
                         return [4 /*yield*/, client.connect()];
                     case 1:
