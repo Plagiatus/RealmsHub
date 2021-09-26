@@ -81,11 +81,11 @@ export class AuthenticationHandler {
 
 	public async getAuthCodes(code: string, refresh: boolean = false): Promise<AuthInfo> {
 		if (!code) throw Error("No Code provided.");
-		let authToken: AuthorizationTokenResponse = await this.authCodeToAuthToken(code, refresh);
-		let xbl: XboxServiceTokenResponse = await this.authTokenToXBL(authToken);
-		let xsts: XboxServiceTokenResponse = await this.xblToXsts(xbl);
-		let mcToken: MCTokenResponse = await this.xstsToMc(xsts);
-		let mcInfo: MCUserInfo = await this.getMCInfo(mcToken);
+		let authToken: AuthorizationTokenResponse = await this.authCodeToAuthToken(code, refresh).catch(reason=>{throw Error("Code is invalid.")});
+		let xbl: XboxServiceTokenResponse = await this.authTokenToXBL(authToken).catch(reason=>{throw Error("Error during XBL Auth.")});
+		let xsts: XboxServiceTokenResponse = await this.xblToXsts(xbl).catch(reason=>{throw Error("Error during XSTS Auth.")});
+		let mcToken: MCTokenResponse = await this.xstsToMc(xsts).catch(reason=>{throw Error("Error during Mojang Auth.")});
+		let mcInfo: MCUserInfo = await this.getMCInfo(mcToken).catch(reason=>{throw Error("Error during Minecraft Info Fetch. Does the user own Minecraft?")});
 
 		return {
 			auth_token: authToken,
@@ -184,7 +184,7 @@ export class AuthenticationHandler {
 						resolve(JSON.parse(req.responseText));
 					} else {
 						console.error(req.status, req.statusText);
-						reject();
+						reject(req.status);
 					}
 				}
 			});

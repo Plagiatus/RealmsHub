@@ -67,19 +67,19 @@ var AuthenticationHandler = /** @class */ (function () {
                     case 0:
                         if (!code)
                             throw Error("No Code provided.");
-                        return [4 /*yield*/, this.authCodeToAuthToken(code, refresh)];
+                        return [4 /*yield*/, this.authCodeToAuthToken(code, refresh).catch(function (reason) { throw Error("Code is invalid."); })];
                     case 1:
                         authToken = _a.sent();
-                        return [4 /*yield*/, this.authTokenToXBL(authToken)];
+                        return [4 /*yield*/, this.authTokenToXBL(authToken).catch(function (reason) { throw Error("Error during XBL Auth."); })];
                     case 2:
                         xbl = _a.sent();
-                        return [4 /*yield*/, this.xblToXsts(xbl)];
+                        return [4 /*yield*/, this.xblToXsts(xbl).catch(function (reason) { throw Error("Error during XSTS Auth."); })];
                     case 3:
                         xsts = _a.sent();
-                        return [4 /*yield*/, this.xstsToMc(xsts)];
+                        return [4 /*yield*/, this.xstsToMc(xsts).catch(function (reason) { throw Error("Error during Mojang Auth."); })];
                     case 4:
                         mcToken = _a.sent();
-                        return [4 /*yield*/, this.getMCInfo(mcToken)];
+                        return [4 /*yield*/, this.getMCInfo(mcToken).catch(function (reason) { throw Error("Error during Minecraft Info Fetch. Does the user own Minecraft?"); })];
                     case 5:
                         mcInfo = _a.sent();
                         return [2 /*return*/, {
@@ -186,7 +186,7 @@ var AuthenticationHandler = /** @class */ (function () {
                                 }
                                 else {
                                     console.error(req.status, req.statusText);
-                                    reject();
+                                    reject(req.status);
                                 }
                             }
                         });
