@@ -1,8 +1,9 @@
 <template>
   <div class="home">
 		<h1>Realms Hub</h1>
-		<span class="affiliation">Not affiliated to or endored by Mojang or Microsoft.</span>
+		<span class="affiliation">Not affiliated to or endorsed by Mojang or Microsoft.</span>
     <img class="logo" alt="Vue logo" src="../assets/logo.png">
+		<div class="preview-note"><span><strong>Please note:</strong><br> This Page is currently under active development and barely in an <strong>alpha</strong> state. <br>Expect things to break or not be finished.</span></div>
 		<div>
 			<div id="login">
 				<h3>Login</h3>
@@ -47,5 +48,13 @@ export default class Home extends Vue {}
 		display: block;
 		margin-bottom: 1em;
 		font-style: italic;
+	}
+
+	.preview-note {
+		margin: 2em 0;
+		padding: 0.5em;
+		border: 2px solid var(--red);
+		border-radius: 1em;
+		background-color: rgb(255, 238, 238);
 	}
 </style>
