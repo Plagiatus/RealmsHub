@@ -15,8 +15,8 @@ export default defineComponent({
   async mounted() {
     let url = new URL(window.location.href);
     let code = url.searchParams.get("code");
-    if (!code) {
-      window.dispatchEvent(new CustomEvent("error", { 
+    if (!code) {		
+      window.dispatchEvent(new CustomEvent("displayError", { 
 				detail: {
 					code: 401,
 					message: "No authorization recieved.",

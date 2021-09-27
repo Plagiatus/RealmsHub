@@ -6,26 +6,26 @@
 </template>
 
 <script lang="ts">
-// import * as https from "https";
 import { defineComponent } from "vue";
+import request from "../components/request-mixin";
 
 export default defineComponent({
+	mixins: [request],
 	async mounted() {
 		let id = localStorage.getItem("id");
 		if(id) {
-			let response: Response = await fetch("http://localhost:9001/check-login", {
-				method: "POST",
-				body: JSON.stringify({id}),
-				headers: { "Content-Type": "application/json"},
-			});
-			if(response.status == 200) {
+			let result: string | undefined = await this.sendRequest("/check-login", "POST", {id});
+			if(result != undefined) {
 				window.location.assign("/overview");
 				return;
 			}
 		}
-		let response: Response = await fetch("http://localhost:9001/login");
-		let result: string = await response.text();
-		window.location.assign(result);
+		let response: string | undefined = await this.sendRequest("/login", "GET", null, () => {
+			window.location.assign("/");
+		});
+		if(response) {
+			window.location.assign(response);
+		}
 	}
 });
 </script>
