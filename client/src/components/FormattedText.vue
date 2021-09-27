@@ -20,10 +20,5 @@ export default defineComponent({
 </script>
 
 <style>
-.c-red {
 
-}
-.c-blue {
-
-}
 </style>

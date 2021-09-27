@@ -23,11 +23,11 @@ export default defineComponent({
       visible: false,
       message: "Generic Error",
       code: 500,
-      dismissEvent: null,
+      dismissEvent: this.dismissEventFunction,
     };
   },
   methods: {
-    showError(_error) {
+    showError(_error: ErrorDetails) {
       this.message = _error.message || "Error";
       this.code = _error.code || 500;
       this.dismissEvent = _error.dismissEvent;
@@ -35,20 +35,31 @@ export default defineComponent({
     },
     dismiss() {
       this.visible = false;
-			console.log(this.dismissEvent);
-			
       if (this.dismissEvent) {
         this.dismissEvent();
       }
     },
+		dismissEventFunction(){
+			return;
+		}
   },
   mounted() {
-    window.addEventListener("error", (error) => {
-			console.log("error", error);
+    window.addEventListener("displayError", (error: any) => {
       this.showError(error.detail);
-    });
+		});
   },
 });
+
+interface ErrorDetails {
+	message: string,
+	code: number,
+	dismissEvent: ()=>void;
+}
+
+// interface ErrorEvent {
+// 	detail: ErrorDetails;
+// }
+
 </script>
 
 <style>

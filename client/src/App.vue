@@ -12,8 +12,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import ErrorDisplay from "@/components/ErrorDisplay";
-import Header from "@/components/Header";
+import ErrorDisplay from "./components/ErrorDisplay.vue";
+import Header from "./components/Header.vue";
 
 export default defineComponent({
   components: {
