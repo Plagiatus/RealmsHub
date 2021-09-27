@@ -24,8 +24,8 @@ export default defineComponent({
   data() {
     return {
       loading: true,
-      myServers: new Array(),
-      allServers: new Array(),
+      myServers: [] as any[],
+      allServers: [] as any[],
     };
   },
   async mounted() {
