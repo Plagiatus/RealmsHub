@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>You are now being logged in.</h1>
-		<div class="loading"></div>
+		<div class="loading" style="position:relative;"></div>
   </div>
 </template>
 

@@ -48,6 +48,12 @@ export default defineComponent({
 	width: 300px;
 	height: 200px;
 	padding: 0.2em;
+	border: 1px solid transparent;
+	border-bottom-color: var(--highlight);
+	border-right-color: var(--highlight);
+	border-radius: 1em;
+	margin: 1em;
+	padding: 1em;
 }
 
 .realm span {
