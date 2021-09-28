@@ -29,13 +29,13 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/overview',
 		name: 'Overview',
-		meta: { requiresLogin: true },
+		meta: { requiresLogin: true, title: "Overview" },
 		component: () => import(/* webpackChunkName: "about" */ '../views/Overview.vue')
 	},
 	{
 		path: '/world/:id',
 		name: 'World',
-		meta: { requiresLogin: true },
+		meta: { requiresLogin: true, title: "World" + },
 		component: () => import(/* webpackChunkName: "about" */ '../views/World.vue')
 	},
 	{
@@ -50,6 +50,11 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
+	document.title = "Realms Hub";
+	if(to.meta.title) {
+		document.title += " - " + <string>to.meta.title;
+	}
+
 	if (to.meta.requiresLogin) {
 		if (localStorage.getItem("id")) {
 			return true;
