@@ -22,76 +22,16 @@ export default defineComponent({
 	methods: {
 		async accept() {
 			let id: string | null = localStorage.getItem("id");
-			let result = this.sendRequest("/invites/accept", "POST", {id, invitationId: this.invite.invitationId});
+			let result = await this.sendRequest("/invites/accept", "POST", {id, invitationId: this.invite.invitationId});
 			if(!result) return;
 			this.$emit("remove-invite", this.invite.invitationId);
 		}, 
 		async deny() {
 			let id: string | null = localStorage.getItem("id");
-			let result = this.sendRequest("/invites/reject", "POST", {id, invitationId: this.invite.invitationId});
+			let result = await this.sendRequest("/invites/reject", "POST", {id, invitationId: this.invite.invitationId});
 			if(!result) return;
 			this.$emit("remove-invite", this.invite.invitationId);
 		}
 	}
 })
 </script>
-
-<style>
-.realm {
-	text-align: left;
-	width: 300px;
-	height: 200px;
-	padding: 0.2em;
-	border: 1px solid transparent;
-	border-bottom-color: var(--highlight);
-	border-right-color: var(--highlight);
-	border-radius: 1em;
-	margin: 1em;
-	padding: 1em;
-}
-
-.realm span {
-	display: block;
-	margin: 0.5em 0;
-}
-
-.realm-status-dot {
-	width: 0.6em;
-	height: 0.6em;
-	border-radius: 50%;
-	display: inline-block;
-}
-
-.realm-status {
-	color: #888;
-	font-size: 0.8em;
-}
-
-span.realm-name {
-	font-size: 1.2em;
-	margin-bottom: 0.7em;
-}
-
-.realm-motd {
-	color: #888;
-	font-size: 0.9em;
-}
-
-.realm-manage {
-	color: var(--highlight);
-	filter: var(--highlight-filter);
-	font-weight: 600;
-	cursor: pointer;
-}
-
-.realm-leave {
-	color: var(--red);
-	filter: var(--red-filter);
-	font-weight: 600;
-	cursor: pointer;
-}
-
-.realm-arrow {
-	height: 0.9em;
-}
-</style>

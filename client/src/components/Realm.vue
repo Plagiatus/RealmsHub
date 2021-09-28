@@ -17,8 +17,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import FormattedText from './FormattedText.vue';
+import request from "../components/request-mixin";
 
 export default defineComponent({
+	mixins:[request],
   components: { FormattedText },
 	name: "Realm",
 	props: ["realm", "owner"],
@@ -36,7 +38,11 @@ export default defineComponent({
 	},
 	methods: {
 		leave() {
-			//
+			let id = localStorage.getItem("id");
+			let worldId = this.realm.id;
+			let result = this.sendRequest("/worlds/leave", "POST", {id, worldId})
+			if(!result) return;
+			this.$emit("leave-realm", worldId);
 		}
 	}
 })
@@ -51,9 +57,10 @@ export default defineComponent({
 	border: 1px solid transparent;
 	border-bottom-color: var(--highlight);
 	border-right-color: var(--highlight);
-	border-radius: 1em;
+	border-bottom-right-radius: 1em;
 	margin: 1em;
 	padding: 1em;
+	box-shadow: 0.6em 0.6em 1em rgba(0, 0, 0, 0.1);
 }
 
 .realm span {

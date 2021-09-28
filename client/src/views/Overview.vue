@@ -16,7 +16,7 @@
 			</div>
 			<h2>All realms</h2>
 			<div class="realms-list" :class="{ loading: loading }">
-				<realm v-for="realm in allServers" v-bind:key="realm" :realm="realm" :owner="false" />
+				<realm v-for="realm in allServers" v-bind:key="realm" :realm="realm" :owner="false" @leave-realm="leaveRealm"/>
 				<p v-if="!loading && allServers.length < 1">You don't seem to be invited to any realms.</p>
 			</div>
 		</div>
@@ -83,13 +83,16 @@ export default defineComponent({
 			if(!result) return;
 			this.invites = JSON.parse(result).invites;
 			this.loadingInvites = false;
-			console.log(this.invites[0]);
 		},
 		removeInvite(_invId: string) {
 			this.invites = this.invites.filter(i => i.invitationId != _invId);
 			if(this.invites.length == 0) {
 				this.tab = "realms"; 
 			}
+			this.loadRealms();
+		},
+		leaveRealm(_realmId: string) {
+			this.allServers = this.allServers.filter(i => i.id != _realmId);
 			this.loadRealms();
 		}
 	}
