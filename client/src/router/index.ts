@@ -35,7 +35,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/world/:id',
 		name: 'World',
-		meta: { requiresLogin: true, title: "World" + },
+		meta: { requiresLogin: true, title: "World" },
 		component: () => import(/* webpackChunkName: "about" */ '../views/World.vue')
 	},
 	{
