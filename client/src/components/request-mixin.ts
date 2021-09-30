@@ -8,11 +8,12 @@ const requestUrl: string = (url.hostname == "localhost") ? "http://localhost:900
 export default defineComponent({
 	name: "request",
 	methods: {
-		async sendRequest(_url: string, _method: "GET" | "POST", _data?: any, _errorDismissEvent?: DismissFunction): Promise<string | undefined> {
+		async sendRequest(_url: string, _method: "GET" | "POST", _data: any = {}, _errorDismissEvent?: DismissFunction): Promise<string | undefined> {
 			let response: Response;
 			if (_method == "GET") {
 				response = await fetch(requestUrl + _url);
 			} else if (_method == "POST") {
+				_data["id"] = localStorage.getItem("id");
 				response = await fetch(requestUrl + _url, {
 					method: _method,
 					body: JSON.stringify(_data),
@@ -41,7 +42,17 @@ export default defineComponent({
 						window.dispatchEvent(new CustomEvent("displayError", {
 							detail: {
 								code: resp.error.code,
-								message: resp.error.message,
+								message: resp.error.message || genericCodeDescription(resp.error.code),
+								dismissEvent: _errorDismissEvent
+							}
+						}));
+						return;
+					}
+					if (resp.code) {
+						window.dispatchEvent(new CustomEvent("displayError", {
+							detail: {
+								code: resp.code,
+								message: resp.message || genericCodeDescription(resp.code),
 								dismissEvent: _errorDismissEvent
 							}
 						}));
@@ -55,3 +66,26 @@ export default defineComponent({
 		}
 	}
 });
+
+function genericCodeDescription(code: number): string {
+	switch (code) {
+		case 400:
+			return "The client sent a bad request to the server.";
+		case 401:
+		case 403:
+			return "You are not authorized to do this. Try logging out and back in.";
+		case 404:
+			return "The requested resource could not be found on the server.";
+		case 405:
+			return "The client sent a request to the server that used a wrong method.";
+		case 408:
+			return "Your request timed out.";
+		case 410:
+			return "The request tried to access a resource that is gone and won't come back.";
+		case 500:
+			return "Something went wrong on the server side. Please try again later.";
+		case 503:
+			return "The server is currently overloaded. Please try again at a later point in time.";
+	}
+	return "An unknown Error occurred."
+}

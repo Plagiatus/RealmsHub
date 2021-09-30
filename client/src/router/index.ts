@@ -33,10 +33,11 @@ const routes: Array<RouteRecordRaw> = [
 		component: () => import(/* webpackChunkName: "about" */ '../views/Overview.vue')
 	},
 	{
-		path: '/world/:id',
+		path: '/world/:worldId',
 		name: 'World',
 		meta: { requiresLogin: true, title: "World" },
-		component: () => import(/* webpackChunkName: "about" */ '../views/World.vue')
+		component: () => import(/* webpackChunkName: "about" */ '../views/World.vue'),
+		props: true,
 	},
 	{
 		path: "/:pathMatch(.*)*",
