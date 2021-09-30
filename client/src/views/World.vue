@@ -23,7 +23,7 @@ export default defineComponent({
   },
   data() {
     return {
-      realm: null as Realm,
+      realm: null as unknown as Realm,
       reloadingRealm: false
     }
   },
