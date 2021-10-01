@@ -20,7 +20,7 @@ export default defineComponent({
 				return;
 			}
 		}
-		let response: string | undefined = await this.sendRequest("/login", "GET", null, () => {
+		let response: string | undefined = await this.sendRequest("/login", "GET", null, undefined, () => {
 			window.location.assign("/");
 		});
 		if(response) {

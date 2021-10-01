@@ -26,7 +26,7 @@ export default defineComponent({
       return;
     }
 
-		let result: string|undefined = await this.sendRequest("/login", "POST", {code}, ()=>{window.location.replace("/")});
+		let result: string|undefined = await this.sendRequest("/login", "POST", {code}, undefined, ()=>{window.location.replace("/")});
 		if(!result){
 			return;
 		}
