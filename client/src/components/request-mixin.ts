@@ -8,7 +8,7 @@ const requestUrl: string = (url.hostname == "localhost") ? "http://localhost:900
 export default defineComponent({
 	name: "request",
 	methods: {
-		async sendRequest(_url: string, _method: "GET" | "POST", _data: any = {}, _errorDismissEvent?: DismissFunction): Promise<string | undefined> {
+		async sendRequest(_url: string, _method: "GET" | "POST", _data: any = {}, _errorMessage?: string, _errorDismissEvent?: DismissFunction): Promise<string | undefined> {
 			let response: Response;
 			if (_method == "GET") {
 				response = await fetch(requestUrl + _url);
@@ -27,7 +27,7 @@ export default defineComponent({
 				window.dispatchEvent(new CustomEvent("displayError", {
 					detail: {
 						code: response.status,
-						message: response.statusText,
+						message: _errorMessage || response.statusText,
 						dismissEvent: _errorDismissEvent
 					}
 				}));
@@ -42,7 +42,7 @@ export default defineComponent({
 						window.dispatchEvent(new CustomEvent("displayError", {
 							detail: {
 								code: resp.error.code,
-								message: resp.error.message || genericCodeDescription(resp.error.code),
+								message: _errorMessage || resp.error.message || genericCodeDescription(resp.error.code),
 								dismissEvent: _errorDismissEvent
 							}
 						}));
@@ -52,7 +52,17 @@ export default defineComponent({
 						window.dispatchEvent(new CustomEvent("displayError", {
 							detail: {
 								code: resp.code,
-								message: resp.message || genericCodeDescription(resp.code),
+								message: _errorMessage || resp.message || genericCodeDescription(resp.code),
+								dismissEvent: _errorDismissEvent
+							}
+						}));
+						return;
+					}
+					if (resp.errorCode) {
+						window.dispatchEvent(new CustomEvent("displayError", {
+							detail: {
+								code: resp.errorCode,
+								message: _errorMessage || resp.errorMsg || genericCodeDescription(resp.code),
 								dismissEvent: _errorDismissEvent
 							}
 						}));
