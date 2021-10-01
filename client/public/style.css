@@ -62,6 +62,7 @@ body {
 	font-weight: 600;
 	cursor: pointer;
 	height: 2em;
+	position: relative;
 }
 
 .btn:disabled {
@@ -73,4 +74,16 @@ body {
   height: 1em;
   margin-top: -.5em;
   margin-left: -.5em;
+}
+
+.input{
+	padding: .375rem .75rem;
+	border-radius: 0.2em;
+	color: #212529;
+	border: 1px solid #ced4da;
+	border-radius: .25rem;
+	width: calc(100% - 2rem);
+	display: block;
+	font: inherit;
+	resize: none;
 }
