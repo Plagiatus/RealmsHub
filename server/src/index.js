@@ -332,7 +332,7 @@ app.route("/worlds/player/:command")
                 return [3 /*break*/, 10];
             case 5:
                 _g = (_f = res).send;
-                return [4 /*yield*/, client.invitePlayer(worldId, undefined, uuid)];
+                return [4 /*yield*/, client.invitePlayer(worldId, req.body.name, uuid)];
             case 6:
                 _g.apply(_f, [_k.sent()]);
                 return [3 /*break*/, 10];

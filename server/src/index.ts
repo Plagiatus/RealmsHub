@@ -198,7 +198,7 @@ app.route("/worlds/player/:command")
 				res.send(await client.makeOP(worldId, uuid));
 				break;
 			case "invite":
-				res.send(await client.invitePlayer(worldId, undefined, uuid));
+				res.send(await client.invitePlayer(worldId, req.body.name, uuid));
 				break;
 			case "kick":
 				res.send(await client.kickPlayer(worldId, uuid));
