@@ -31,19 +31,19 @@ export default defineComponent({
 			if(this.loading) return;
 			this.loading = true;
 			let result = await this.sendRequest("/worlds/settings", "POST", {settings: {name: this.name, description: this.description}, worldId: this.worldId});
+			this.loading = false;
 			if(!result) {
-				this.loading = false;
 				return;
 			}
 			this.$emit("updateRealm");
-			this.loading = false;
 		}
 	}
 })
 </script>
 
 <style>
-#realm-settings {
+#realm-settings,
+#realm-players {
 	padding: 2em;
 	border-radius: 2rem;
 	margin: 1rem;
@@ -53,17 +53,6 @@ export default defineComponent({
 	border: 1px solid var(--background);
 }
 
-.input{
-	padding: .375rem .75rem;
-	border-radius: 0.2em;
-	color: #212529;
-	border: 1px solid #ced4da;
-	border-radius: .25rem;
-	width: calc(100% - 2rem);
-	display: block;
-	font: inherit;
-	resize: none;
-}
 </style>
 
 <style scoped>
