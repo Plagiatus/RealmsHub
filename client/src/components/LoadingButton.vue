@@ -1,5 +1,5 @@
 <template>
-	<button class="btn" :disabled="this.loading || this.success" :class="{loading: loading}">{{textToDisplay}}</button>
+	<button class="btn" :disabled="loading || success || disabled" :class="{loading: loading, light: light, red: red}" >{{textToDisplay}}</button>
 </template>
 
 <script lang="ts">
@@ -7,7 +7,7 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
 	name: "LoadingButton",
-	props: ["text", "loading", "successText"],
+	props: ["text", "loading", "successText", "light", "red", "disabled"],
 	data() {
 		return {
 			success: false
