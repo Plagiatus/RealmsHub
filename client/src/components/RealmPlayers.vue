@@ -1,5 +1,5 @@
 <template>
-	<div id="realm-players">
+	<div id="realm-players" class="gray-block">
 		<div>
 			<h2>Players</h2>
 			<input type="text" v-model="filter" class="input" placeholder="🔎 filter" @input="updateFilter">

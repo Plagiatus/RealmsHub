@@ -2,6 +2,10 @@
   <div class="world">
     <div v-if="!this.realm" class="loading"></div>
     <div class="world-content" v-if="!!this.realm">
+			<div class="flex">
+				<realm-info :realm="realm" :worldId="worldId" @toggle-open="toggleOpen"/>
+				<realm-subscription :realm="realm" :worldId="worldId"/>
+			</div>
       <realm-settings :realmName="realm.name" :realmDescription="realm.motd" :worldId="worldId" />
 			<realm-players :players="realm.players" :worldId="worldId" @remove-player="removePlayer" @update-realm="reloadRealm" @update-ops="updateOPs"/>
     </div>
@@ -14,12 +18,16 @@ import { defineComponent } from 'vue';
 import request from "../components/request-mixin";
 import RealmSettings from "../components/RealmSettings.vue";
 import RealmPlayers from "../components/RealmPlayers.vue";
+import RealmInfo from "../components/RealmInfo.vue";
+import RealmSubscription from "../components/RealmSubscription.vue";
 
 export default defineComponent({
   mixins: [request],
   components: {
     RealmSettings,
-		RealmPlayers
+		RealmPlayers,
+		RealmInfo,
+		RealmSubscription,
   },
   props: {
     worldId: String
@@ -35,7 +43,6 @@ export default defineComponent({
   },
   methods: {
     async reloadRealm(_realm?: Realm) {
-			console.log("reload", _realm);
       if (this.reloadingRealm) return;
 			if (_realm){
 				this.realm = _realm;
@@ -50,6 +57,8 @@ export default defineComponent({
       }
       this.realm = JSON.parse(result) as Realm;
       this.reloadingRealm = false;
+			console.log(this.realm);
+			
     },
 		removePlayer(uuid: string){
 			this.realm.players = this.realm?.players?.filter(p => p.uuid != uuid) || [];
@@ -60,15 +69,18 @@ export default defineComponent({
 				if(ops.includes(p.name)) p.operator = true;
 				else p.operator = false;
 			}
+		},
+		toggleOpen() {
+			this.realm.state = this.realm.state == "OPEN" ? "CLOSED" : "OPEN";
 		}
   }
 });
 
-type WorldType = "NORMAL" | "ADVENTUREMAP" | "MINIGAME";
-type TemplateType = "MINIGAME" | "ADVENTUREMAP" | "EXERIENCE" | "NORMAL" | "INSPIRATION";
-type SlotNumber = 1 | 2 | 3;
+export type WorldType = "NORMAL" | "ADVENTUREMAP" | "MINIGAME";
+export type TemplateType = "MINIGAME" | "ADVENTUREMAP" | "EXERIENCE" | "NORMAL" | "INSPIRATION";
+export type SlotNumber = 1 | 2 | 3;
 
-interface Realm {
+export interface Realm {
 	id: number,
 	remoteSubscriptionId: string,
 	owner: string,
@@ -93,7 +105,7 @@ interface Realm {
 	subscriptionRefreshStatus: any | null,
 }
 
-interface RealmsPlayer {
+export interface RealmsPlayer {
 	uuid: string,
 	name: string,
 	operator: boolean,
@@ -102,7 +114,7 @@ interface RealmsPlayer {
 	permission: "MEMBER" | "OPERATOR",
 }
 
-interface Slot {
+export interface Slot {
 	options: JSON,
 	slotId: SlotNumber
 }
@@ -120,5 +132,16 @@ export interface Ops {
 
 .world-content {
 	width: 100%;
+}
+</style>
+
+<style scoped>
+.flex {
+	display: flex;
+
+}
+
+.flex > * {
+	width: 50%
 }
 </style>
