@@ -68,28 +68,6 @@ export default defineComponent({
 	margin: 0.5em 0;
 }
 
-.realm-status-dot {
-	width: 0.6em;
-	height: 0.6em;
-	border-radius: 50%;
-	display: inline-block;
-}
-
-.realm-status {
-	color: #888;
-	font-size: 0.8em;
-}
-
-span.realm-name {
-	font-size: 1.2em;
-	margin-bottom: 0.7em;
-}
-
-.realm-motd {
-	color: #888;
-	font-size: 0.9em;
-}
-
 .realm-manage {
 	color: var(--highlight);
 	filter: var(--highlight-filter);

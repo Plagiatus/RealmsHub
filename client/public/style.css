@@ -8,6 +8,8 @@ body {
 	--gold: #b09d30;
 	--btn-dark-green: #178f63;
 	--btn-light-green: #b4e9d1;
+	--btn-red: #F5D6D1;
+	--btn-red-text: #BD4E3D;
 	--btn-disabled: rgb(187, 199, 181);
 
 	/* 
@@ -65,8 +67,20 @@ body {
 	position: relative;
 }
 
+
+.btn.light {
+	background-color: var(--btn-light-green);
+	color: var(--highlight);
+}
+
+.btn.red {
+	background-color: var(--btn-red);
+	color: var(--btn-red-text);
+}
+
 .btn:disabled {
 	background-color: var(--btn-disabled);
+	color: var(--foreground);
 }
 
 .btn.loading:before {
@@ -86,4 +100,54 @@ body {
 	display: block;
 	font: inherit;
 	resize: none;
+}
+
+.realm-status-dot {
+	width: 0.6em;
+	height: 0.6em;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+.realm-status {
+	color: #888;
+	font-size: 0.8em;
+}
+
+span.realm-name {
+	font-size: 1.2em;
+	margin-bottom: 0.7em;
+}
+
+.realm-motd {
+	color: #888;
+	font-size: 0.9em;
+}
+
+.realm-owner {
+	width: 80px;
+	height: 74px;
+}
+
+.gray-block {
+	display: block;
+	
+	padding: 2em;
+	border-radius: 2rem;
+	margin: 1rem;
+	background-color: var(--foreground-gray);
+	position: relative;
+	min-width: 300px;
+	border: 1px solid var(--background);
+}
+
+.rightbound {
+	text-align: right;
+}
+
+.bold {
+	font-weight: bold;
+}
+.semi-bold {
+	font-weight: 600;
 }

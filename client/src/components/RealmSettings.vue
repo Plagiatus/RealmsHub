@@ -1,5 +1,5 @@
 <template>
-	<div id="realm-settings">
+	<div id="realm-settings" class="gray-block">
 		<h2>Realm settings</h2>
 		<label for="realm-name">Realm name</label>
 		<input class="input" type="text" name="realmName" id="realm-name" v-model="name">
@@ -40,20 +40,6 @@ export default defineComponent({
 	}
 })
 </script>
-
-<style>
-#realm-settings,
-#realm-players {
-	padding: 2em;
-	border-radius: 2rem;
-	margin: 1rem;
-	background-color: var(--foreground-gray);
-	position: relative;
-	min-width: 300px;
-	border: 1px solid var(--background);
-}
-
-</style>
 
 <style scoped>
 label {
