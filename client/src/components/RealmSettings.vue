@@ -3,8 +3,16 @@
 		<h2>Realm settings</h2>
 		<label for="realm-name">Realm name</label>
 		<input class="input" type="text" name="realmName" id="realm-name" v-model="name">
+		<span class="preview" v-if="name.includes('§')">
+			<formatted-text class="block" :text="name" />
+			<span class="right">Preview</span>
+		</span>
 		<label for="realm-desc">Realm description</label>
 		<textarea class="input"  name="realmDescription" id="realm-desc" v-model="description" rows="3" />
+		<span class="preview" v-if="description.includes('§')">
+			<formatted-text class="block" :text="description" />
+			<span class="right">Preview</span>
+		</span>
 		<span id="colorinfo">Both of these support <a href="https://www.digminecraft.com/lists/color_list_pc.php" target="_blank" rel="noopener noreferrer">Formatting Codes</a> (the § variant).</span>
 		<loading-button @click="save" :loading="loading" :text="'Save Settings'" :successText="'Saved'" />
 	</div>
@@ -14,10 +22,14 @@
 import { defineComponent } from 'vue';
 import request from "../components/request-mixin";
 import LoadingButton from "./LoadingButton.vue";
+import FormattedText from "./FormattedText.vue";
 
 export default defineComponent({
 	mixins: [request],
-	components: {LoadingButton},
+	components: {
+		LoadingButton,
+		FormattedText,	
+	},
 	props: ["realmName", "realmDescription", "worldId"],
 	data() {
 		return {
@@ -54,9 +66,25 @@ button {
 }
 
 #colorinfo {
-	display: block;
 	font-size: .9em;
 	font-style: italic;
+}
+
+.preview,
+#colorinfo {
+	display: block;
 	margin: .5em 0;
+}
+
+.preview {
+	border-radius: .5em;
+	border: 1px solid var(--btn-disabled);
+	padding: .5em;
+	background-color: var(--foreground);
+}
+
+.right {
+	float: right;
+	font-style: italic;
 }
 </style>
