@@ -72,7 +72,8 @@ export default defineComponent({
 	justify-content: space-evenly;
 }
 
-#realm-info span {
+#realm-info > div > span {
 	display: block;
+	margin: 0.5em 0;
 }
 </style>

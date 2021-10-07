@@ -93,10 +93,3 @@ export default defineComponent({
 	}
 })
 </script>
-
-<style>
-#realm-info span {
-	display: block;
-	margin: 0.5em 0;
-}
-</style>

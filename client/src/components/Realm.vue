@@ -63,7 +63,7 @@ export default defineComponent({
 	box-shadow: 0.6em 0.6em 1em rgba(0, 0, 0, 0.1);
 }
 
-.realm span {
+.realm > span {
 	display: block;
 	margin: 0.5em 0;
 }
