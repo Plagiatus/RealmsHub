@@ -81,6 +81,7 @@ body {
 .btn:disabled {
 	background-color: var(--btn-disabled);
 	color: var(--foreground);
+	cursor: default;
 }
 
 .btn.loading:before {

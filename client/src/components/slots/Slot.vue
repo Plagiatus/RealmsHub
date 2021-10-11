@@ -1,11 +1,11 @@
 <template>
 	<div class="slot" :class="{active: selected}">
-		<img :src="src" :alt="alt">
+		<img src="../../assets/logo.png" alt="">
 		<span class="slot-description">{{description}}</span>
 		<span class="slot-name">{{name}}</span>
 		<loading-button v-if="!this.selected" class="btn light" @click="selectSlot" :text="'Select Slot'" :successText="''" :loading="this.loadingSlotChange"/>
-		<button v-if="this.selected" class="btn light" @click="openSettings">Settings</button>
-		<button v-if="this.selected" class="btn" @click="openResetWorld">Reset World</button>
+		<button v-if="this.selected" class="btn light" @click="openSettings" disabled="disabled">Settings</button>
+		<button v-if="this.selected" class="btn" @click="openResetWorld" disabled="disabled">Reset World</button>
 	</div>
 </template>
 
@@ -56,12 +56,6 @@ export default defineComponent({
 			if(this.options.slotName) return this.options.slotName;
 			return "World " + this.slot.slotId;
 		},
-		src(): string {
-			return "";
-		},
-		alt(): string {
-			return "";
-		}
 	},
 	methods: {
 		async selectSlot() {
@@ -110,5 +104,9 @@ export default defineComponent({
 .slot-name {
 	margin: .4em 0;
 	font-weight: bolder;
+}
+
+.slot > button {
+	margin-top: 0.5em;
 }
 </style>
