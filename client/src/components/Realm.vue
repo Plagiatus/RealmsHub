@@ -7,7 +7,10 @@
 			- {{realm.owner}}
 			</span>
 		<formatted-text class="realm-name" :text="realm.name" />
-		<formatted-text class="realm-motd" :text="realm.motd" />
+		<span class="realm-motd">
+			<span class="realm-minigame" v-if="realm.minigameName">Minigame</span>
+			<formatted-text  :text="motd" />
+		</span>
 		<router-link :to="'/world/' + this.realm.id" class="realm-manage" v-if="owner">Manage <img class="realm-arrow" src="../assets/arrow-right.svg"></router-link>
 		<span class="realm-leave" v-else @click="leave()">Leave <img class="realm-arrow" src="../assets/arrow-right.svg"></span>
 
@@ -34,7 +37,13 @@ export default defineComponent({
 			if(this.realm.expired) return "var(--expired)";
 			if(this.realm.state == "OPEN") return "var(--highlight)";
 			return "var(--red)";
-		}
+		},
+		motd(): string {
+			if(this.realm.minigameName) {
+				return this.realm.minigameName;
+			}
+			return this.realm.motd;
+		},
 	},
 	methods: {
 		leave() {
@@ -84,5 +93,13 @@ export default defineComponent({
 
 .realm-arrow {
 	height: 0.9em;
+}
+
+.realm-minigame {
+	background-color: var(--gold);
+	color: var(--foreground);
+	padding: .25rem;
+	border-radius: .25rem;
+	margin-right: .4em;
 }
 </style>
