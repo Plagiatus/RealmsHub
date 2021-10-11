@@ -6,6 +6,7 @@
 				<realm-info :realm="realm" :worldId="worldId" @toggle-open="toggleOpen"/>
 				<realm-subscription :realm="realm" :worldId="worldId"/>
 			</div>
+			<slots :realm="realm" :worldId="worldId" @select-slot="selectSlot"/>
       <realm-settings :realmName="realm.name" :realmDescription="realm.motd" :worldId="worldId" />
 			<realm-players :players="realm.players" :worldId="worldId" @remove-player="removePlayer" @update-realm="reloadRealm" @update-ops="updateOPs"/>
     </div>
@@ -20,6 +21,7 @@ import RealmSettings from "../components/RealmSettings.vue";
 import RealmPlayers from "../components/RealmPlayers.vue";
 import RealmInfo from "../components/RealmInfo.vue";
 import RealmSubscription from "../components/RealmSubscription.vue";
+import Slots from "../components/Slots.vue";
 
 export default defineComponent({
   mixins: [request],
@@ -28,6 +30,7 @@ export default defineComponent({
 		RealmPlayers,
 		RealmInfo,
 		RealmSubscription,
+		Slots,
   },
   props: {
     worldId: String
@@ -72,7 +75,11 @@ export default defineComponent({
 		},
 		toggleOpen() {
 			this.realm.state = this.realm.state == "OPEN" ? "CLOSED" : "OPEN";
-		}
+		},
+		selectSlot(_slot: SlotNumber) {
+			this.realm.activeSlot = _slot;
+			this.realm.worldType = 'NORMAL';
+		},
   }
 });
 
@@ -117,6 +124,23 @@ export interface RealmsPlayer {
 export interface Slot {
 	options: JSON,
 	slotId: SlotNumber
+}
+
+export interface SlotSettings {
+	slotName?: string,
+	pvp?: boolean,
+	spawnAnimals?: boolean,
+	spawnMonsters?: boolean,
+	spawnNPCs?: boolean,
+	spawnProtection?: number,
+	commandBlocks?: boolean,
+	forceGameMode?: boolean,
+	gameMode?: number,
+	difficulty?: number,
+	worldTemplateId?: number,
+	worldTemplateImage?: string,
+	adventureMap?: boolean,
+	resourcePackHash?: null
 }
 
 export interface Ops {
