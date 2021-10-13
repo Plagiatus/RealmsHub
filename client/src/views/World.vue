@@ -6,7 +6,10 @@
 				<realm-info :realm="realm" :worldId="worldId" @toggle-open="toggleOpen"/>
 				<realm-subscription :realm="realm" :worldId="worldId"/>
 			</div>
-			<slots :realm="realm" :worldId="worldId" @select-slot="selectSlot"/>
+			<slots :realm="realm" :worldId="worldId" @select-slot="selectSlot" @open-settings="openSlotSettings"/>
+			<transition name="grow">
+				<slot-setting v-if="slotSettingsOpen" :worldId="worldId" :slotId="realm.activeSlot" :settings="realm.slots[realm.activeSlot - 1].options" @update-slot-settings="updateSlotSettings" @close="closeSlotSettings"/>
+			</transition>
       <realm-settings :realmName="realm.name" :realmDescription="realm.motd" :worldId="worldId" />
 			<realm-players :players="realm.players" :worldId="worldId" @remove-player="removePlayer" @update-realm="reloadRealm" @update-ops="updateOPs"/>
     </div>
@@ -22,6 +25,7 @@ import RealmPlayers from "../components/RealmPlayers.vue";
 import RealmInfo from "../components/RealmInfo.vue";
 import RealmSubscription from "../components/RealmSubscription.vue";
 import Slots from "../components/Slots.vue";
+import SlotSetting from "../components/slots/SlotSettings.vue";
 
 export default defineComponent({
   mixins: [request],
@@ -31,6 +35,7 @@ export default defineComponent({
 		RealmInfo,
 		RealmSubscription,
 		Slots,
+		SlotSetting,
   },
   props: {
     worldId: String
@@ -38,7 +43,8 @@ export default defineComponent({
   data() {
     return {
       realm: null as unknown as Realm,
-      reloadingRealm: false
+      reloadingRealm: false,
+			slotSettingsOpen: false,
     }
   },
   async mounted() {
@@ -52,7 +58,6 @@ export default defineComponent({
 				return;
 			}
       this.reloadingRealm = true;
-      let id = localStorage.getItem("id");
       let result = await this.sendRequest("/worlds/get-one", "POST", { worldId: this.worldId });
       if (!result) {
         this.reloadingRealm = false;
@@ -79,6 +84,18 @@ export default defineComponent({
 		selectSlot(_slot: SlotNumber) {
 			this.realm.activeSlot = _slot;
 			this.realm.worldType = 'NORMAL';
+		},
+		openSlotSettings() {
+			this.slotSettingsOpen = !this.slotSettingsOpen;
+		},
+		updateSlotSettings(settings: SlotSettings, slot: number): void {
+			slot -= 1;
+			if(this.realm?.slots && this.realm?.slots[slot]){
+				this.realm.slots[slot].options = JSON.stringify(settings);
+			}
+		},
+		closeSlotSettings(){
+			this.slotSettingsOpen = false;
 		},
   }
 });
@@ -122,7 +139,7 @@ export interface RealmsPlayer {
 }
 
 export interface Slot {
-	options: JSON,
+	options: string,
 	slotId: SlotNumber
 }
 
@@ -167,5 +184,24 @@ export interface Ops {
 
 .flex > * {
 	width: 50%
+}
+
+.grow-enter-active,
+.grow-leave-active {
+	transition: all .3s;
+}
+
+.grow-enter-to,
+.grow-leave-from {
+	max-height: 1000px;
+	opacity: 1;
+}
+
+.grow-enter-from,
+.grow-leave-to {
+  max-height: 0;
+	opacity: 0;
+	overflow: hidden;
+	padding: 0 2em;
 }
 </style>

@@ -21,6 +21,15 @@ export default defineComponent({
 		selectSlot(_slot: number) {
 			this.$emit("selectSlot", _slot);
 		},
+		openSettings() {
+			this.$emit("openSettings");
+		},
+		openMinigame() {
+			this.$emit("openMinigame");
+		},
+		openResetWorld() {
+			this.$emit("openResetWorld");
+		},
 	}
 })
 </script>

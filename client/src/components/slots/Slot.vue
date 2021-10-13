@@ -4,7 +4,7 @@
 		<span class="slot-description">{{description}}</span>
 		<formatted-text class="slot-name" :text="name" />
 		<loading-button v-if="!this.selected" class="btn light" @click="selectSlot" :text="'Select Slot'" :successText="''" :loading="this.loadingSlotChange"/>
-		<button v-if="this.selected" class="btn light" @click="openSettings" disabled="disabled">Settings</button>
+		<button v-if="this.selected" class="btn light" @click="openSettings">Settings</button>
 		<button v-if="this.selected" class="btn" @click="openResetWorld" disabled="disabled">Reset World</button>
 	</div>
 </template>
