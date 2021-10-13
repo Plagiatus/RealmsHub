@@ -278,7 +278,7 @@ span.realm-name {
 	left: 0;
 	top: -3px;
 	border-radius: 50%;
-	background: var(--foreground);
+	background-color: var(--foreground);
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 }
 
@@ -302,15 +302,21 @@ span.realm-name {
 	-o-transition: ease .3s;
 }
 
+.toggle:disabled:after,
+.toggle:disabled:before {
+	background-color: var(--btn-disabled);
+	cursor: default;
+}
 
 /* Slider */
 
 .slider {
 	-webkit-appearance: none;  
   appearance: none;
-  height: 25px; 
-  background: #d3d3d3; 
+  height: 28px; 
+  background: var(--btn-light-green); 
   outline: none;
+	border-radius: 16px;
   /* -webkit-transition: .2s;
   transition: opacity .2s; */
 }
@@ -319,8 +325,11 @@ span.realm-name {
 .slider::-moz-range-thumb {
 	-webkit-appearance: none;
 	appearance: none;
-	width: 25px;
-	height: 25px;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: none;
 	background: var(--btn-dark-green);
 	cursor: pointer;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 }
