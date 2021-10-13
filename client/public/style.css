@@ -250,6 +250,7 @@ span.realm-name {
 
 .toggle {
 	-webkit-appearance: none;
+	appearance: none;
 	-webkit-tap-highlight-color: transparent;
 	position: relative;
 	border: 0;
@@ -263,7 +264,7 @@ span.realm-name {
 	width: 60px;
 	height: 28px;
 	display: inline-block;
-	background-color: #ccc;
+	background-color: #d3d3d3;
 	border-radius: 18px;
 	clear: both;
 }
@@ -299,4 +300,27 @@ span.realm-name {
 	-webkit-transition: ease .3s;
 	-moz-transition: ease .3s;
 	-o-transition: ease .3s;
+}
+
+
+/* Slider */
+
+.slider {
+	-webkit-appearance: none;  
+  appearance: none;
+  height: 25px; 
+  background: #d3d3d3; 
+  outline: none;
+  /* -webkit-transition: .2s;
+  transition: opacity .2s; */
+}
+
+.slider::-webkit-slider-thumb,
+.slider::-moz-range-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 25px;
+	height: 25px;
+	background: var(--btn-dark-green);
+	cursor: pointer;
 }
