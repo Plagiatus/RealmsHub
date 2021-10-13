@@ -2,7 +2,7 @@
 	<div class="slot" :class="{active: selected}">
 		<img src="../../assets/logo.png" alt="">
 		<span class="slot-description">{{description}}</span>
-		<span class="slot-name">{{name}}</span>
+		<formatted-text class="slot-name" :text="name" />
 		<loading-button v-if="!this.selected" class="btn light" @click="selectSlot" :text="'Select Slot'" :successText="''" :loading="this.loadingSlotChange"/>
 		<button v-if="this.selected" class="btn light" @click="openSettings" disabled="disabled">Settings</button>
 		<button v-if="this.selected" class="btn" @click="openResetWorld" disabled="disabled">Reset World</button>
@@ -13,13 +13,14 @@
 import { defineComponent } from 'vue';
 import { SlotSettings } from '../../views/World.vue';
 import LoadingButton from "../LoadingButton.vue";
+import FormattedText from '../FormattedText.vue';
 import request from "../request-mixin";
 
 
 export default defineComponent({
 	mixins: [request],
 	props: ["slots", "selectedSlot", "worldId", "minigameActive"],
-	components: {LoadingButton},
+	components: {LoadingButton, FormattedText},
 	data() {
 		return {
 			loadingSlotChange: false,
