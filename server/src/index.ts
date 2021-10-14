@@ -2,7 +2,7 @@ import express, { NextFunction } from "express";
 import *  as bodyParser from "body-parser";
 import { configProduction, configTesting, Config } from "./config";
 import { AuthenticationHandler, AuthInfo } from "../../ms-api";
-import JavaRealmsClient, { SlotNumber, Template, Templates, TemplateType } from "../../realms-api";
+import RealmsClient, { SlotNumber, Template, Templates, TemplateType } from "../../realms-api";
 import { AuthTokenInDB, DB } from "./db";
 import * as https from "https";
 import hat from "hat";
@@ -18,7 +18,7 @@ if (process.argv[2] == "--local") {
 const db = new DB();
 const tokenTimestamps: Map<string, number> = new Map<string, number>();
 const tokens: Map<string, AuthInfo> = new Map<string, AuthInfo>();
-const clients: Map<string, JavaRealmsClient> = new Map<string, JavaRealmsClient>();
+const clients: Map<string, RealmsClient> = new Map<string, RealmsClient>();
 let latestVersion: string;
 
 const app = express();
@@ -61,7 +61,7 @@ async function checkAndInitAuth(req: express.Request, res: express.Response, nex
 function initAuth(_id: string, _token: AuthInfo) {
 	tokenTimestamps.set(_id, Date.now());
 	tokens.set(_id, _token);
-	clients.set(_id, new JavaRealmsClient(latestVersion, _token.mc_token.access_token, _token.mc_info.id, _token.mc_info.name));
+	clients.set(_id, new RealmsClient(latestVersion, _token.mc_token.access_token, _token.mc_info.id, _token.mc_info.name));
 	let tokenInDB: AuthTokenInDB = { ..._token, id: _id };
 	db.saveToken(tokenInDB);
 }
@@ -126,7 +126,7 @@ app.route("/templates/:type/:page/:size")
 
 app.route("/invites/:command")
 	.post(checkAndInitAuth, async (req, res) => {
-		let client: JavaRealmsClient = <JavaRealmsClient>clients.get(req.body.id);
+		let client: RealmsClient = <RealmsClient>clients.get(req.body.id);
 		let command: string = req.params.command;
 
 		if (command == "get") {
@@ -157,7 +157,7 @@ app.route("/worlds/slot/:command")
 			return;
 		}
 
-		let client: JavaRealmsClient = <JavaRealmsClient>clients.get(req.body.id);
+		let client: RealmsClient = <RealmsClient>clients.get(req.body.id);
 		let command: string = req.params.command;
 
 		switch (command) {
@@ -187,7 +187,7 @@ app.route("/worlds/player/:command")
 			res.sendStatus(400);
 			return;
 		}
-		let client: JavaRealmsClient = <JavaRealmsClient>clients.get(req.body.id);
+		let client: RealmsClient = <RealmsClient>clients.get(req.body.id);
 		let command: string = req.params.command;
 
 		switch (command) {
@@ -217,7 +217,7 @@ app.route("/worlds/:command")
 			res.sendStatus(400);
 			return;
 		}
-		let client: JavaRealmsClient = <JavaRealmsClient>clients.get(req.body.id);
+		let client: RealmsClient = <RealmsClient>clients.get(req.body.id);
 		let command = req.params.command;
 		switch (command) {
 			case "get-one":
@@ -303,7 +303,7 @@ app.route("/worlds/:command")
 app.route("/:command")
 	.post(checkAndInitAuth, async (req, res) => {
 		let command: string = req.params.command;
-		let client: JavaRealmsClient = <JavaRealmsClient>clients.get(req.body.id);
+		let client: RealmsClient = <RealmsClient>clients.get(req.body.id);
 		switch (command) {
 			case "worlds":
 				res.send(await client.worlds());
@@ -396,7 +396,7 @@ async function getTemplates(type: TemplateType, page: number, size: number, clie
 		return { page: -1, size: -1, total: -1, templates: [] };
 	}
 
-	let client: JavaRealmsClient = <JavaRealmsClient>clients.get(clientId);
+	let client: RealmsClient = <RealmsClient>clients.get(clientId);
 	let types: TemplateType[] = ["MINIGAME", "ADVENTUREMAP", "EXERIENCE", "NORMAL", "INSPIRATION"];
 	for (let type of types) {
 		let oneTemp = await client.templates(type, 0, 1);
