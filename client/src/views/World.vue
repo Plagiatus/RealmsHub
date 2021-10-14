@@ -3,14 +3,16 @@
     <div v-if="!this.realm" class="loading"></div>
     <div class="world-content" v-if="!!this.realm">
 			<div class="flex">
-				<realm-info :realm="realm" :worldId="worldId" @toggle-open="toggleOpen"/>
+				<realm-info :realm="realm" :worldId="worldId" @toggle-open="toggleOpen" @open-realm-settings="openRealmSettings" />
 				<realm-subscription :realm="realm" :worldId="worldId"/>
 			</div>
+			<transition name="grow">
+				<realm-settings v-if="realmSettingsOpen" :realmName="realm.name" :realmDescription="realm.motd" :worldId="worldId" @close="closeRealmSettings" />
+			</transition>
 			<slots :realm="realm" :worldId="worldId" @select-slot="selectSlot" @open-settings="openSlotSettings"/>
 			<transition name="grow">
 				<slot-setting v-if="slotSettingsOpen" :worldId="worldId" :slotId="realm.activeSlot" :settings="realm.slots[realm.activeSlot - 1].options" @update-slot-settings="updateSlotSettings" @close="closeSlotSettings"/>
 			</transition>
-      <realm-settings :realmName="realm.name" :realmDescription="realm.motd" :worldId="worldId" />
 			<realm-players :players="realm.players" :worldId="worldId" @remove-player="removePlayer" @update-realm="reloadRealm" @update-ops="updateOPs"/>
     </div>
     <p><em>More features are being worked on and coming soon!</em></p>
@@ -45,6 +47,7 @@ export default defineComponent({
       realm: null as unknown as Realm,
       reloadingRealm: false,
 			slotSettingsOpen: false,
+			realmSettingsOpen: false,
     }
   },
   async mounted() {
@@ -88,14 +91,20 @@ export default defineComponent({
 		openSlotSettings() {
 			this.slotSettingsOpen = !this.slotSettingsOpen;
 		},
+		closeSlotSettings(){
+			this.slotSettingsOpen = false;
+		},
+		openRealmSettings() {
+			this.realmSettingsOpen = !this.realmSettingsOpen;
+		},
+		closeRealmSettings() {
+			this.realmSettingsOpen = false;
+		},
 		updateSlotSettings(settings: SlotSettings, slot: number): void {
 			slot -= 1;
 			if(this.realm?.slots && this.realm?.slots[slot]){
 				this.realm.slots[slot].options = JSON.stringify(settings);
 			}
-		},
-		closeSlotSettings(){
-			this.slotSettingsOpen = false;
 		},
   }
 });

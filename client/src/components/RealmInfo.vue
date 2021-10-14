@@ -10,6 +10,7 @@
 			<formatted-text class="realm-name" :text="realm.name" />
 			<formatted-text class="realm-motd" :text="realm.motd" />
 			<loading-button :red="realm.state == 'OPEN'" :text="buttonText" :successText="buttonTextSuccess" :loading="loading" :disabled="realm.expired" @click="toggleOpen" />
+			<button class="btn light" @click="openSettings">Settings</button>
 		</div>
 	</div>
 </template>
@@ -60,7 +61,10 @@ export default defineComponent({
 			this.loading = false;
 			if(!result) return;
 			this.$emit("toggleOpen");
-		}
+		},
+		openSettings(){
+			this.$emit("openRealmSettings");
+		},
 	}
 })
 </script>
@@ -73,6 +77,11 @@ export default defineComponent({
 }
 
 #realm-info > div > span {
+	display: block;
+	margin: 0.5em 0;
+}
+
+#realm-info > div > button {
 	display: block;
 	margin: 0.5em 0;
 }

@@ -15,6 +15,7 @@
 		</span>
 		<span id="colorinfo">Both of these support <a href="https://www.digminecraft.com/lists/color_list_pc.php" target="_blank" rel="noopener noreferrer">Formatting Codes</a> (the § variant).</span>
 		<loading-button @click="save" :loading="loading" :text="'Save Settings'" :successText="'Saved'" />
+		<span @click="close" id="close"><img src="../assets/x.svg" alt="close"></span>
 	</div>
 </template>
 
@@ -48,7 +49,10 @@ export default defineComponent({
 				return;
 			}
 			this.$emit("updateRealm");
-		}
+		},
+		close() {
+			this.$emit("close");
+		},
 	}
 })
 </script>
@@ -87,4 +91,19 @@ button {
 	float: right;
 	font-style: italic;
 }
+</style>
+
+<style scoped>
+
+	#close {
+		position: absolute;
+		cursor: pointer;
+		top: 2em;
+		right: 2em;
+	}
+
+	#close > img {
+		width: 2rem;
+		height: 2rem;
+	}
 </style>
