@@ -1,27 +1,24 @@
 //@ts-expect-error
 import { XMLHttpRequest } from "xmlhttprequest";
 
-export default class JavaRealmsApiClient {
+export default class RealmsClient {
 	private accessToken: string;
 	private playerUuid: string;
 	private playerName: string;
-	private static gameVersion: string;
-	private static apiUrl: string = "https://pc.realms.minecraft.net"
+	private pe: boolean;
+	private gameVersion: string;
 
-	constructor(_gameVersion: string, _accessToken: string, _uuid: string, _name?: string) {
+	constructor(_gameVersion: string, _accessToken: string, _uuid: string, _name: string, _pe: boolean = false) {
 		this.accessToken = _accessToken;
 		this.playerUuid = _uuid;
-		if (!_name) {
-			this.playerName = "Plagiatus";
-		} else {
-			this.playerName = _name;
-		}
-		JavaRealmsApiClient.gameVersion = _gameVersion;
+		this.playerName = _name;
+		this.gameVersion = _gameVersion;
+		this.pe = _pe;
 	}
 
 
 	private get cookie(): string {
-		return "sid=token:" + this.accessToken + ":" + this.playerUuid + ";user=" + this.playerName + ";version=" + JavaRealmsApiClient.gameVersion;
+		return "sid=token:" + this.accessToken + ":" + this.playerUuid + ";user=" + this.playerName + ";version=" + this.gameVersion;
 	}
 
 
@@ -54,13 +51,33 @@ export default class JavaRealmsApiClient {
 	}
 
 	private createRequest(_url: string, _method: RequestMethod): XMLHttpRequest {
-		let request = new XMLHttpRequest();
-		request.open(_method, _url);
-		request.setDisableHeaderCheck(true);
-		request.setRequestHeader("Cookie", this.cookie);
-		if (_method == "POST")
-			request.setRequestHeader("Content-Type", "application/json");
-		return request;
+		if(!this.pe){
+			let url = "https://pc.realms.minecraft.net" + _url; 
+			let request = new XMLHttpRequest();
+			request.open(_method, url);
+			request.setDisableHeaderCheck(true);
+			request.setRequestHeader("Cookie", this.cookie);
+			if (_method == "POST")
+				request.setRequestHeader("Content-Type", "application/json");
+			return request;
+		} else {
+			let url = "https://pocket.realms.minecraft.net" + _url;
+			let request = new XMLHttpRequest();
+			request.open(_method, url);
+			request.setDisableHeaderCheck(true);
+			request.setRequestHeader("Authorization", "XBL3.0 " + this.accessToken);
+			// request.setRequestHeader("User-Agent", "MCPE/UWP");
+			request.setRequestHeader("Client-Version", this.gameVersion);
+			// request.setRequestHeader("Accept-Language", "en-GB");
+			// request.setRequestHeader("Accept-Encoding", "gzip, deflate, br");
+			// request.setRequestHeader("Accept", "*/*")
+			// request.setRequestHeader("Cache-Control", "no-cache")
+			// request.setRequestHeader("Charset", "utf-8")
+			
+			if (_method == "POST")
+				request.setRequestHeader("Content-Type", "application/json");
+			return request;
+		}
 	}
 
 	private async waitForRequestResponse(req: XMLHttpRequest): Promise<any | RequestError> {
@@ -87,66 +104,66 @@ export default class JavaRealmsApiClient {
 	//#region CORE requests
 	//#region GET requests
 	public async compatible(): Promise<Compatible> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/mco/client/compatible");
+		let result = await this.sendGetRequest("/mco/client/compatible");
 		return result;
 	}
 
 	public async worlds(): Promise<RealmsServer[]> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/worlds");
+		let result = await this.sendGetRequest("/worlds");
 		return JSON.parse(result);
 	}
 
 	public async world(_worldId: number): Promise<RealmsServer> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId);
+		let result = await this.sendGetRequest("/worlds/" + _worldId);
 		return JSON.parse(result);
 	}
 
 	public async ip(_worldId: number): Promise<Ip | string> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/worlds/v1/" + _worldId + "/join/pc");
+		let result = await this.sendGetRequest("/worlds/v1/" + _worldId + "/join/pc");
 		if (result == "Retry again later")
 			return result;
 		return JSON.parse(result);
 	}
 
 	public async backups(_worldId: number): Promise<Backups> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/backups");
+		let result = await this.sendGetRequest("/worlds/" + _worldId + "/backups");
 		return JSON.parse(result);
 	}
 
 	public async downloadLatestBackup(_worldId: number, _slot: SlotNumber): Promise<BackupDownload> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/slot/" + _slot + "/download");
+		let result = await this.sendGetRequest("/worlds/" + _worldId + "/slot/" + _slot + "/download");
 		return JSON.parse(result);
 	}
 
 	public async getOps(_worldId: number): Promise<string[]> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/ops/" + _worldId);
+		let result = await this.sendGetRequest("/ops/" + _worldId);
 		return JSON.parse(result);
 	}
 
 	public async subscriptions(_worldId: number): Promise<SubscriptionInfo> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/subscriptions/" + _worldId);
+		let result = await this.sendGetRequest("/subscriptions/" + _worldId);
 		return JSON.parse(result);
 	}
 
 	public async inviteCount(): Promise<number> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/invites/count/pending");
+		let result = await this.sendGetRequest("/invites/count/pending");
 		return result;
 	}
 
 	public async invites(): Promise<Invites> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/invites/pending");
+		let result = await this.sendGetRequest("/invites/pending");
 		return JSON.parse(result);
 	}
 
 	public async templates(_type: TemplateType, _page: number, _pageSize: number = 10): Promise<Templates> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/worlds/templates/" + _type + "?page=" + _page + "&pageSize=" + _pageSize);
+		let result = await this.sendGetRequest("/worlds/templates/" + _type + "?page=" + _page + "&pageSize=" + _pageSize);
 		return JSON.parse(result);
 	}
 	//#endregion
 
 	//#region POST requests
 	public async makeOP(_worldId: number, _playerUUID: string): Promise<Ops> {
-		let result = await this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/ops/" + _worldId + "/" + _playerUUID, undefined);
+		let result = await this.sendPostRequest("/ops/" + _worldId + "/" + _playerUUID, undefined);
 		return JSON.parse(result);
 	}
 
@@ -154,12 +171,12 @@ export default class JavaRealmsApiClient {
 		let data: { name?: string, uuid?: string } = {};
 		if (_playerName) data.name = _playerName;
 		else data.uuid = _playerUUID;
-		let result = await this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/invites/" + _worldId, data);
+		let result = await this.sendPostRequest("/invites/" + _worldId, data);
 		return JSON.parse(result);
 	}
 
 	public async resetWorld(_worldId: number, _settings: RealmWorldResetSettings): Promise<any> {
-		let result = await this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/reset", _settings);
+		let result = await this.sendPostRequest("/worlds/" + _worldId + "/reset", _settings);
 		return JSON.parse(result);
 	}
 
@@ -172,62 +189,62 @@ export default class JavaRealmsApiClient {
 	}
 
 	public async setWorldSettings(_worldId: number, _settings: RealmSettings): Promise<any> {
-		let result = await this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId, _settings);
+		let result = await this.sendPostRequest("/worlds/" + _worldId, _settings);
 		return JSON.parse(result);
 	}
 
 	public async setSlotSettings(_worldId: number, _slot: SlotNumber, _settings: SlotSettings): Promise<any> {
-		let result = await this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/slot/" + _slot, _settings);
+		let result = await this.sendPostRequest("/worlds/" + _worldId + "/slot/" + _slot, _settings);
 		return result;
 	}
 	//#endregion
 
 	//#region PUT requests
 	public async acceptInvite(_invitationId: string): Promise<boolean> {
-		let result = await this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/invites/accept/" + _invitationId);
+		let result = await this.sendPutRequest("/invites/accept/" + _invitationId);
 		return result;
 	}
 	public async rejectInvite(_invitationId: string): Promise<boolean> {
-		let result = await this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/invites/reject/" + _invitationId);
+		let result = await this.sendPutRequest("/invites/reject/" + _invitationId);
 		return result;
 	}
 	public async openRealm(_worldId: number): Promise<boolean> {
-		let result = await this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/open");
+		let result = await this.sendPutRequest("/worlds/" + _worldId + "/open");
 		return result;
 	}
 	public async closeRealm(_worldId: number): Promise<boolean> {
-		let result = await this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/close");
+		let result = await this.sendPutRequest("/worlds/" + _worldId + "/close");
 		return result;
 	}
 
 	public async setToMinigame(_worldId: number, _minigameId: number): Promise<boolean> {
-		let result = await this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/worlds/minigames/" + _minigameId + "/" + _worldId);
+		let result = await this.sendPutRequest("/worlds/minigames/" + _minigameId + "/" + _worldId);
 		return !!result;
 	}
 	public async setToSlot(_worldId: number, _slot: SlotNumber): Promise<boolean> {
-		let result = await this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/slot/" + _slot);
+		let result = await this.sendPutRequest("/worlds/" + _worldId + "/slot/" + _slot);
 		return result;
 	}
 	/**
 	 * Closes the world to allow you to upload a new world.
 	 */
 	public async uploadInfo(_worldId: number): Promise<UploadInfo> {
-		let result = await this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/backups/upload");
+		let result = await this.sendPutRequest("/worlds/" + _worldId + "/backups/upload");
 		return result;
 	}
 	//#endregion
 
 	//#region DELETE requests
 	public async kickPlayer(_worldId: number, _playerUUID: string): Promise<boolean> {
-		let result = await this.sendDeleteRequest(JavaRealmsApiClient.apiUrl + "/invites/" + _worldId + "/invite/" + _playerUUID);
+		let result = await this.sendDeleteRequest("/invites/" + _worldId + "/invite/" + _playerUUID);
 		return result;
 	}
 	public async deopPlayer(_worldId: number, _playerUUID: string): Promise<Ops> {
-		let result = await this.sendDeleteRequest(JavaRealmsApiClient.apiUrl + "/ops/" + _worldId + "/" + _playerUUID);
+		let result = await this.sendDeleteRequest("/ops/" + _worldId + "/" + _playerUUID);
 		return JSON.parse(result);
 	}
 	public async leaveServer(_worldId: number): Promise<any> {
-		let result = await this.sendDeleteRequest(JavaRealmsApiClient.apiUrl + "/invites/" + _worldId);
+		let result = await this.sendDeleteRequest("/invites/" + _worldId);
 		return result;
 	}
 	//#endregion
@@ -235,56 +252,61 @@ export default class JavaRealmsApiClient {
 
 	//#region OTHER requests
 	public async getNews(): Promise<News> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/mco/v1/news");
+		let result = await this.sendGetRequest("/mco/v1/news");
 		return JSON.parse(result);
 	}
 
 	/** No idea what this does. */
 	public async regionPingResult(): Promise<any> {
-		let result = await this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/regions/ping/stat");
+		let result = await this.sendPostRequest("/regions/ping/stat");
 		return result;
 	}
 
 	public async getLiveStats(_worldId: number): Promise<Livestats> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/activities/liveplayerlist");
+		let result = await this.sendGetRequest("/activities/liveplayerlist");
 		return JSON.parse(result);
 	}
 
 	// public async initialize(_worldId: number, _settings: RealmSettings): Promise<any> {
-	// 	let result = await this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/initialize");
+	// 	let result = await this.sendPostRequest("/worlds/" + _worldId + "/initialize");
 	// 	return result;
 	// }
 
 	public async mcoAvailable(): Promise<any> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/mco/available");
+		let result = await this.sendGetRequest("/mco/available");
 		return result;
 	}
 
 	public async stageAvailable(): Promise<any> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/mco/stageAvailable");
+		let result = await this.sendGetRequest("/mco/stageAvailable");
 		return result;
 	}
 
 	// public async restoreWorld(_worldId: number): Promise<any> {
-	// 	let result = await this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/backups");
+	// 	let result = await this.sendPutRequest("/worlds/" + _worldId + "/backups");
 	// 	return result;
 	// }
 
 	public async agreeToTos(): Promise<any> {
-		let result = await this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/mco/tos/agreed");
+		let result = await this.sendPostRequest("/mco/tos/agreed");
 		return result;
 	}
 
 	public async trialAvailable(): Promise<boolean> {
-		let result = await this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/trial");
+		let result = await this.sendGetRequest("/trial");
 		return result;
 	}
 
 	/** Doesn't seem to be doing anything. */
 	public async deleteWorld(_worldId: number): Promise<boolean> {
-		let result = await this.sendDeleteRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId);
+		let result = await this.sendDeleteRequest("/worlds/" + _worldId);
 		return result;
 	}
+
+	// public async buy(): Promise<BuyMessage> {
+	// 	let result = await this.sendGetRequest("/mco/buy");
+	// 	return JSON.parse(result);
+	// }
 
 	//#endregion
 }
@@ -473,4 +495,9 @@ interface PlayerSessionInfo {
 	clientId: any,
 	globalMultiplayerCorrelationId: any,
 	playerId: string
+}
+
+interface BuyMessage {
+	statusMessage: string,
+	buyLink: string
 }

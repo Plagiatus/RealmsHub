@@ -38,26 +38,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 //@ts-expect-error
 var xmlhttprequest_1 = require("xmlhttprequest");
-var JavaRealmsApiClient = /** @class */ (function () {
-    function JavaRealmsApiClient(_gameVersion, _accessToken, _uuid, _name) {
+var RealmsClient = /** @class */ (function () {
+    function RealmsClient(_gameVersion, _accessToken, _uuid, _name, _pe) {
+        if (_pe === void 0) { _pe = false; }
         this.accessToken = _accessToken;
         this.playerUuid = _uuid;
-        if (!_name) {
-            this.playerName = "Plagiatus";
-        }
-        else {
-            this.playerName = _name;
-        }
-        JavaRealmsApiClient.gameVersion = _gameVersion;
+        this.playerName = _name;
+        this.gameVersion = _gameVersion;
+        this.pe = _pe;
     }
-    Object.defineProperty(JavaRealmsApiClient.prototype, "cookie", {
+    Object.defineProperty(RealmsClient.prototype, "cookie", {
         get: function () {
-            return "sid=token:" + this.accessToken + ":" + this.playerUuid + ";user=" + this.playerName + ";version=" + JavaRealmsApiClient.gameVersion;
+            return "sid=token:" + this.accessToken + ":" + this.playerUuid + ";user=" + this.playerName + ";version=" + this.gameVersion;
         },
         enumerable: true,
         configurable: true
     });
-    JavaRealmsApiClient.prototype.sendGetRequest = function (_url) {
+    RealmsClient.prototype.sendGetRequest = function (_url) {
         return __awaiter(this, void 0, void 0, function () {
             var request, promise;
             return __generator(this, function (_a) {
@@ -68,7 +65,7 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.sendPostRequest = function (_url, _data) {
+    RealmsClient.prototype.sendPostRequest = function (_url, _data) {
         return __awaiter(this, void 0, void 0, function () {
             var request, promise;
             return __generator(this, function (_a) {
@@ -82,7 +79,7 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.sendPutRequest = function (_url) {
+    RealmsClient.prototype.sendPutRequest = function (_url) {
         return __awaiter(this, void 0, void 0, function () {
             var request, promise;
             return __generator(this, function (_a) {
@@ -93,7 +90,7 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.sendDeleteRequest = function (_url) {
+    RealmsClient.prototype.sendDeleteRequest = function (_url) {
         return __awaiter(this, void 0, void 0, function () {
             var request, promise;
             return __generator(this, function (_a) {
@@ -104,16 +101,36 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.createRequest = function (_url, _method) {
-        var request = new xmlhttprequest_1.XMLHttpRequest();
-        request.open(_method, _url);
-        request.setDisableHeaderCheck(true);
-        request.setRequestHeader("Cookie", this.cookie);
-        if (_method == "POST")
-            request.setRequestHeader("Content-Type", "application/json");
-        return request;
+    RealmsClient.prototype.createRequest = function (_url, _method) {
+        if (!this.pe) {
+            var url = "https://pc.realms.minecraft.net" + _url;
+            var request = new xmlhttprequest_1.XMLHttpRequest();
+            request.open(_method, url);
+            request.setDisableHeaderCheck(true);
+            request.setRequestHeader("Cookie", this.cookie);
+            if (_method == "POST")
+                request.setRequestHeader("Content-Type", "application/json");
+            return request;
+        }
+        else {
+            var url = "https://pocket.realms.minecraft.net" + _url;
+            var request = new xmlhttprequest_1.XMLHttpRequest();
+            request.open(_method, url);
+            request.setDisableHeaderCheck(true);
+            request.setRequestHeader("Authorization", "XBL3.0 " + this.accessToken);
+            // request.setRequestHeader("User-Agent", "MCPE/UWP");
+            request.setRequestHeader("Client-Version", this.gameVersion);
+            // request.setRequestHeader("Accept-Language", "en-GB");
+            // request.setRequestHeader("Accept-Encoding", "gzip, deflate, br");
+            // request.setRequestHeader("Accept", "*/*")
+            // request.setRequestHeader("Cache-Control", "no-cache")
+            // request.setRequestHeader("Charset", "utf-8")
+            if (_method == "POST")
+                request.setRequestHeader("Content-Type", "application/json");
+            return request;
+        }
     };
-    JavaRealmsApiClient.prototype.waitForRequestResponse = function (req) {
+    RealmsClient.prototype.waitForRequestResponse = function (req) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve, reject) {
@@ -141,12 +158,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
     };
     //#region CORE requests
     //#region GET requests
-    JavaRealmsApiClient.prototype.compatible = function () {
+    RealmsClient.prototype.compatible = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/mco/client/compatible")];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/mco/client/compatible")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -154,12 +171,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.worlds = function () {
+    RealmsClient.prototype.worlds = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/worlds")];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/worlds")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -167,12 +184,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.world = function (_worldId) {
+    RealmsClient.prototype.world = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId)];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/worlds/" + _worldId)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -180,12 +197,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.ip = function (_worldId) {
+    RealmsClient.prototype.ip = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/worlds/v1/" + _worldId + "/join/pc")];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/worlds/v1/" + _worldId + "/join/pc")];
                     case 1:
                         result = _a.sent();
                         if (result == "Retry again later")
@@ -195,12 +212,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.backups = function (_worldId) {
+    RealmsClient.prototype.backups = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/backups")];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/worlds/" + _worldId + "/backups")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -208,12 +225,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.downloadLatestBackup = function (_worldId, _slot) {
+    RealmsClient.prototype.downloadLatestBackup = function (_worldId, _slot) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/slot/" + _slot + "/download")];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/worlds/" + _worldId + "/slot/" + _slot + "/download")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -221,12 +238,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.getOps = function (_worldId) {
+    RealmsClient.prototype.getOps = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/ops/" + _worldId)];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/ops/" + _worldId)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -234,12 +251,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.subscriptions = function (_worldId) {
+    RealmsClient.prototype.subscriptions = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/subscriptions/" + _worldId)];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/subscriptions/" + _worldId)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -247,12 +264,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.inviteCount = function () {
+    RealmsClient.prototype.inviteCount = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/invites/count/pending")];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/invites/count/pending")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -260,12 +277,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.invites = function () {
+    RealmsClient.prototype.invites = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/invites/pending")];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/invites/pending")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -273,13 +290,13 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.templates = function (_type, _page, _pageSize) {
+    RealmsClient.prototype.templates = function (_type, _page, _pageSize) {
         if (_pageSize === void 0) { _pageSize = 10; }
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/worlds/templates/" + _type + "?page=" + _page + "&pageSize=" + _pageSize)];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/worlds/templates/" + _type + "?page=" + _page + "&pageSize=" + _pageSize)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -289,12 +306,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
     };
     //#endregion
     //#region POST requests
-    JavaRealmsApiClient.prototype.makeOP = function (_worldId, _playerUUID) {
+    RealmsClient.prototype.makeOP = function (_worldId, _playerUUID) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/ops/" + _worldId + "/" + _playerUUID, undefined)];
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/ops/" + _worldId + "/" + _playerUUID, undefined)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -302,7 +319,7 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.invitePlayer = function (_worldId, _playerName, _playerUUID) {
+    RealmsClient.prototype.invitePlayer = function (_worldId, _playerName, _playerUUID) {
         return __awaiter(this, void 0, void 0, function () {
             var data, result;
             return __generator(this, function (_a) {
@@ -313,7 +330,7 @@ var JavaRealmsApiClient = /** @class */ (function () {
                             data.name = _playerName;
                         else
                             data.uuid = _playerUUID;
-                        return [4 /*yield*/, this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/invites/" + _worldId, data)];
+                        return [4 /*yield*/, this.sendPostRequest("/invites/" + _worldId, data)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -321,12 +338,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.resetWorld = function (_worldId, _settings) {
+    RealmsClient.prototype.resetWorld = function (_worldId, _settings) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/reset", _settings)];
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/worlds/" + _worldId + "/reset", _settings)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -334,26 +351,26 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.resetWorldToSeed = function (_worldId, _seed, _levelType, _generateStructures) {
+    RealmsClient.prototype.resetWorldToSeed = function (_worldId, _seed, _levelType, _generateStructures) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.resetWorld(_worldId, { generateStructures: _generateStructures, levelType: _levelType, seed: _seed, worldTemplateId: -1 })];
             });
         });
     };
-    JavaRealmsApiClient.prototype.resetWorldToTemplate = function (_worldId, _templateId) {
+    RealmsClient.prototype.resetWorldToTemplate = function (_worldId, _templateId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.resetWorld(_worldId, { generateStructures: false, levelType: -1, seed: "", worldTemplateId: _templateId })];
             });
         });
     };
-    JavaRealmsApiClient.prototype.setWorldSettings = function (_worldId, _settings) {
+    RealmsClient.prototype.setWorldSettings = function (_worldId, _settings) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId, _settings)];
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/worlds/" + _worldId, _settings)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -361,12 +378,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.setSlotSettings = function (_worldId, _slot, _settings) {
+    RealmsClient.prototype.setSlotSettings = function (_worldId, _slot, _settings) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/slot/" + _slot, _settings)];
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/worlds/" + _worldId + "/slot/" + _slot, _settings)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -376,12 +393,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
     };
     //#endregion
     //#region PUT requests
-    JavaRealmsApiClient.prototype.acceptInvite = function (_invitationId) {
+    RealmsClient.prototype.acceptInvite = function (_invitationId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/invites/accept/" + _invitationId)];
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/invites/accept/" + _invitationId)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -389,12 +406,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.rejectInvite = function (_invitationId) {
+    RealmsClient.prototype.rejectInvite = function (_invitationId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/invites/reject/" + _invitationId)];
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/invites/reject/" + _invitationId)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -402,12 +419,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.openRealm = function (_worldId) {
+    RealmsClient.prototype.openRealm = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/open")];
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/worlds/" + _worldId + "/open")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -415,12 +432,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.closeRealm = function (_worldId) {
+    RealmsClient.prototype.closeRealm = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/close")];
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/worlds/" + _worldId + "/close")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -428,12 +445,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.setToMinigame = function (_worldId, _minigameId) {
+    RealmsClient.prototype.setToMinigame = function (_worldId, _minigameId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/worlds/minigames/" + _minigameId + "/" + _worldId)];
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/worlds/minigames/" + _minigameId + "/" + _worldId)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, !!result];
@@ -441,12 +458,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.setToSlot = function (_worldId, _slot) {
+    RealmsClient.prototype.setToSlot = function (_worldId, _slot) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/slot/" + _slot)];
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/worlds/" + _worldId + "/slot/" + _slot)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -457,12 +474,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
     /**
      * Closes the world to allow you to upload a new world.
      */
-    JavaRealmsApiClient.prototype.uploadInfo = function (_worldId) {
+    RealmsClient.prototype.uploadInfo = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/backups/upload")];
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/worlds/" + _worldId + "/backups/upload")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -472,12 +489,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
     };
     //#endregion
     //#region DELETE requests
-    JavaRealmsApiClient.prototype.kickPlayer = function (_worldId, _playerUUID) {
+    RealmsClient.prototype.kickPlayer = function (_worldId, _playerUUID) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendDeleteRequest(JavaRealmsApiClient.apiUrl + "/invites/" + _worldId + "/invite/" + _playerUUID)];
+                    case 0: return [4 /*yield*/, this.sendDeleteRequest("/invites/" + _worldId + "/invite/" + _playerUUID)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -485,12 +502,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.deopPlayer = function (_worldId, _playerUUID) {
+    RealmsClient.prototype.deopPlayer = function (_worldId, _playerUUID) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendDeleteRequest(JavaRealmsApiClient.apiUrl + "/ops/" + _worldId + "/" + _playerUUID)];
+                    case 0: return [4 /*yield*/, this.sendDeleteRequest("/ops/" + _worldId + "/" + _playerUUID)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -498,12 +515,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.leaveServer = function (_worldId) {
+    RealmsClient.prototype.leaveServer = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendDeleteRequest(JavaRealmsApiClient.apiUrl + "/invites/" + _worldId)];
+                    case 0: return [4 /*yield*/, this.sendDeleteRequest("/invites/" + _worldId)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -514,12 +531,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
     //#endregion
     //#endregion
     //#region OTHER requests
-    JavaRealmsApiClient.prototype.getNews = function () {
+    RealmsClient.prototype.getNews = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/mco/v1/news")];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/mco/v1/news")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -528,12 +545,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
         });
     };
     /** No idea what this does. */
-    JavaRealmsApiClient.prototype.regionPingResult = function () {
+    RealmsClient.prototype.regionPingResult = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/regions/ping/stat")];
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/regions/ping/stat")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -541,12 +558,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.getLiveStats = function (_worldId) {
+    RealmsClient.prototype.getLiveStats = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/activities/liveplayerlist")];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/activities/liveplayerlist")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, JSON.parse(result)];
@@ -555,15 +572,15 @@ var JavaRealmsApiClient = /** @class */ (function () {
         });
     };
     // public async initialize(_worldId: number, _settings: RealmSettings): Promise<any> {
-    // 	let result = await this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/initialize");
+    // 	let result = await this.sendPostRequest("/worlds/" + _worldId + "/initialize");
     // 	return result;
     // }
-    JavaRealmsApiClient.prototype.mcoAvailable = function () {
+    RealmsClient.prototype.mcoAvailable = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/mco/available")];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/mco/available")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -571,12 +588,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.stageAvailable = function () {
+    RealmsClient.prototype.stageAvailable = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/mco/stageAvailable")];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/mco/stageAvailable")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -585,15 +602,15 @@ var JavaRealmsApiClient = /** @class */ (function () {
         });
     };
     // public async restoreWorld(_worldId: number): Promise<any> {
-    // 	let result = await this.sendPutRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId + "/backups");
+    // 	let result = await this.sendPutRequest("/worlds/" + _worldId + "/backups");
     // 	return result;
     // }
-    JavaRealmsApiClient.prototype.agreeToTos = function () {
+    RealmsClient.prototype.agreeToTos = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendPostRequest(JavaRealmsApiClient.apiUrl + "/mco/tos/agreed")];
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/mco/tos/agreed")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -601,12 +618,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.prototype.trialAvailable = function () {
+    RealmsClient.prototype.trialAvailable = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendGetRequest(JavaRealmsApiClient.apiUrl + "/trial")];
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/trial")];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -615,12 +632,12 @@ var JavaRealmsApiClient = /** @class */ (function () {
         });
     };
     /** Doesn't seem to be doing anything. */
-    JavaRealmsApiClient.prototype.deleteWorld = function (_worldId) {
+    RealmsClient.prototype.deleteWorld = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.sendDeleteRequest(JavaRealmsApiClient.apiUrl + "/worlds/" + _worldId)];
+                    case 0: return [4 /*yield*/, this.sendDeleteRequest("/worlds/" + _worldId)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -628,7 +645,6 @@ var JavaRealmsApiClient = /** @class */ (function () {
             });
         });
     };
-    JavaRealmsApiClient.apiUrl = "https://pc.realms.minecraft.net";
-    return JavaRealmsApiClient;
+    return RealmsClient;
 }());
-exports.default = JavaRealmsApiClient;
+exports.default = RealmsClient;
