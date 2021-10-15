@@ -9,9 +9,12 @@
 			<transition name="grow">
 				<realm-settings v-if="realmSettingsOpen" :realmName="realm.name" :realmDescription="realm.motd" :worldId="worldId" @close="closeRealmSettings" />
 			</transition>
-			<slots :realm="realm" :worldId="worldId" @select-slot="selectSlot" @open-settings="openSlotSettings"/>
+			<slots :realm="realm" :worldId="worldId" @select-slot="selectSlot" @open-settings="openSlotSettings" @open-reset-world="openSlotResetSettings"/>
 			<transition name="grow">
 				<slot-setting v-if="slotSettingsOpen" :worldId="worldId" :slotId="realm.activeSlot" :settings="realm.slots[realm.activeSlot - 1].options" @update-slot-settings="updateSlotSettings" @close="closeSlotSettings"/>
+			</transition>
+			<transition name="grow">
+				<reset-world v-if="slotResetSettingsOpen" :worldId="worldId" @close="closeSlotResetSettings"/>
 			</transition>
 			<realm-players :players="realm.players" :worldId="worldId" @remove-player="removePlayer" @update-realm="reloadRealm" @update-ops="updateOPs"/>
     </div>
@@ -28,6 +31,7 @@ import RealmInfo from "../components/RealmInfo.vue";
 import RealmSubscription from "../components/RealmSubscription.vue";
 import Slots from "../components/Slots.vue";
 import SlotSetting from "../components/slots/SlotSettings.vue";
+import ResetWorld from "../components/slots/ResetWorld.vue";
 
 export default defineComponent({
   mixins: [request],
@@ -38,6 +42,7 @@ export default defineComponent({
 		RealmSubscription,
 		Slots,
 		SlotSetting,
+		ResetWorld,
   },
   props: {
     worldId: String
@@ -47,6 +52,7 @@ export default defineComponent({
       realm: null as unknown as Realm,
       reloadingRealm: false,
 			slotSettingsOpen: false,
+			slotResetSettingsOpen: true,
 			realmSettingsOpen: false,
     }
   },
@@ -89,13 +95,21 @@ export default defineComponent({
 			this.realm.worldType = 'NORMAL';
 		},
 		openSlotSettings() {
-			this.slotSettingsOpen = !this.slotSettingsOpen;
+			this.slotSettingsOpen = true;
+			this.slotResetSettingsOpen = false;
 		},
 		closeSlotSettings(){
 			this.slotSettingsOpen = false;
 		},
+		openSlotResetSettings() {
+			this.slotResetSettingsOpen = true;
+			this.slotSettingsOpen = false;
+		},
+		closeSlotResetSettings(){
+			this.slotResetSettingsOpen = false;
+		},
 		openRealmSettings() {
-			this.realmSettingsOpen = !this.realmSettingsOpen;
+			this.realmSettingsOpen = true;
 		},
 		closeRealmSettings() {
 			this.realmSettingsOpen = false;
@@ -193,24 +207,5 @@ export interface Ops {
 
 .flex > * {
 	width: 50%
-}
-
-.grow-enter-active,
-.grow-leave-active {
-	transition: all .3s;
-}
-
-.grow-enter-to,
-.grow-leave-from {
-	max-height: 1000px;
-	opacity: 1;
-}
-
-.grow-enter-from,
-.grow-leave-to {
-  max-height: 0;
-	opacity: 0;
-	overflow: hidden;
-	padding: 0 2em;
 }
 </style>
