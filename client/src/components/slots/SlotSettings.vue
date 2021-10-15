@@ -6,7 +6,7 @@
 				<tbody>
 					<tr>
 						<td><label for="name">Slot Name</label></td>
-						<td><input id="name" type="text" v-model="setting.slotName"></td>
+						<td><input id="name" type="text" v-model="setting.slotName" class="input"></td>
 					</tr>
 					<tr>
 						<td><label for="difficult">Difficulty</label></td>
