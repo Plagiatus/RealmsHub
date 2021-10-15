@@ -103,6 +103,14 @@ body {
 	resize: none;
 }
 
+select {
+	padding: .375rem .75rem;
+	border-radius: 0.2em;
+	color: #212529;
+	border: 1px solid #ced4da;
+	border-radius: .25rem;
+}
+
 .realm-status-dot {
 	width: 0.6em;
 	height: 0.6em;
