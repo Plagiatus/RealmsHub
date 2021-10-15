@@ -65,7 +65,7 @@
 			</table>
 		</div>
 		<loading-button :loading="loading" :text="'Update Settings'" :successText="'Settings updated'" @click="updateSettings"/>
-		<span @click="close" id="close"><img src="../../assets/x.svg" alt="close"></span>
+		<span @click="close" class="close"><img src="../../assets/x.svg" alt="close"></span>
 	</div>
 </template>
 
@@ -141,17 +141,5 @@ export default defineComponent({
 
 	.slider {
 		width: 100%;
-	}
-
-	#close {
-		position: absolute;
-		cursor: pointer;
-		top: 2em;
-		right: 2em;
-	}
-
-	#close > img {
-		width: 2rem;
-		height: 2rem;
 	}
 </style>
