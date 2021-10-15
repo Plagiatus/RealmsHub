@@ -66,13 +66,14 @@ export default class RealmsClient {
 			request.open(_method, url);
 			request.setDisableHeaderCheck(true);
 			request.setRequestHeader("Authorization", "XBL3.0 " + this.accessToken);
-			// request.setRequestHeader("User-Agent", "MCPE/UWP");
+			request.setRequestHeader("User-Agent", "MCPE/UWP");
 			request.setRequestHeader("Client-Version", this.gameVersion);
 			// request.setRequestHeader("Accept-Language", "en-GB");
 			// request.setRequestHeader("Accept-Encoding", "gzip, deflate, br");
 			// request.setRequestHeader("Accept", "*/*")
 			// request.setRequestHeader("Cache-Control", "no-cache")
 			// request.setRequestHeader("Charset", "utf-8")
+			request.withCredentials = true;
 			
 			if (_method == "POST")
 				request.setRequestHeader("Content-Type", "application/json");
@@ -177,7 +178,7 @@ export default class RealmsClient {
 
 	public async resetWorld(_worldId: number, _settings: RealmWorldResetSettings): Promise<any> {
 		let result = await this.sendPostRequest("/worlds/" + _worldId + "/reset", _settings);
-		return JSON.parse(result);
+		return result;
 	}
 
 	public async resetWorldToSeed(_worldId: number, _seed: string, _levelType: LevelType, _generateStructures: boolean) {

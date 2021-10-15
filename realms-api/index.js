@@ -118,13 +118,14 @@ var RealmsClient = /** @class */ (function () {
             request.open(_method, url);
             request.setDisableHeaderCheck(true);
             request.setRequestHeader("Authorization", "XBL3.0 " + this.accessToken);
-            // request.setRequestHeader("User-Agent", "MCPE/UWP");
+            request.setRequestHeader("User-Agent", "MCPE/UWP");
             request.setRequestHeader("Client-Version", this.gameVersion);
             // request.setRequestHeader("Accept-Language", "en-GB");
             // request.setRequestHeader("Accept-Encoding", "gzip, deflate, br");
             // request.setRequestHeader("Accept", "*/*")
             // request.setRequestHeader("Cache-Control", "no-cache")
             // request.setRequestHeader("Charset", "utf-8")
+            request.withCredentials = true;
             if (_method == "POST")
                 request.setRequestHeader("Content-Type", "application/json");
             return request;
@@ -346,7 +347,7 @@ var RealmsClient = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.sendPostRequest("/worlds/" + _worldId + "/reset", _settings)];
                     case 1:
                         result = _a.sent();
-                        return [2 /*return*/, JSON.parse(result)];
+                        return [2 /*return*/, result];
                 }
             });
         });
