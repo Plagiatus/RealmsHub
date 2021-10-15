@@ -165,6 +165,28 @@ span.close > img {
 	font-weight: 600;
 }
 
+/* growing animation */
+
+
+.grow-enter-active,
+.grow-leave-active {
+	transition: all .3s;
+}
+
+.grow-enter-to,
+.grow-leave-from {
+	max-height: 1000px;
+	opacity: 1;
+}
+
+.grow-enter-from,
+.grow-leave-to {
+  max-height: 0;
+	opacity: 0;
+	overflow: hidden;
+	padding: 0 2em;
+}
+
 /* Color and formatting codes */
 .§0 {
 	color: #000000;
