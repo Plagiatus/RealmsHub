@@ -434,7 +434,7 @@ app.route("/worlds/:command")
                 seed = req.body.seed;
                 worldType = req.body.worldType;
                 genStructures = !!req.body.generateStructures;
-                if (!seed || !worldType) {
+                if (seed == undefined || worldType == undefined) {
                     res.sendStatus(400);
                     return [3 /*break*/, 32];
                 }

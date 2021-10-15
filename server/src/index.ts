@@ -82,14 +82,13 @@ app.route("/login")
 		let code: string = req.body.code;
 		if (!code || typeof code != "string") {
 			res.sendStatus(400);
-			return; 
+			return;
 		}
 		try {
 			let authInfo: AuthInfo = await authHandler.getAuthCodes(code);
 			let id: string = hat(512, 32) + "." + hat(512, 32);
 			initAuth(id, authInfo);
-			
-			res.send({id: id, username: authInfo.mc_info.name});
+			res.send({ id: id, username: authInfo.mc_info.name });
 		} catch (error) {
 			anErrorOccured(<Error>error, res);
 		}
@@ -248,7 +247,7 @@ app.route("/worlds/:command")
 				let seed = req.body.seed;
 				let worldType = req.body.worldType;
 				let genStructures = !!req.body.generateStructures;
-				if (!seed || !worldType) {
+				if (seed == undefined || worldType == undefined) {
 					res.sendStatus(400);
 					break;
 				}
