@@ -142,6 +142,18 @@ span.realm-name {
 	border: 1px solid var(--background);
 }
 
+span.close {
+	position: absolute;
+	cursor: pointer;
+	top: 2em;
+	right: 2em;
+}
+
+span.close > img {
+	width: 2rem;
+	height: 2rem;
+}
+
 .rightbound {
 	text-align: right;
 }
