@@ -11,6 +11,9 @@ body {
 	--btn-red: #F5D6D1;
 	--btn-red-text: #BD4E3D;
 	--btn-disabled: rgb(187, 199, 181);
+	--btn-disabled-color: rgb(151, 153, 150);
+	--font-color: #2c3e50;
+	--btn-slight-red: #ECE3E5;
 
 	/* 
 	* SVG files need a filter to get the correct color
@@ -19,6 +22,7 @@ body {
 	--highlight-filter: invert(41%) sepia(59%) saturate(510%) hue-rotate(124deg) brightness(102%) contrast(92%);
 	--red-filter: invert(50%) sepia(66%) saturate(1744%) hue-rotate(326deg) brightness(100%) contrast(103%);
 	--gold-filter: invert(59%) sepia(58%) saturate(489%) hue-rotate(14deg) brightness(93%) contrast(88%);
+	--font-color-filter: invert(20%) sepia(15%) saturate(1246%) hue-rotate(169deg) brightness(94%) contrast(88%);
 
 	
 	background: linear-gradient(var(--highlight) 50%, var(--background )50%);
@@ -28,7 +32,25 @@ body {
 	padding:0;
 }
 
+body.dark {
+	--background: #1f1f1f;
+	--foreground: #262d35;
+	--font-color: #bdbdbd;
+	--foreground-gray: #21272e;
 
+	--font-color-filter: invert(89%) sepia(0%) saturate(508%) hue-rotate(136deg) brightness(86%) contrast(91%);
+	--foreground-filter: invert(13%) sepia(10%) saturate(1285%) hue-rotate(172deg) brightness(93%) contrast(86%);
+}
+
+body.dark .keep-dark {
+	--font-color: #2c3e50;
+	--font-color-filter: invert(20%) sepia(15%) saturate(1246%) hue-rotate(169deg) brightness(94%) contrast(88%);
+}
+
+*, ::after {
+	transition: .3s ease;
+	transition-property: background-color color border-color border;
+}
 
 @keyframes loading {
   to {transform: rotate(360deg);}
@@ -80,7 +102,7 @@ body {
 
 .btn:disabled {
 	background-color: var(--btn-disabled);
-	color: var(--foreground);
+	color: var(--btn-disabled-color);
 	cursor: default;
 }
 
@@ -101,6 +123,8 @@ body {
 	display: block;
 	font: inherit;
 	resize: none;
+	background-color: var(--foreground);
+	color: var(--font-color)
 }
 
 select {
@@ -109,6 +133,12 @@ select {
 	color: #212529;
 	border: 1px solid #ced4da;
 	border-radius: .25rem;
+	background-color: var(--foreground);
+	color: var(--font-color);
+}
+
+option:hover {
+	background-color: var(--highlight);
 }
 
 .realm-status-dot {
@@ -160,6 +190,7 @@ span.close {
 span.close > img {
 	width: 2rem;
 	height: 2rem;
+	filter: var(--font-color-filter);
 }
 
 .rightbound {
@@ -171,6 +202,13 @@ span.close > img {
 }
 .semi-bold {
 	font-weight: 600;
+}
+.italic {
+	font-style: italic;
+}
+
+a, a:visited {
+	color: var(--highlight);
 }
 
 /* growing animation */
@@ -194,6 +232,19 @@ span.close > img {
 	overflow: hidden;
 	padding: 0 2em;
 }
+
+/* Fade Animation */
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 
 /* Color and formatting codes */
 .§0 {
@@ -281,12 +332,11 @@ span.close > img {
 }
 
 .§r {
-	color: initial;
+	color: #888;
 	text-decoration: none;
 	font-style: normal;
 	font-weight: normal;
 }
-
 
 /* Toggle buttons */
 
@@ -317,10 +367,10 @@ span.close > img {
 	height: 32px;
 	display: block;
 	position: absolute;
-	left: 0;
+	left: -1px;
 	top: -3px;
 	border-radius: 50%;
-	background-color: var(--foreground);
+	background-color: white;
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 }
 

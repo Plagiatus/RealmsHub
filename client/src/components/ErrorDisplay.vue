@@ -8,7 +8,7 @@
         If this keeps happening, please inform the administrators of this
         website.
       </p>
-      <button @click="dismiss">Dismiss</button>
+      <button class="btn light" @click="dismiss">Dismiss</button>
     </div>
   </div>
 </template>
@@ -103,5 +103,9 @@ interface ErrorDetails {
   font-size: 7em;
   user-select: none;
   z-index: 0;
+}
+
+body.dark #error-code {
+	color: rgba(255, 255, 255, 0.05)
 }
 </style>

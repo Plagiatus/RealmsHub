@@ -2,9 +2,9 @@
 	<div class="realm-player">
 		<div class="realm-player-status-dot" :style="{background: statusColorVariable}"></div>
 		<span class="realm-player-name">{{player.name}}</span>
-		<span class="realm-player-status">{{statusText}}</span>
-		<button @click="remove()" :class="{loading: loadingRemove}" class="realm-player-button realm-player-remove" :disabled="loadingRemove"><img src="../assets/x.svg" alt="Remove"></button>
+		<button @click="remove()" :class="{loading: loadingRemove}" class="realm-player-button realm-player-remove keep-dark" :disabled="loadingRemove"><img src="../assets/x.svg" alt="Remove"></button>
 		<button @click="toggleOP()" :class="{loading: loadingOP}" class="realm-player-button realm-player-op" :disabled="loadingOP"><img :src="player.operator ? require('../assets/star.svg'):require('../assets/star-empty.svg')" alt="Toggle OP"></button>
+		<span class="realm-player-status keep-dark">{{statusText}}</span>
 	</div>
 </template>
 
@@ -79,7 +79,7 @@ export default defineComponent({
 	float:right;
 	margin: 0 .3em;
 	padding: 0;
-	background-color: #ECE3E5;
+	background-color: var(--btn-slight-red);
 	border-radius: 0.2em;
 	border: none;
 	cursor: pointer;
@@ -100,18 +100,21 @@ export default defineComponent({
 .realm-player-status {
 	font-size: .8em;
 	margin-left: .5em;
-	background-color: #ECE3E5;
+	background-color: var(--btn-slight-red);
 	padding: .3em .5em;
 	border-radius: .2em;
+	float: right;
+	color: var(--font-color);
 }
 
 .realm-player-button img {
 	width: 1em;
 	height: 1em;
+	filter: var(--font-color-filter);
 }
 
 .realm-player-op img {
-	filter: var(--gold-filter)
+	filter: var(--gold-filter);
 }
 
 .realm-player-button:disabled {
@@ -121,6 +124,9 @@ export default defineComponent({
 }
 .realm-player-button:disabled img {
 	filter: invert(99%) sepia(0%) saturate(1101%) hue-rotate(177deg) brightness(119%) contrast(87%);
+}
+body.dark .realm-player-button:disabled img {
+	filter: var(--foreground-filter);
 }
 .realm-player-button.loading:before {
 	width: 1em;

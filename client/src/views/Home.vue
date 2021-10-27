@@ -73,6 +73,11 @@ export default defineComponent({
 		cursor: pointer;
 	}
 
+	#login a,
+	#login a:visited{
+		color: inherit;
+	}
+
 	span.affiliation {
 		display: block;
 		margin-bottom: 1em;
@@ -85,5 +90,6 @@ export default defineComponent({
 		border: 2px solid var(--red);
 		border-radius: 1em;
 		background-color: rgb(255, 238, 238);
+		color: #2c3e50;
 	}
 </style>
