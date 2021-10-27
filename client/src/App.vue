@@ -5,6 +5,7 @@
 			<div id="content">
 				<router-view />
 			</div>
+			<Footer/>
 		</div>
     <error-display />
   </div>
@@ -14,12 +15,34 @@
 import { defineComponent } from "vue";
 import ErrorDisplay from "./components/ErrorDisplay.vue";
 import Header from "./components/Header.vue";
+import Footer from "./components/Footer.vue";
+import settings from "./components/settings-mixin";
 
 export default defineComponent({
+	mixins: [settings],
   components: {
     ErrorDisplay,
     Header,
+    Footer,
   },
+	beforeMount(){
+		this.checkSettings();
+		console.log("before Mount: App", this.pageSettings);
+		this.checkDarkmode();
+		window.addEventListener("settingsUpdated", this.checkDarkmode);
+	},
+	methods: {
+		checkDarkmode() {
+			console.log("check Darkmode")
+			if(this.pageSettings.darkMode){
+				console.log("check Darkmode: yes")
+				document.body.classList.add("dark");
+			} else {
+				console.log("check Darkmode: no")
+				document.body.classList.remove("dark");
+			}
+		}
+	}
 });
 </script>
 
@@ -30,7 +53,7 @@ export default defineComponent({
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: var(--font-color);
 }
 
 #nav {
@@ -39,7 +62,7 @@ export default defineComponent({
 
 #nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color: var(--font-color);
 }
 
 #nav a.router-link-exact-active {
