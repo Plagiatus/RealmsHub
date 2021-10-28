@@ -33,12 +33,9 @@ export default defineComponent({
 	},
 	methods: {
 		checkDarkmode() {
-			console.log("check Darkmode")
 			if(this.pageSettings.darkMode){
-				console.log("check Darkmode: yes")
 				document.body.classList.add("dark");
 			} else {
-				console.log("check Darkmode: no")
 				document.body.classList.remove("dark");
 			}
 		}

@@ -28,7 +28,7 @@ export default defineComponent({
 		reloadSettings() {
 			this.pageSettings = JSON.parse(localStorage.getItem("pageSettings") || JSON.stringify(this.defaultPageSettings));
 			this.cookieSettings = JSON.parse(localStorage.getItem("cookieSettings") || JSON.stringify(this.defaultCookieSettings));
-			window.dispatchEvent(new CustomEvent("settingsUpdated"))
+			window.dispatchEvent(new CustomEvent("settingsUpdated"));
 		},
 		checkSettings() {
 			if (!localStorage.getItem("pageSettings")) {
