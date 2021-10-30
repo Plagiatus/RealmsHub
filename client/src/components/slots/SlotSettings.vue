@@ -1,6 +1,7 @@
 <template>
 	<div id="slot-settings" class="gray-block">
 		<h2>Slot Settings</h2>
+		<span v-if="setting.adventureMap" style="color: var(--red)">Some settings are disabled because your current world is an adventure/experience/inspiration.</span>
 		<div>
 			<table>
 				<tbody>
@@ -31,11 +32,11 @@
 					</tr>
 					<tr>
 						<td><label for="forceGamemode">Force Default Gamemode</label></td>
-						<td><input id="forceGamemode" class="toggle" type="checkbox" v-model="setting.forceGameMode"></td>
+						<td><input id="forceGamemode" class="toggle" :disabled="setting.adventureMap" type="checkbox" v-model="setting.forceGameMode"></td>
 					</tr>
 					<tr>
 						<td><label for="spawnP">Spawn Protection Distance</label></td>
-						<td><span class="valueDisplay">{{spawnProtectionText}}</span><input id="spawnP" type="range" v-model="setting.spawnProtection" min="0" max="16" step="1" class="slider"></td>
+						<td><span class="valueDisplay">{{spawnProtectionText}}</span><input id="spawnP" :disabled="setting.adventureMap" type="range" v-model="setting.spawnProtection" min="0" max="16" step="1" class="slider"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -43,23 +44,23 @@
 				<tbody>
 					<tr>
 						<td><label for="pvp">PvP</label></td>
-						<td><input id="pvp" class="toggle" type="checkbox" v-model="setting.pvp"></td>
+						<td><input id="pvp" class="toggle" :disabled="setting.adventureMap" type="checkbox" v-model="setting.pvp"></td>
 					</tr>
 					<tr>
 						<td><label for="spawnA">Spawn Animals</label></td>
-						<td><input id="spawnA" class="toggle" type="checkbox" v-model="setting.spawnAnimals"></td>
+						<td><input id="spawnA" class="toggle" :disabled="setting.adventureMap" type="checkbox" v-model="setting.spawnAnimals"></td>
 					</tr>
 					<tr>
 						<td><label for="spawnM">Spawn Monsters</label></td>
-						<td><input id="spawnM" class="toggle" type="checkbox" v-model="setting.spawnMonsters" :disabled="setting.difficulty == 0"></td>
+						<td><input id="spawnM" class="toggle" :disabled="setting.adventureMap || setting.difficulty == 0" type="checkbox" v-model="setting.spawnMonsters"></td>
 					</tr>
 					<tr>
 						<td><label for="spawnN">Spawn NPCs</label></td>
-						<td><input id="spawnN" class="toggle" type="checkbox" v-model="setting.spawnNPCs"></td>
+						<td><input id="spawnN" class="toggle" :disabled="setting.adventureMap" type="checkbox" v-model="setting.spawnNPCs"></td>
 					</tr>
 					<tr>
 						<td><label for="commands">Enable Commandblocks</label></td>
-						<td><input id="commands" class="toggle" type="checkbox" v-model="setting.commandBlocks"></td>
+						<td><input id="commands" class="toggle" :disabled="setting.adventureMap" type="checkbox" v-model="setting.commandBlocks"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -85,7 +86,7 @@ export default defineComponent({
 	data() {
 		return {
 			loading: false,
-			setting: JSON.parse(this.settings),
+			setting: JSON.parse(this.settings) as SlotSettings,
 		}
 	},
 	watch: {
@@ -102,7 +103,7 @@ export default defineComponent({
 	methods: {
 		async updateSettings() {
 			this.loading = true;
-			if(this.setting.spawnProtection < 0) this.setting.spawnProtection = 0;
+			if (this.setting.spawnProtection != undefined && this.setting.spawnProtection < 0) this.setting.spawnProtection = 0;
 			let slot = this.slotId;
 			let settings = this.setting;
 			let result = await this.sendRequest("/worlds/slot/settings", "POST", {worldId: this.worldId, slot, settings});
