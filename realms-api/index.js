@@ -51,7 +51,7 @@ var RealmsClient = /** @class */ (function () {
         get: function () {
             return "sid=token:" + this.accessToken + ":" + this.playerUuid + ";user=" + this.playerName + ";version=" + this.gameVersion;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     RealmsClient.prototype.sendGetRequest = function (_url) {

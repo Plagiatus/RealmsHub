@@ -315,7 +315,7 @@ export default class RealmsClient {
 type RequestMethod = "GET" | "POST" | "PUT" | "DELETE";
 type Compatible = "COMPATIBLE" | "OUTDATED" | "OTHER";
 export type WorldType = "NORMAL" | "ADVENTUREMAP" | "MINIGAME";
-export type TemplateType = "MINIGAME" | "ADVENTUREMAP" | "EXERIENCE" | "NORMAL" | "INSPIRATION";
+export type TemplateType = "MINIGAME" | "ADVENTUREMAP" | "EXPERIENCE" | "NORMAL" | "INSPIRATION";
 export type SlotNumber = 1 | 2 | 3;
 /**
  * 0: default  
