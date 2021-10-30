@@ -10,16 +10,16 @@
 				<button class="reset-option-title btn light" disabled="disabled">Upload World</button>
 			</div>
 			<div class="reset-option">
-				<button class="reset-option-title btn light" disabled="disabled">World Template</button>
+				<button class="reset-option-title btn light" @click="openTemplate('NORMAL')">World Template</button>
 			</div>
 			<div class="reset-option">
-				<button class="reset-option-title btn light" disabled="disabled">Adventure Map</button>
+				<button class="reset-option-title btn light" @click="openTemplate('ADVENTUREMAP')">Adventure Map</button>
 			</div>
 			<div class="reset-option">
-				<button class="reset-option-title btn light" disabled="disabled">Experience Map</button>
+				<button class="reset-option-title btn light" @click="openTemplate('EXPERIENCE')">Experience Map</button>
 			</div>
 			<div class="reset-option">
-				<button class="reset-option-title btn light" disabled="disabled">Inspiration Map</button>
+				<button class="reset-option-title btn light" @click="openTemplate('INSPIRATION')">Inspiration Map</button>
 			</div>
 		</div>
 		<transition name="grow">
@@ -59,6 +59,7 @@
 import { defineComponent } from 'vue';
 import LoadingButton from "../LoadingButton.vue";
 import request from "../../components/request-mixin";
+import { TemplateType } from '@/views/World.vue';
 
 export default defineComponent({
 	props: ["worldId"],
@@ -84,6 +85,7 @@ export default defineComponent({
 		},
 		openNewWorldSettings(){
 			this.newWorldSettingsOpen = true;
+			this.$emit("closeTemplate");
 		},
 		closeNewWorldSettings(){
 			this.newWorldSettingsOpen = false;
@@ -99,7 +101,11 @@ export default defineComponent({
 			if(!this.loading) return;
 			this.timeElapsed++;
 			setTimeout(this.updateTime, 1000);
-		}
+		},
+		openTemplate(_type: TemplateType){
+			this.newWorldSettingsOpen = false;
+			this.$emit("openTemplate", _type)
+		},
 	}
 });
 

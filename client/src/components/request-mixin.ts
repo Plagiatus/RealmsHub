@@ -8,11 +8,11 @@ const requestUrl: string = (url.hostname == "localhost") ? "http://localhost:900
 export default defineComponent({
 	name: "request",
 	methods: {
-		async sendRequest(_url: string, _method: "GET" | "POST", _data: any = {}, _errorMessage?: string, _errorDismissEvent?: DismissFunction): Promise<string | undefined> {
+		async sendRequest(_url: string, _method: "GET" | "POST" | "SEARCH", _data: any = {}, _errorMessage?: string, _errorDismissEvent?: DismissFunction): Promise<string | undefined> {
 			let response: Response;
 			if (_method == "GET") {
 				response = await fetch(requestUrl + _url);
-			} else if (_method == "POST") {
+			} else if (_method == "POST" || _method == "SEARCH") {
 				_data["id"] = localStorage.getItem("id");
 				response = await fetch(requestUrl + _url, {
 					method: _method,

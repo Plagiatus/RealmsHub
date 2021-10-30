@@ -3,7 +3,7 @@
 		<img :src="src" alt="Minigame Image">
 		<span class="slot-description">{{description}}</span>
 		<span class="slot-name">{{name}}</span>
-		<button class="btn" :class="{light: !active}" @click="openMinigame" disabled="disabled">{{buttontext}}</button>
+		<button class="btn" :class="{light: !active}" @click="openMinigame">{{buttontext}}</button>
 	</div>
 </template>
 

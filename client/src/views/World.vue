@@ -9,12 +9,15 @@
 			<transition name="grow">
 				<realm-settings v-if="realmSettingsOpen" :realmName="realm.name" :realmDescription="realm.motd" :worldId="worldId" @close="closeRealmSettings" />
 			</transition>
-			<slots :realm="realm" :worldId="worldId" @select-slot="selectSlot" @open-settings="openSlotSettings" @open-reset-world="openSlotResetSettings"/>
+			<slots :realm="realm" :worldId="worldId" @select-slot="selectSlot" @open-settings="openSlotSettings" @open-reset-world="openSlotResetSettings" @open-minigame="openMinigame"/>
 			<transition name="grow">
 				<slot-setting v-if="slotSettingsOpen" :worldId="worldId" :slotId="realm.activeSlot" :settings="realm.slots[realm.activeSlot - 1].options" @update-slot-settings="updateSlotSettings" @close="closeSlotSettings"/>
 			</transition>
 			<transition name="grow">
-				<reset-world v-if="slotResetSettingsOpen" :worldId="worldId" @close="closeSlotResetSettings"/>
+				<reset-world v-if="slotResetSettingsOpen" :worldId="worldId" @close="closeSlotResetSettings" @open-template="openTemplateSettings" @close-template="closeTemplateSettings"/>
+			</transition>
+			<transition name="grow">
+				<templates v-if="templateSelection!=''" :type="templateSelection" @close="closeTemplateSettings" :worldId="worldId"/>
 			</transition>
 			<realm-players :players="realm.players" :worldId="worldId" @remove-player="removePlayer" @update-realm="reloadRealm" @update-ops="updateOPs"/>
     </div>
@@ -32,6 +35,7 @@ import RealmSubscription from "../components/RealmSubscription.vue";
 import Slots from "../components/Slots.vue";
 import SlotSetting from "../components/slots/SlotSettings.vue";
 import ResetWorld from "../components/slots/ResetWorld.vue";
+import Templates from "../components/slots/Templates.vue";
 
 export default defineComponent({
   mixins: [request],
@@ -43,6 +47,7 @@ export default defineComponent({
 		Slots,
 		SlotSetting,
 		ResetWorld,
+		Templates,
   },
   props: {
     worldId: String
@@ -52,8 +57,9 @@ export default defineComponent({
       realm: null as unknown as Realm,
       reloadingRealm: false,
 			slotSettingsOpen: false,
-			slotResetSettingsOpen: true,
+			slotResetSettingsOpen: false,
 			realmSettingsOpen: false,
+			templateSelection: "",
     }
   },
   async mounted() {
@@ -97,11 +103,15 @@ export default defineComponent({
 		openSlotSettings() {
 			this.slotSettingsOpen = true;
 			this.slotResetSettingsOpen = false;
+			this.templateSelection = "";
 		},
 		closeSlotSettings(){
 			this.slotSettingsOpen = false;
 		},
 		openSlotResetSettings() {
+			if(!this.slotResetSettingsOpen) {
+				this.templateSelection = "";
+			}
 			this.slotResetSettingsOpen = true;
 			this.slotSettingsOpen = false;
 		},
@@ -120,11 +130,22 @@ export default defineComponent({
 				this.realm.slots[slot].options = JSON.stringify(settings);
 			}
 		},
+		openMinigame(){
+			this.slotSettingsOpen = false;
+			this.slotResetSettingsOpen = false;
+			this.templateSelection = "MINIGAME";
+		},
+		openTemplateSettings(_type: TemplateType){
+			this.templateSelection = _type;
+		},
+		closeTemplateSettings(){
+			this.templateSelection = "";
+		},
   }
 });
 
 export type WorldType = "NORMAL" | "ADVENTUREMAP" | "MINIGAME";
-export type TemplateType = "MINIGAME" | "ADVENTUREMAP" | "EXERIENCE" | "NORMAL" | "INSPIRATION";
+export type TemplateType = "MINIGAME" | "ADVENTUREMAP" | "EXPERIENCE" | "NORMAL" | "INSPIRATION";
 export type SlotNumber = 1 | 2 | 3;
 
 export interface Realm {
