@@ -211,6 +211,11 @@ a, a:visited {
 	color: var(--highlight);
 }
 
+hr {
+	border: 1px solid var(--font-color);
+	border-bottom: none;
+}
+
 /* growing animation */
 
 
