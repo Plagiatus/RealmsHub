@@ -10,6 +10,25 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -49,14 +68,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = void 0;
 var express_1 = __importDefault(require("express"));
 var bodyParser = __importStar(require("body-parser"));
 var config_1 = require("./config");
@@ -77,7 +90,7 @@ var tokenTimestamps = new Map();
 var tokens = new Map();
 var clients = new Map();
 var latestVersion;
-var app = express_1.default();
+var app = (0, express_1.default)();
 app.use(bodyParser.json());
 // app.use((req, res, next)=>{
 // 	let origin: string = (req.headers.origin == "http://localhost:8080") ? "http://localhost:8080" : "https://realmshub.com";
@@ -91,7 +104,7 @@ app.use(bodyParser.json());
 // 	methods: "GET,POST",
 // 	preflightContinue: false
 // }
-app.use(cors_1.default());
+app.use((0, cors_1.default)({ methods: ["GET", "POST", "SEARCH"] }));
 var authHandler = new ms_api_1.AuthenticationHandler(exports.config.clientId, exports.config.clientSecret, exports.config.redirectUri);
 function checkAndInitAuth(req, res, next) {
     var _a;
@@ -114,6 +127,7 @@ function checkAndInitAuth(req, res, next) {
                         return [2 /*return*/];
                     }
                     else {
+                        // await checkAuthValidity(dbToken);
                         initAuth(id, dbToken);
                     }
                     _b.label = 2;
@@ -158,7 +172,7 @@ app.route("/login")
                 return [4 /*yield*/, authHandler.getAuthCodes(code)];
             case 2:
                 authInfo = _a.sent();
-                id = hat_1.default(512, 32) + "." + hat_1.default(512, 32);
+                id = (0, hat_1.default)(512, 32) + "." + (0, hat_1.default)(512, 32);
                 initAuth(id, authInfo);
                 res.send({ id: id, username: authInfo.mc_info.name });
                 return [3 /*break*/, 4];
@@ -190,6 +204,22 @@ app.route("/check-login")
 //#endregion
 app.route("/templates/:type/:page/:size")
     .get(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var type, page, size, _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                type = req.params.type;
+                page = parseInt(req.params.page);
+                size = parseInt(req.params.size);
+                _b = (_a = res).send;
+                return [4 /*yield*/, getTemplates(type, page, size)];
+            case 1:
+                _b.apply(_a, [_c.sent()]);
+                return [2 /*return*/];
+        }
+    });
+}); })
+    .search(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var type, page, size, _a, _b;
     return __generator(this, function (_c) {
         switch (_c.label) {
@@ -638,27 +668,31 @@ function anErrorOccured(error, res) {
     });
 }
 var templateMap = new Map();
+var lastTemplateCheck = 0;
 function getTemplates(type, page, size, clientId) {
     return __awaiter(this, void 0, void 0, function () {
-        var templates, result, client, types, _i, types_1, type_1, oneTemp, allTemps;
+        var templates, hoursSinceLastCheck, result, client, types, _i, types_1, type_1, oneTemp, allTemps;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     templates = templateMap.get(type);
-                    if (templates) {
-                        result = {
-                            page: page,
-                            size: size,
-                            total: templates.length,
-                            templates: templates.slice((page + 1) * size, (page + 2) * size)
-                        };
-                        return [2 /*return*/, result];
+                    hoursSinceLastCheck = (Date.now() - lastTemplateCheck) / 1000 / 60 / 60;
+                    if (!(clientId && clients.has(clientId) && hoursSinceLastCheck > 24)) { //if there is no client ID and the last check was less than 24 hours ago check if templates exist, otherwise reload templates
+                        if (templates) {
+                            result = {
+                                page: page,
+                                size: size,
+                                total: templates.length,
+                                templates: templates.slice((page) * size, (page + 1) * size)
+                            };
+                            return [2 /*return*/, result];
+                        }
                     }
                     if (!clientId || !clients.has(clientId)) {
                         return [2 /*return*/, { page: -1, size: -1, total: -1, templates: [] }];
                     }
                     client = clients.get(clientId);
-                    types = ["MINIGAME", "ADVENTUREMAP", "EXERIENCE", "NORMAL", "INSPIRATION"];
+                    types = ["MINIGAME", "ADVENTUREMAP", "EXPERIENCE", "NORMAL", "INSPIRATION"];
                     _i = 0, types_1 = types;
                     _a.label = 1;
                 case 1:
@@ -675,7 +709,9 @@ function getTemplates(type, page, size, clientId) {
                 case 4:
                     _i++;
                     return [3 /*break*/, 1];
-                case 5: return [2 /*return*/, getTemplates(type, page, size)];
+                case 5:
+                    lastTemplateCheck = Date.now();
+                    return [2 /*return*/, getTemplates(type, page, size)];
             }
         });
     });

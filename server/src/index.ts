@@ -35,7 +35,7 @@ app.use(bodyParser.json());
 // 	methods: "GET,POST",
 // 	preflightContinue: false
 // }
-app.use(cors());
+app.use(cors({ methods: ["GET", "POST", "SEARCH"] }));
 
 const authHandler = new AuthenticationHandler(config.clientId, config.clientSecret, config.redirectUri);
 
@@ -51,6 +51,7 @@ async function checkAndInitAuth(req: express.Request, res: express.Response, nex
 			res.sendStatus(401);
 			return;
 		} else {
+			// await checkAuthValidity(dbToken);
 			initAuth(id, dbToken);
 		}
 	}
@@ -119,7 +120,13 @@ app.route("/templates/:type/:page/:size")
 		let type: TemplateType = <TemplateType>req.params.type;
 		let page: number = parseInt(req.params.page);
 		let size: number = parseInt(req.params.size);
-		res.send(await getTemplates(type, page, size, req.body.id))
+		res.send(await getTemplates(type, page, size));
+	})
+	.search(async (req, res) => {
+		let type: TemplateType = <TemplateType>req.params.type;
+		let page: number = parseInt(req.params.page);
+		let size: number = parseInt(req.params.size);
+		res.send(await getTemplates(type, page, size, req.body.id));
 	})
 	.all(wrongMethod);
 
@@ -380,28 +387,33 @@ function anErrorOccured(error: Error, res: express.Response) {
 }
 
 const templateMap: Map<TemplateType, Template[]> = new Map<TemplateType, Template[]>();
+let lastTemplateCheck: number = 0;
 async function getTemplates(type: TemplateType, page: number, size: number, clientId?: string): Promise<Templates> {
 	let templates = templateMap.get(type);
-	if (templates) {
-		let result: Templates = {
-			page,
-			size,
-			total: templates.length,
-			templates: templates.slice((page + 1) * size, (page + 2) * size)
+	let hoursSinceLastCheck: number = (Date.now() - lastTemplateCheck) / 1000 / 60 / 60;
+	if (!(clientId && clients.has(clientId) && hoursSinceLastCheck > 24)){	//if there is no client ID and the last check was less than 24 hours ago check if templates exist, otherwise reload templates
+		if (templates) {
+			let result: Templates = {
+				page,
+				size,
+				total: templates.length,
+				templates: templates.slice((page) * size, (page + 1) * size)
+			}
+			return result;
 		}
-		return result;
 	}
 	if (!clientId || !clients.has(clientId)) {
 		return { page: -1, size: -1, total: -1, templates: [] };
 	}
 
 	let client: RealmsClient = <RealmsClient>clients.get(clientId);
-	let types: TemplateType[] = ["MINIGAME", "ADVENTUREMAP", "EXERIENCE", "NORMAL", "INSPIRATION"];
+	let types: TemplateType[] = ["MINIGAME", "ADVENTUREMAP", "EXPERIENCE", "NORMAL", "INSPIRATION"];
 	for (let type of types) {
 		let oneTemp = await client.templates(type, 0, 1);
 		let allTemps = await client.templates(type, 0, oneTemp.total);
 		templateMap.set(type, allTemps.templates);
 	}
+	lastTemplateCheck = Date.now();
 
 	return getTemplates(type, page, size);
 }
