@@ -217,8 +217,6 @@ export default defineComponent({
       this.selectedTemplate = this.templates.find(t => t.id == id);
     },
     async confirmSelection() {
-      console.log("confirm!");
-
       this.loadingTemplateOntoRealm = true;
       let path = "/worlds/reset-template";
       let body = { worldId: this.worldId, template: 0, minigame: 0 };
