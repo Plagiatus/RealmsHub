@@ -1,6 +1,6 @@
 <template>
 	<div class="slot" :class="{active: selected}">
-		<img src="../../assets/logo.png" alt="">
+		<img :src="imgsource" alt="">
 		<span class="slot-description">{{description}}</span>
 		<formatted-text class="slot-name" :text="name" />
 		<loading-button v-if="!this.selected" class="btn light" @click="selectSlot" :text="'Select Slot'" :successText="''" :loading="this.loadingSlotChange"/>
@@ -56,6 +56,13 @@ export default defineComponent({
 		name(): string {
 			if(this.options.slotName) return this.options.slotName;
 			return "World " + this.slot.slotId;
+		},
+		imgsource(): string {
+			if(this.options.worldTemplateImage) {
+				return "data:image/jpeg;base64," + this.options.worldTemplateImage;
+			}
+			let image = require.context("../../assets/");
+			return image("./logo.png");
 		},
 	},
 	methods: {
