@@ -75,6 +75,15 @@ export default defineComponent({
 	min-height: 300px;
 	display: grid;
   place-items: center;
+	position: relative;
+}
+
+
+@media screen and (max-width: 1056px) {
+	#content {
+		max-width: 95%;
+		box-sizing: border-box;
+	}
 }
 
 #content-wrapper {

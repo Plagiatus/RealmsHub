@@ -40,4 +40,11 @@ export default defineComponent({
 	flex-direction: row;
 	justify-content: space-around;
 }
+
+@media screen and (max-width: 1056px) {
+	#slots {
+		flex-wrap: wrap;
+		margin-top: 1em;
+	}
+}
 </style>

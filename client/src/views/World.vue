@@ -255,10 +255,17 @@ export interface Ops {
 <style scoped>
 .flex {
 	display: flex;
-
+	flex-wrap: wrap;
 }
 
-.flex > * {
-	width: 50%
+.flex > div {
+	width: calc(50% - 2em);
+	box-sizing: border-box;
+}
+
+@media screen and (max-width: 1056px) {
+	.flex > div {
+		width: 100%;
+	}
 }
 </style>

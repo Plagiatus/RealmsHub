@@ -48,7 +48,8 @@ export default defineComponent({
 
 <style scoped>
 	.home {
-		width: 800px;
+		width: 100%;
+		max-width: 800px;
 	}
 
 	img.logo {

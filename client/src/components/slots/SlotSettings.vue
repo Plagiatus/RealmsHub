@@ -143,4 +143,16 @@ export default defineComponent({
 	.slider {
 		width: 100%;
 	}
+	
+	@media screen and (max-width: 660px) {
+		#slot-settings > div {
+			flex-direction: column;
+		}
+		table {
+			width: 100%;
+		}
+		td:last-child {
+			text-align: right;
+		}
+	}
 </style>

@@ -1,13 +1,13 @@
 <template>
 	<div id="realm-players" class="gray-block">
-		<div>
+		<div id="realm-players-inner">
 			<h2>Players</h2>
 			<input type="text" v-model="filter" class="input search" placeholder="filter" @input="updateFilter">
 			<div class="scroll-container">
 				<realm-player v-for="player in acceptedPlayers" v-bind:key="player" :player="player" :worldId="worldId" @remove-player="removePlayer" @update-ops="updateOPs"/>
 			</div> 
 		</div>
-		<div>
+		<div id="realms-players-invites">
 			<h3>Invite</h3>
 			<input type="text" class="input" v-model="playername" placeholder="Playername">
 			<loading-button :disabled="!playername" @click="invite" :text="'Invite'" :successText="'Invited'" :loading="loading"/>
@@ -109,7 +109,7 @@ interface RealmsPlayer {
 
 #realm-players {
 	height: 500px;
-	width: calc(100% - 2rem);
+	/* width: calc(100% - 2rem); */
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
@@ -119,6 +119,7 @@ interface RealmsPlayer {
 #realm-players>* {
 	flex-grow: 1;
 	margin: 0 1em;
+	max-height: 500px;
 }
 
 .scroll-container {
@@ -136,6 +137,25 @@ h2 {
 	background-size: 1em;
 	background-position: .5em .5em;
 	text-indent: 1em;
+}
+
+@media screen and (max-width: 1056px) {
+	#realm-players {
+		flex-direction: column;
+		height: initial;
+	}
+	#realm-players > * {
+		margin: 0;
+	}
+	#realm-players-inner {
+		position: relative;
+	}
+	.scroll-container {
+		max-height: 400px;
+	}
+	#realms-players-invites {
+		margin-top: 1em;
+	}
 }
 </style>
 

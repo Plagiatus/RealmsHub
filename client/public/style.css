@@ -181,6 +181,13 @@ span.realm-name {
 	border: 1px solid var(--background);
 }
 
+@media screen and (max-width: 1056px) {
+	.gray-block {
+		padding: 1em;
+		margin: .5rem;
+	}
+}
+
 span.close {
 	position: absolute;
 	cursor: pointer;

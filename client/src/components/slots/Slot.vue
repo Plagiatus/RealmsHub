@@ -1,11 +1,15 @@
 <template>
 	<div class="slot" :class="{active: selected}">
 		<img :src="imgsource" alt="">
-		<span class="slot-description">{{description}}</span>
-		<formatted-text class="slot-name" :text="name" />
-		<loading-button v-if="!this.selected" class="btn light" @click="selectSlot" :text="'Select Slot'" :successText="''" :loading="this.loadingSlotChange"/>
-		<button v-if="this.selected" class="btn light" @click="openSettings">Settings</button>
-		<button v-if="this.selected" class="btn" @click="openResetWorld">Reset World</button>
+		<div class="slot-inner-wrapper">
+			<span class="slot-description">{{description}}</span>
+			<formatted-text class="slot-name" :text="name" />
+			<div class="slot-inner-button-wrapper">
+				<loading-button v-if="!this.selected" class="btn light" @click="selectSlot" :text="'Select Slot'" :successText="''" :loading="this.loadingSlotChange"/>
+				<button v-if="this.selected" class="btn light" @click="openSettings">Settings</button>
+				<button v-if="this.selected" class="btn" @click="openResetWorld">Reset World</button>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -84,13 +88,19 @@ export default defineComponent({
 </script>
 
 <style>
-.slot {
+.slot,
+.slot-inner-wrapper,
+.slot-inner-button-wrapper {
 	display: flex;
 	flex-direction: column;
-	border-radius: .25rem;
-	padding: .5rem;
-	outline: 1px solid #aaa;
 	text-align: center;
+}
+
+.slot {
+	padding: .5rem;
+	border-radius: .25rem;
+	outline: 1px solid #aaa;
+	margin: .1em;
 }
 
 .slot.active {
@@ -114,7 +124,35 @@ export default defineComponent({
 	font-weight: bolder;
 }
 
-.slot > button {
+.slot-inner-button-wrapper button {
 	margin-top: 0.5em;
+}
+
+@media screen and (max-width: 1056px) {
+	.slot {
+		width: calc(50% - 0.5em);
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: row;
+		margin: .25em;
+	}
+	.slot-inner-wrapper {
+		flex-grow: 1;
+		padding-left: .5em;
+	}
+	.slot > img {
+		width: 80px;
+		height: 80px;
+	}
+	.slot-inner-button-wrapper button {
+		margin: 0.5em;
+	}
+}
+
+@media screen and (max-width: 660px) {
+	.slot {
+		width: calc(100% - .5em);
+		align-items: center;
+	}
 }
 </style>
