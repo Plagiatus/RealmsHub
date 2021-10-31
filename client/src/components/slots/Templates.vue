@@ -103,7 +103,7 @@
           </div>
           <div></div>
 					<div>
-						<span id="template-confirm-button" class="italic keep-dark">This will take around 30 seconds.</span>
+						<span id="template-confirm-button" class="italic keep-dark">This will take up to 30 seconds.</span>
 						<loading-button
 							:text="'Confirm'"
 							:successText="'Map loaded!'"
