@@ -35,6 +35,7 @@ export default defineComponent({
 <style>
 .header {
 	width: 100%;
+	z-index: 1000;
 }
 
 #page-top {
@@ -56,7 +57,6 @@ export default defineComponent({
 	background-color: var(--foreground);
 	border: 3px solid var(--highlight);
 	border-radius: .5rem;
-	z-index: 1000;
 }
 
 .mainmenu a {
