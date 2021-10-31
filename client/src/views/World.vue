@@ -17,7 +17,7 @@
 				<reset-world v-if="slotResetSettingsOpen" :worldId="worldId" @close="closeSlotResetSettings" @open-template="openTemplateSettings" @close-template="closeTemplateSettings"/>
 			</transition>
 			<transition name="grow">
-				<templates v-if="templateSelection!=''" :type="templateSelection" @close="closeTemplateSettings" :worldId="worldId"/>
+				<templates v-if="templateSelection!=''" :type="templateSelection" @close="closeTemplateSettings" @set-template="setTemplate" :worldId="worldId"/>
 			</transition>
 			<realm-players :players="realm.players" :worldId="worldId" @remove-player="removePlayer" @update-realm="reloadRealm" @update-ops="updateOPs"/>
     </div>
@@ -140,6 +140,38 @@ export default defineComponent({
 		},
 		closeTemplateSettings(){
 			this.templateSelection = "";
+		},
+		setTemplate(t: any) {
+			if(t.type == "MINIGAME") {
+				this.realm.minigameName = t.name;
+				this.realm.minigameId = t.id;
+				this.realm.minigameImage = t.image;
+				this.realm.worldType = "MINIGAME";
+				return;
+			}
+			let slot = this.realm?.slots?.find(s => s.slotId == this.realm.activeSlot);
+			if (!slot) return;
+			let options: SlotSettings = JSON.parse(slot.options);
+			options.worldTemplateImage = undefined;
+			options.gameMode = 0;
+			options.difficulty = 2;
+			options.forceGameMode = false;
+			options.spawnProtection = 0;
+			options.pvp = true;
+			options.spawnAnimals = true;
+			options.spawnMonsters = true;
+			options.spawnNPCs = true;
+			options.commandBlocks = false;
+			this.realm.worldType = "NORMAL";
+			if(t.type != "NORMAL") {
+				this.realm.worldType = "ADVENTUREMAP";
+				options.slotName = t.name;
+				options.worldTemplateId = t.id;
+				options.worldTemplateImage = t.image;
+				options.adventureMap = true;
+				options.commandBlocks = true;
+			}
+			slot.options = JSON.stringify(options);
 		},
   }
 });
