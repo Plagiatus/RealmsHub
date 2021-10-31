@@ -222,9 +222,9 @@ export default defineComponent({
       let body = { worldId: this.worldId, template: 0, minigame: 0 };
       if (this.type == "MINIGAME") {
         path = "/worlds/minigame";
-        body.minigame = this.selectedTemplate.id;
+        body.minigame = this.selectedTemplate?.id || 0;
       } else {
-        body.template = this.selectedTemplate.id;
+        body.template = this.selectedTemplate?.id || 0;
       }
 			let type = this.type;
 			let template = this.selectedTemplate;
