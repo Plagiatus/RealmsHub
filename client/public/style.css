@@ -45,6 +45,7 @@ body.dark {
 body.dark .keep-dark {
 	--font-color: #2c3e50;
 	--font-color-filter: invert(20%) sepia(15%) saturate(1246%) hue-rotate(169deg) brightness(94%) contrast(88%);
+	color: var(--font-color);
 }
 
 *, ::after {

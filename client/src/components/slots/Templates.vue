@@ -10,7 +10,7 @@
               type="text"
               id="search-name"
               class="input search"
-              placeholder="Search minigames"
+              :placeholder="'Search ' + maptype + 's'"
               v-model="search.name"
             />
           </div>
@@ -57,7 +57,7 @@
       </div>
     </div>
     <div id="template-selected">
-      <div v-if="selectedTemplate.id">
+      <div v-if="selectedTemplate">
         <img
           class="template-img"
           :src="'data:image/jpeg;base64,' + selectedTemplate.image"
@@ -103,7 +103,7 @@
           </div>
           <div></div>
 					<div>
-						<span id="template-confirm-button" class="italic">This will take around 30 seconds.</span>
+						<span id="template-confirm-button" class="italic keep-dark">This will take around 30 seconds.</span>
 						<loading-button
 							:text="'Confirm'"
 							:successText="'Map loaded!'"
@@ -114,7 +114,7 @@
         </div>
       </div>
       <div v-else style="display: flex; justify-content:center; align-items: center; height: 100%">
-				<span>
+				<span class="keep-dark">
 					No {{ maptype }} selected.
 				</span>
 			</div>
@@ -155,7 +155,7 @@ export default defineComponent({
     return {
       loadingTemplates: false,
       templates: [] as Template[],
-      selectedTemplate: {} as Template,
+      selectedTemplate: {} as Template | undefined,
       advancedOptions: true,
       basicSearchString: "",
       search: {
@@ -172,7 +172,7 @@ export default defineComponent({
     },
     async loadTemplates() {
       this.templates = [];
-			this.selectedTemplate = {};
+			this.selectedTemplate = undefined;
       this.loadingTemplates = true;
       let result: string | undefined = await this.sendRequest("/templates/" + this.type + "/0/1", "SEARCH", {});
       this.loadingTemplates = false;
@@ -226,10 +226,13 @@ export default defineComponent({
       } else {
         body.template = this.selectedTemplate.id;
       }
+			let type = this.type;
+			let template = this.selectedTemplate;
       let result = await this.sendRequest(path, "POST", body)
       this.loadingTemplateOntoRealm = false;
       if (!result) return;
 			setTimeout(this.close, 1000);
+			this.$emit("setTemplate", type, template);
     },
   },
   watch: {
@@ -381,5 +384,6 @@ export interface Template {
 #template-confirm-button {
 	margin-right: .5em;
 	font-size: .8em;
+	color: var(--font-color);
 }
 </style>
