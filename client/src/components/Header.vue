@@ -6,7 +6,7 @@
 		<nav class="mainmenu" v-if="loggedIn">
 			<router-link to="/overview" class="mainmenu-item" id="header-overview">Overview</router-link>
 			<div class="header-splitter"></div>
-			<router-link to="/logout" id="header-logout">Logout <img src="../assets/logout.svg" alt=""></router-link>
+			<router-link to="/logout" id="header-logout" class="keep-dark" >Logout <img src="../assets/logout.svg" alt=""></router-link>
 		</nav>
 		<router-link to="/login" id="header-login" v-else><img src="../assets/ms-symbollockup_signin_light.svg" alt=""></router-link>
 	</div>
