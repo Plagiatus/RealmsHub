@@ -433,7 +433,7 @@ hr {
 }
 
 .slider:disabled,
-.slider::-webkit-slider-thumb,
-.slider::-moz-range-thumb {
+.slider:disabled:-webkit-slider-thumb,
+.slider:disabled:-moz-range-thumb {
 	background: var(--btn-disabled);
 }
