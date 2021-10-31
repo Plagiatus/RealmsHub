@@ -2,7 +2,7 @@
 	<div id="realm-players" class="gray-block">
 		<div id="realm-players-inner">
 			<h2>Players</h2>
-			<input type="text" v-model="filter" class="input search" placeholder="filter" @input="updateFilter">
+			<input type="text" v-model="filter" class="input search" placeholder="filter">
 			<div class="scroll-container">
 				<realm-player v-for="player in acceptedPlayers" v-bind:key="player" :player="player" :worldId="worldId" @remove-player="removePlayer" @update-ops="updateOPs"/>
 			</div> 
