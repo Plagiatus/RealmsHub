@@ -78,6 +78,7 @@ export default defineComponent({
 	justify-content: right;
 	position: relative;
 	padding: .2em;
+	margin-right: 10px;
 }
 #footer-attribution {
 	flex-direction: column;

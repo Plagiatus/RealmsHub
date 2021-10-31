@@ -66,8 +66,9 @@ export default defineComponent({
   border: 1px solid var(--background);
   padding: 1em;
   margin-bottom: 20px;
-  right: -10px;
+  right: 5px;
   border-radius: 1em;
+	width: 300px;
 }
 
 #page-settings::after {
