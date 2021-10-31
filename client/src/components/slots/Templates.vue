@@ -103,7 +103,7 @@
           </div>
           <div></div>
 					<div>
-						<span id="template-confirm-button" class="italic keep-dark">This will take up to 30 seconds.</span>
+						<span id="template-confirm-button" class="italic keep-dark" v-if="type != 'MINIGAME'">This will take up to 30 seconds.</span>
 						<loading-button
 							:text="'Confirm'"
 							:successText="'Map loaded!'"
@@ -232,7 +232,7 @@ export default defineComponent({
       this.loadingTemplateOntoRealm = false;
       if (!result) return;
 			setTimeout(this.close, 1000);
-			this.$emit("setTemplate", type, template);
+			this.$emit("setTemplate", template);
     },
   },
   watch: {
