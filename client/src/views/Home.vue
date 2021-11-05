@@ -3,7 +3,7 @@
 		<h1>Realms Hub</h1>
 		<span class="affiliation">Not affiliated to or endorsed by Mojang or Microsoft.</span>
     <img class="logo" alt="Vue logo" src="../assets/logo.png">
-		<div class="preview-note"><span><strong>Please note:</strong><br> This Page is currently under active development and barely in an <strong>alpha</strong> state. <br>Expect things to break or not be finished. Especially on mobile devices.</span></div>
+		<div class="preview-note"><span><strong>Please note:</strong><br> This Page is currently under active development and considered to be in <strong>BETA</strong>.<br>That means everything should work, but sometimes might not.<br>Expect things to occasionally break or not be finished. If you find a bug, please <a href="https://github.com/Plagiatus/RealmsHub/issues" target="_blank" rel="noopener noreferrer">report it.</a></span></div>
 		<div>
 			<div id="login">
 				<h3>Login</h3>
@@ -16,6 +16,7 @@
 			<p>Realms Hub is an independant web service that allows you to manage your Realm from the web.</p>
 			<p>A Realm is a Minecraft Server, hosted by Mojang / Microsoft, the creators of the best-selling game ever.</p>
 			<p>This service is developed and maintained by <a href="https://plagiatus.net" target="_blank" rel="noopener noreferrer">Plagiatus</a>.</p>
+			<p>The website source code is open source and can be found <a href="https://github.com/Plagiatus/RealmsHub/" target="_blank" rel="noopener noreferrer">here</a>.</p>
 		</div>
 		<div id="faq">
 			<h2>FAQ</h2>
