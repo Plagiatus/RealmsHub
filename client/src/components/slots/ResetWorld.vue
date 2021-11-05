@@ -130,9 +130,8 @@ type LevelType = 0 | 1 | 2 | 3 | -1;
 
 <style scoped>
 #flex {
-	display: flex;
-	justify-content: space-around;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
 }
 
 label {
@@ -146,5 +145,25 @@ label {
 }
 select {
 	margin-left: 10px;
+}
+
+.reset-option {
+	padding: .3em;
+}
+
+.reset-option-title {
+	width: 141px;
+}
+
+@media screen and (max-width: 1250px) {
+	#flex {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+@media screen and (max-width: 575px) {
+	#flex {
+		grid-template-columns: repeat(2, 1fr);
+	}
 }
 </style>

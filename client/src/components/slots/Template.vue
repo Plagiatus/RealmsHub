@@ -55,10 +55,10 @@ export default defineComponent({
 
 <style>
 .template {
-  display: flex;
+  display: grid;
+	grid-template-columns: auto 1fr auto;
   margin: 0.25em;
   padding: 0.75em;
-  flex-direction: row;
   background-color: var(--foreground-gray);
   border-radius: 1rem;
 	box-shadow: 0 0 4px rgba(0, 0, 0, .1);
@@ -127,4 +127,20 @@ a.template-author:visited,
 	margin-left: .3em;
 }
 
+@media screen and (max-width: 660px) {
+	.template {
+		font-size: .8em;
+		grid-template-rows: auto auto;
+		grid-template-columns: auto 1fr;
+
+	}
+
+	.template-links {
+		grid-template-columns: 100px 1fr auto;
+		grid-template-rows: auto;
+		grid-column: 1 / span 2;
+		width: 100%;
+		margin-top: .2em;
+	}
+}
 </style>

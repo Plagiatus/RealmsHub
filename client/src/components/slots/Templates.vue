@@ -57,7 +57,7 @@
       </div>
     </div>
     <div id="template-selected">
-      <div v-if="selectedTemplate">
+      <div v-if="selectedTemplate" id="template-selected-display">
         <img
           class="template-img"
           :src="'data:image/jpeg;base64,' + selectedTemplate.image"
@@ -85,7 +85,7 @@
             {{ selectedTemplate.recommendedPlayers }}
           </span>
         </div>
-        <div class="template-links">
+        <div class="template-links" id="template-selected-links">
           <div style="text-align: right;">
             <a
               class="template-trailer template-button"
@@ -302,15 +302,15 @@ export interface Template {
 }
 
 #template-selected {
-  height: 100px;
+  min-height: 100px;
   background-color: var(--btn-light-green);
   margin: 1em 0;
   padding: 0.75em;
 }
 
-#template-selected > div {
-  display: flex;
-  flex-direction: row;
+#template-selected-display {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
 }
 
 #template-selected > span {
@@ -385,5 +385,24 @@ export interface Template {
 	margin-right: .5em;
 	font-size: .8em;
 	color: var(--font-color);
+}
+
+@media screen and (max-width: 720px) {
+	#template-selected {
+		font-size: .8em;
+	}
+}
+@media screen and (max-width: 900px) {
+	#template-selected-display {
+		grid-template-columns: auto 1fr;
+	}
+
+	#template-selected-links {
+		grid-template-columns: 100px 1fr auto;
+		grid-template-rows: auto;
+		grid-column: 1 / span 2;
+		width: 100%;
+		margin-top: .2em;
+	}
 }
 </style>
