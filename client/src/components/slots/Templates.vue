@@ -206,6 +206,9 @@ export default defineComponent({
         return [0, 11];
       }
       let min: number = parseInt(numbers[0]) || 0;
+			if(!t.recommendedPlayers.includes("+") && !t.recommendedPlayers.includes("-")) {
+				return [min, min];
+			}
       let max: number = parseInt(numbers[1]) || 11;
       return [min, max];
     },
