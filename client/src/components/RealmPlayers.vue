@@ -33,13 +33,25 @@
 					</div>
 					<div class="realm-players-bulk-option">
 						<label for="realm-players-bulk-invite"><h3>(Un)invite</h3></label>
-						<span class="italic" style="font-size:.75em; margin-left: 1em">Accepts <code>:op</code> tag</span>
+						<span class="" style="font-size:.75em; margin-left: 1em;">Accepts <code style="font-size: 1.3em;">:op</code> tag</span>
 						<div id="realm-players-bulk-invite-buttons">
 							<loading-button :disabled="loadingBulkUninvite" :loading="loadingBulkInvite" :text="'Invite All'" :successText="'Invited all'" @click="bulkInvite"/>
 							<loading-button :disabled="loadingBulkInvite" :loading="loadingBulkUninvite" :text="'Uninvite All'" :successText="'Uninvited all'" @click="bulkUninvite"/>
 							<button class="btn light" @click="clearInviteInput" style="grid-area:clear">Clear</button>
 						</div>
 						<textarea class="input" id="realm-players-bulk-invite" v-model="bulkInviteValue" />
+						<div id="bulk-formatting-help-wrapper">
+							<div id="bulk-formatting-help">
+								<span>formatting info</span>
+								<img src="../assets/question-circle.svg" alt="?">
+							</div>
+							<div id="bulk-formatting-help-popover">
+								<span>Seperate players by newlines.</span><br>
+								<span>Add <code>:op</code> to mark as operator.</span><br>
+								<span>For example</span>
+								<pre>{{exampleFormatting}}</pre>
+							</div>
+						</div>
 					</div>
 				</div>
 			</transition>
@@ -68,7 +80,7 @@ export default defineComponent({
 			inviteOpen: false,
 			filter: "",
 			playername: "",
-			bulkOpen: false,
+			bulkOpen: true,
 			loadingBulkInvite: false,
 			loadingBulkUninvite: false,
 			includeOPInExport: false,
@@ -269,6 +281,9 @@ export default defineComponent({
 			}
 			return "Show bulk options";
 		},
+		exampleFormatting(): string {
+			return "Player1\nPlayer2:op\nPlayer3";
+		}
 	}
 })
 
@@ -377,6 +392,41 @@ h2 {
 #bulk-export-options > *,
 #realm-players-bulk-invite-buttons > * {
 	align-self: center;
+}
+
+#bulk-formatting-help-wrapper {
+	display: flex;
+	justify-content: right;
+	position: relative;
+}
+
+#bulk-formatting-help {
+	display: flex;
+	align-items: center;
+	user-select: none;
+}
+
+#bulk-formatting-help > img {
+	width: 1.5em;
+	height: 1.5em;
+	margin-left: 0.2em;
+	filter: var(--font-color-filter);
+}
+
+#bulk-formatting-help-popover {
+	visibility: hidden;
+	position: absolute;
+	bottom: 100%;
+	padding: 1em;
+	margin-bottom: .2em;
+	background-color: var(--foreground-gray);
+	border-radius: 0.35em;
+	border: 1px solid #ced4da;
+}
+
+#bulk-formatting-help:hover + #bulk-formatting-help-popover,
+#bulk-formatting-help-popover:hover {
+	visibility: visible;
 }
 
 @media screen and (max-width: 1056px) {
