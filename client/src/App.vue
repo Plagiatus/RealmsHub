@@ -1,12 +1,12 @@
 <template>
   <div>
-		<div id="content-wrapper">
-			<Header/>
-			<div id="content">
-				<router-view />
-			</div>
-			<Footer/>
-		</div>
+    <div id="content-wrapper">
+      <Header />
+      <div id="content">
+        <router-view />
+      </div>
+      <Footer />
+    </div>
     <error-display />
   </div>
 </template>
@@ -19,27 +19,27 @@ import Footer from "./components/Footer.vue";
 import settings from "./components/settings-mixin";
 
 export default defineComponent({
-	mixins: [settings],
+  mixins: [settings],
   components: {
     ErrorDisplay,
     Header,
     Footer,
   },
-	beforeMount(){
-		this.checkSettings();
-		console.log("before Mount: App", this.pageSettings);
-		this.checkDarkmode();
-		window.addEventListener("settingsUpdated", this.checkDarkmode);
-	},
-	methods: {
-		checkDarkmode() {
-			if(this.pageSettings.darkMode){
-				document.body.classList.add("dark");
-			} else {
-				document.body.classList.remove("dark");
-			}
-		}
-	}
+  beforeMount() {
+    this.checkSettings();
+    console.log("before Mount: App", this.pageSettings);
+    this.checkDarkmode();
+    window.addEventListener("settingsUpdated", this.checkDarkmode);
+  },
+  methods: {
+    checkDarkmode() {
+      if (this.pageSettings.darkMode) {
+        document.body.classList.add("dark");
+      } else {
+        document.body.classList.remove("dark");
+      }
+    }
+  }
 });
 </script>
 
@@ -67,30 +67,29 @@ export default defineComponent({
 }
 
 #content {
-	background-color: var(--foreground);
-	border-radius: 1em;
-	max-width: 80%;
-	padding: 1em;
-	min-width: 50%;
-	min-height: 300px;
-	display: grid;
+  background-color: var(--foreground);
+  border-radius: 1em;
+  max-width: 80%;
+  padding: 1em;
+  min-width: 50%;
+  min-height: 300px;
+  display: grid;
   place-items: center;
-	position: relative;
+  position: relative;
 }
 
-
 @media screen and (max-width: 1056px) {
-	#content {
-		max-width: 95%;
-		box-sizing: border-box;
-	}
+  #content {
+    max-width: 95%;
+    box-sizing: border-box;
+  }
 }
 
 #content-wrapper {
-	display: grid;
+  display: grid;
   place-items: center;
-	margin: 3em 0;
-	min-height: 90vh;
+  margin: 3em 0;
+  min-height: 90vh;
 }
 
 </style>
