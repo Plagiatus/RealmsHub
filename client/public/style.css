@@ -172,7 +172,7 @@ span.realm-name {
 .gray-block {
 	display: block;
 	
-	padding: 2em;
+	padding: 1.5em;
 	border-radius: 2rem;
 	margin: 1rem;
 	background-color: var(--foreground-gray);
