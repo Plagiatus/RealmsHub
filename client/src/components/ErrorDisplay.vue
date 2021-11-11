@@ -93,6 +93,7 @@ interface ErrorDetails {
 #error-message {
   position: relative;
   z-index: 1;
+	white-space: pre;
 }
 
 #error-code {
