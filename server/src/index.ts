@@ -402,12 +402,13 @@ async function getTemplates(type: TemplateType, page: number, size: number, clie
 			return result;
 		}
 	}
-	if (!clientId || !clients.has(clientId)) {
+	
+	let types: TemplateType[] = ["MINIGAME", "ADVENTUREMAP", "EXPERIENCE", "NORMAL", "INSPIRATION"];
+	if (!clientId || !clients.has(clientId) || !types.includes(type)) {
 		return { page: -1, size: -1, total: -1, templates: [] };
 	}
 
 	let client: RealmsClient = <RealmsClient>clients.get(clientId);
-	let types: TemplateType[] = ["MINIGAME", "ADVENTUREMAP", "EXPERIENCE", "NORMAL", "INSPIRATION"];
 	for (let type of types) {
 		let oneTemp = await client.templates(type, 0, 1);
 		let allTemps = await client.templates(type, 0, oneTemp.total);

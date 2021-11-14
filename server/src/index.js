@@ -671,7 +671,7 @@ var templateMap = new Map();
 var lastTemplateCheck = 0;
 function getTemplates(type, page, size, clientId) {
     return __awaiter(this, void 0, void 0, function () {
-        var templates, hoursSinceLastCheck, result, client, types, _i, types_1, type_1, oneTemp, allTemps;
+        var templates, hoursSinceLastCheck, result, types, client, _i, types_1, type_1, oneTemp, allTemps;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -688,11 +688,11 @@ function getTemplates(type, page, size, clientId) {
                             return [2 /*return*/, result];
                         }
                     }
-                    if (!clientId || !clients.has(clientId)) {
+                    types = ["MINIGAME", "ADVENTUREMAP", "EXPERIENCE", "NORMAL", "INSPIRATION"];
+                    if (!clientId || !clients.has(clientId) || !types.includes(type)) {
                         return [2 /*return*/, { page: -1, size: -1, total: -1, templates: [] }];
                     }
                     client = clients.get(clientId);
-                    types = ["MINIGAME", "ADVENTUREMAP", "EXPERIENCE", "NORMAL", "INSPIRATION"];
                     _i = 0, types_1 = types;
                     _a.label = 1;
                 case 1:
