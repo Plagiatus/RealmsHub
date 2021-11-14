@@ -80,7 +80,7 @@ export default defineComponent({
 			inviteOpen: false,
 			filter: "",
 			playername: "",
-			bulkOpen: true,
+			bulkOpen: false,
 			loadingBulkInvite: false,
 			loadingBulkUninvite: false,
 			includeOPInExport: false,
