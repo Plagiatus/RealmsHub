@@ -108,8 +108,8 @@ export default defineComponent({
 }
 
 .slot > img {
-	width: 195px;
-	height: 195px;
+	width: 160px;
+	height: 160px;
 }
 
 .slot-description {
