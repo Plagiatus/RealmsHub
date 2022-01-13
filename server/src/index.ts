@@ -7,6 +7,7 @@ import { AuthTokenInDB, DB } from "./db";
 import * as https from "https";
 import hat from "hat";
 import cors from "cors";
+import { readFile } from "fs/promises";
 
 export let config: Config;
 if (process.argv[2] == "--local") {
@@ -306,6 +307,12 @@ app.route("/worlds/:command")
 	})
 	.all(wrongMethod);
 
+	app.route("/announcement")
+	.get(async (req, res)=> {
+		res.send(await getAnnouncement());
+	})
+	.all(wrongMethod);
+
 app.route("/:command")
 	.post(checkAndInitAuth, async (req, res) => {
 		let command: string = req.params.command;
@@ -384,6 +391,10 @@ function anErrorOccured(error: Error, res: express.Response) {
 			message: error.message
 		}
 	})
+}
+
+async function getAnnouncement(): Promise<string> {
+	return await readFile(__dirname + "/../../announcement.html", "utf-8");
 }
 
 const templateMap: Map<TemplateType, Template[]> = new Map<TemplateType, Template[]>();

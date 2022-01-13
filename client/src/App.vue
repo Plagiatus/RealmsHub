@@ -1,5 +1,6 @@
 <template>
   <div>
+		<AnnouncementBannerWrapper/>
 		<Header />
     <div id="content-wrapper">
       <div id="content">
@@ -17,6 +18,7 @@ import ErrorDisplay from "./components/ErrorDisplay.vue";
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
 import settings from "./components/settings-mixin";
+import AnnouncementBannerWrapper from "./components/announcement/AnnouncementBannerWrapper.vue";
 
 export default defineComponent({
   mixins: [settings],
@@ -24,6 +26,7 @@ export default defineComponent({
     ErrorDisplay,
     Header,
     Footer,
+		AnnouncementBannerWrapper,
   },
   beforeMount() {
     this.checkSettings();
@@ -38,7 +41,7 @@ export default defineComponent({
       } else {
         document.body.classList.remove("dark");
       }
-    }
+    },
   }
 });
 </script>

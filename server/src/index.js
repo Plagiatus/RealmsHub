@@ -79,6 +79,7 @@ var db_1 = require("./db");
 var https = __importStar(require("https"));
 var hat_1 = __importDefault(require("hat"));
 var cors_1 = __importDefault(require("cors"));
+var promises_1 = require("fs/promises");
 if (process.argv[2] == "--local") {
     exports.config = config_1.configTesting;
 }
@@ -537,6 +538,21 @@ app.route("/worlds/:command")
     });
 }); })
     .all(wrongMethod);
+app.route("/announcement")
+    .get(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _b = (_a = res).send;
+                return [4 /*yield*/, getAnnouncement()];
+            case 1:
+                _b.apply(_a, [_c.sent()]);
+                return [2 /*return*/];
+        }
+    });
+}); })
+    .all(wrongMethod);
 app.route("/:command")
     .post(checkAndInitAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var command, client, _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s;
@@ -665,6 +681,16 @@ function anErrorOccured(error, res) {
             code: 500,
             message: error.message
         }
+    });
+}
+function getAnnouncement() {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, (0, promises_1.readFile)(__dirname + "/../../announcement.html", "utf-8")];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
     });
 }
 var templateMap = new Map();
