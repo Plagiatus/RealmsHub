@@ -36,6 +36,9 @@ export default defineComponent({
 .header {
 	width: 100%;
 	z-index: 1000;
+	position: sticky;
+	top: 5px;
+	padding: 1px; /* to prevent margin collapsing. Don't ask. */
 }
 
 #page-top {
@@ -49,11 +52,10 @@ export default defineComponent({
 }
 
 .mainmenu {
-	position: fixed;
-	top: -1em;
+	position: absolute;
 	right: 1em;
 	font-size: 1.5em;
-	padding-top: 1em;
+	/* padding-top: 1em; */
 	background-color: var(--foreground);
 	border: 3px solid var(--highlight);
 	border-radius: .5rem;
@@ -86,9 +88,7 @@ export default defineComponent({
 
 
 #header-login {
-	position: fixed;
-	top: -1em;
+	position: absolute;
 	right: 1em;
-	padding-top: 1.5em;
 }
 </style>
