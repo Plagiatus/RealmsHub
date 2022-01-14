@@ -1,5 +1,5 @@
 <template>
-  <div id="announcement-banner" class="keep-dark">
+  <div id="announcement-banner">
 		<div v-html="content"></div>
 		<span @click="close" class="close"><img src="../../assets/x.svg" alt="close"></span>
 	</div>
@@ -24,7 +24,7 @@ export default defineComponent({
 
 #announcement-banner {
 	padding: 1em;
-	background-color: var(--gold);
+	background-color: var(--foreground);
 	color: var(--font-color);
 }
 
