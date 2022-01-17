@@ -13,7 +13,7 @@
 		</div>
 		<div id="info">
 			<h2>Info</h2>
-			<p>Realms Hub is an independant web service that allows you to manage your Realm from the web.</p>
+			<p>Realms Hub is an independent web service that allows you to manage your Realm from the web.</p>
 			<p>A Realm is a Minecraft Server, hosted by Mojang / Microsoft, the creators of the best-selling game ever.</p>
 			<p>This service is developed and maintained by <a href="https://plagiatus.net" target="_blank" rel="noopener noreferrer">Plagiatus</a>.</p>
 			<p>The website source code is open source and can be found <a href="https://github.com/Plagiatus/RealmsHub/" target="_blank" rel="noopener noreferrer">here</a>.</p>
