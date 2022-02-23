@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AuthenticationHandler = void 0;
 //@ts-expect-error
 var xmlhttprequest_1 = require("xmlhttprequest");
 var AuthenticationHandler = /** @class */ (function () {
@@ -55,13 +56,13 @@ var AuthenticationHandler = /** @class */ (function () {
             var url = "https://login.live.com/oauth20_authorize.srf?client_id=" + this.clientId + "&response_type=code&redirect_uri=" + this.redirectUri + "&scope=XboxLive.signin%20offline_access";
             return url;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     AuthenticationHandler.prototype.getAuthCodes = function (code, refresh) {
         if (refresh === void 0) { refresh = false; }
         return __awaiter(this, void 0, void 0, function () {
-            var authToken, xbl, xsts, mcToken, mcInfo;
+            var authToken, xbl, xsts, mcToken, mcInfo, xstsBR;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -82,12 +83,16 @@ var AuthenticationHandler = /** @class */ (function () {
                         return [4 /*yield*/, this.getMCInfo(mcToken).catch(function (reason) { throw Error("Error during Minecraft Info Fetch. Does the user own Minecraft?"); })];
                     case 5:
                         mcInfo = _a.sent();
+                        return [4 /*yield*/, this.xblToXsts(xbl, false).catch(function (reason) { throw Error("Error during XSTS Auth."); })];
+                    case 6:
+                        xstsBR = _a.sent();
                         return [2 /*return*/, {
                                 auth_token: authToken,
                                 mc_info: mcInfo,
                                 mc_token: mcToken,
                                 xbox_token: xbl,
-                                xsts_token: xsts
+                                xsts_token: xsts,
+                                xsts_br_token: xstsBR,
                             }];
                 }
             });
@@ -132,12 +137,13 @@ var AuthenticationHandler = /** @class */ (function () {
             });
         });
     };
-    AuthenticationHandler.prototype.xblToXsts = function (token) {
+    AuthenticationHandler.prototype.xblToXsts = function (token, forJava) {
+        if (forJava === void 0) { forJava = true; }
         return __awaiter(this, void 0, void 0, function () {
             var request, data, promise;
             return __generator(this, function (_a) {
                 request = new xmlhttprequest_1.XMLHttpRequest();
-                data = "{\n\t\t\t\"Properties\": {\n\t\t\t\t\"SandboxId\": \"RETAIL\",\n\t\t\t\t\"UserTokens\": [\n\t\t\t\t\t\t\"" + token.Token + "\"\n\t\t\t\t]\n\t\t\t},\n\t\t\t\"RelyingParty\": \"rp://api.minecraftservices.com/\",\n\t\t\t\"TokenType\": \"JWT\"\n\t\t}";
+                data = "{\n\t\t\t\"Properties\": {\n\t\t\t\t\"SandboxId\": \"RETAIL\",\n\t\t\t\t\"UserTokens\": [\n\t\t\t\t\t\t\"" + token.Token + "\"\n\t\t\t\t]\n\t\t\t},\n\t\t\t\"RelyingParty\": \"" + (forJava ? "rp://api.minecraftservices.com/" : "https://pocket.realms.minecraft.net/") + "\",\n\t\t\t\"TokenType\": \"JWT\"\n\t\t}";
                 request.open("POST", "https://xsts.auth.xboxlive.com/xsts/authorize");
                 request.setRequestHeader("Content-Type", "application/json");
                 request.setRequestHeader("Accept", "application/json");

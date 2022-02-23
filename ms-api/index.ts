@@ -49,8 +49,9 @@ export interface AuthInfo {
 	auth_token: AuthorizationTokenResponse,
 	xbox_token: XboxServiceTokenResponse,
 	xsts_token: XboxServiceTokenResponse,
+	xsts_br_token: XboxServiceTokenResponse,
 	mc_token: MCTokenResponse,
-	mc_info: MCUserInfo
+	mc_info: MCUserInfo,
 }
 
 interface DisplayClaim {
@@ -81,18 +82,21 @@ export class AuthenticationHandler {
 
 	public async getAuthCodes(code: string, refresh: boolean = false): Promise<AuthInfo> {
 		if (!code) throw Error("No Code provided.");
-		let authToken: AuthorizationTokenResponse = await this.authCodeToAuthToken(code, refresh).catch(reason=>{throw Error("Code is invalid.")});
-		let xbl: XboxServiceTokenResponse = await this.authTokenToXBL(authToken).catch(reason=>{throw Error("Error during XBL Auth.")});
-		let xsts: XboxServiceTokenResponse = await this.xblToXsts(xbl).catch(reason=>{throw Error("Error during XSTS Auth.")});
-		let mcToken: MCTokenResponse = await this.xstsToMc(xsts).catch(reason=>{throw Error("Error during Mojang Auth.")});
-		let mcInfo: MCUserInfo = await this.getMCInfo(mcToken).catch(reason=>{throw Error("Error during Minecraft Info Fetch. Does the user own Minecraft?")});
+		let authToken: AuthorizationTokenResponse = await this.authCodeToAuthToken(code, refresh).catch(reason => { throw Error("Code is invalid.") });
+		let xbl: XboxServiceTokenResponse = await this.authTokenToXBL(authToken).catch(reason => { throw Error("Error during XBL Auth.") });
+		let xsts: XboxServiceTokenResponse = await this.xblToXsts(xbl).catch(reason => { throw Error("Error during XSTS Auth.") });
+		let mcToken: MCTokenResponse = await this.xstsToMc(xsts).catch(reason => { throw Error("Error during Mojang Auth.") });
+		let mcInfo: MCUserInfo = await this.getMCInfo(mcToken).catch(reason => { throw Error("Error during Minecraft Info Fetch. Does the user own Minecraft?") });
 
+		let xstsBR: XboxServiceTokenResponse = await this.xblToXsts(xbl, false).catch(reason => { throw Error("Error during XSTS Auth.") });
+		
 		return {
 			auth_token: authToken,
 			mc_info: mcInfo,
 			mc_token: mcToken,
 			xbox_token: xbl,
-			xsts_token: xsts
+			xsts_token: xsts,
+			xsts_br_token: xstsBR,
 		}
 	}
 
@@ -134,7 +138,7 @@ export class AuthenticationHandler {
 		return promise;
 	}
 
-	private async xblToXsts(token: XboxServiceTokenResponse): Promise<XboxServiceTokenResponse> {
+	private async xblToXsts(token: XboxServiceTokenResponse, forJava: boolean = true): Promise<XboxServiceTokenResponse> {
 		let request = new XMLHttpRequest();
 		let data = `{
 			"Properties": {
@@ -143,7 +147,7 @@ export class AuthenticationHandler {
 						"${token.Token}"
 				]
 			},
-			"RelyingParty": "rp://api.minecraftservices.com/",
+			"RelyingParty": "${forJava ? "rp://api.minecraftservices.com/" : "https://pocket.realms.minecraft.net/"}",
 			"TokenType": "JWT"
 		}`;
 		request.open("POST", "https://xsts.auth.xboxlive.com/xsts/authorize");
