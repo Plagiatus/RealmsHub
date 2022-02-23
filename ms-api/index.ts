@@ -46,10 +46,11 @@ interface MCCapeInfo extends MCInfo {
 }
 
 export interface AuthInfo {
+	aquired: number,
 	auth_token: AuthorizationTokenResponse,
 	xbox_token: XboxServiceTokenResponse,
 	xsts_token: XboxServiceTokenResponse,
-	xsts_br_token: XboxServiceTokenResponse,
+	xsts_br_token?: XboxServiceTokenResponse,
 	mc_token: MCTokenResponse,
 	mc_info: MCUserInfo,
 }
@@ -89,8 +90,9 @@ export class AuthenticationHandler {
 		let mcInfo: MCUserInfo = await this.getMCInfo(mcToken).catch(reason => { throw Error("Error during Minecraft Info Fetch. Does the user own Minecraft?") });
 
 		let xstsBR: XboxServiceTokenResponse = await this.xblToXsts(xbl, false).catch(reason => { throw Error("Error during XSTS Auth.") });
-		
+
 		return {
+			aquired: Date.now(),
 			auth_token: authToken,
 			mc_info: mcInfo,
 			mc_token: mcToken,
@@ -98,6 +100,47 @@ export class AuthenticationHandler {
 			xsts_token: xsts,
 			xsts_br_token: xstsBR,
 		}
+	}
+
+	public async refreshTokenIfNeeded(token: AuthInfo): Promise<AuthInfo> {
+		let refreshNeeded: boolean = false;
+		let now: Date = new Date(Date.now());
+		let aqDate: Date = new Date(token.aquired ?? 0);
+		let authDate: Date = new Date(aqDate.valueOf() + 1000 * token.auth_token.expires_in);
+		if(now > authDate){
+			token.auth_token = await this.authCodeToAuthToken(token.auth_token.refresh_token, true).catch(reason => { throw Error("Couldn't refresh Auth Token.")});
+			token.aquired = now.valueOf();
+			refreshNeeded = true;
+		}
+		
+		let xboxDate: Date = new Date(token.xbox_token.NotAfter);
+		if(now > xboxDate || refreshNeeded) {
+			token.xbox_token = await this.authTokenToXBL(token.auth_token).catch(reason => {throw Error("Error during XBL refresh.")});
+			refreshNeeded = true;
+		}
+
+		let xstsDate: Date = new Date(token.xsts_token.NotAfter);
+		if(now > xstsDate || refreshNeeded) {
+			token.xsts_token = await this.xblToXsts(token.xbox_token).catch(reason => { throw Error("Error during XSTS refresh.")});
+			refreshNeeded = true;
+		}
+		
+		if(token.xsts_br_token){
+			let xstsBrDate: Date = new Date(token.xsts_br_token.NotAfter);
+			if(now > xstsBrDate || refreshNeeded) {
+				token.xsts_br_token = await this.xblToXsts(token.xbox_token, false).catch(reason => { throw Error("Error during XSTS (Br) refresh.")});
+				refreshNeeded = true;
+			}
+		}
+		
+		let mcDate: Date = new Date(token.mc_token.expires_in * 1000 + aqDate.valueOf());
+		if(now > mcDate || refreshNeeded) {
+			token.mc_token = await this.xstsToMc(token.xsts_token).catch(reason => { throw Error("Error during MC Token refresh.")});
+			refreshNeeded = true;	
+		}
+		if(refreshNeeded) console.log("refresh was needed");
+		
+		return token;
 	}
 
 	private async authCodeToAuthToken(code: string, refresh: boolean): Promise<AuthorizationTokenResponse> {

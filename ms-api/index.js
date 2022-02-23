@@ -87,6 +87,7 @@ var AuthenticationHandler = /** @class */ (function () {
                     case 6:
                         xstsBR = _a.sent();
                         return [2 /*return*/, {
+                                aquired: Date.now(),
                                 auth_token: authToken,
                                 mc_info: mcInfo,
                                 mc_token: mcToken,
@@ -94,6 +95,70 @@ var AuthenticationHandler = /** @class */ (function () {
                                 xsts_token: xsts,
                                 xsts_br_token: xstsBR,
                             }];
+                }
+            });
+        });
+    };
+    AuthenticationHandler.prototype.refreshTokenIfNeeded = function (token) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            var refreshNeeded, now, aqDate, authDate, _b, xboxDate, _c, xstsDate, _d, xstsBrDate, _e, mcDate, _f;
+            return __generator(this, function (_g) {
+                switch (_g.label) {
+                    case 0:
+                        refreshNeeded = false;
+                        now = new Date(Date.now());
+                        aqDate = new Date((_a = token.aquired) !== null && _a !== void 0 ? _a : 0);
+                        authDate = new Date(aqDate.valueOf() + 1000 * token.auth_token.expires_in);
+                        if (!(now > authDate)) return [3 /*break*/, 2];
+                        _b = token;
+                        return [4 /*yield*/, this.authCodeToAuthToken(token.auth_token.refresh_token, true).catch(function (reason) { throw Error("Couldn't refresh Auth Token."); })];
+                    case 1:
+                        _b.auth_token = _g.sent();
+                        token.aquired = now.valueOf();
+                        refreshNeeded = true;
+                        _g.label = 2;
+                    case 2:
+                        xboxDate = new Date(token.xbox_token.NotAfter);
+                        if (!(now > xboxDate || refreshNeeded)) return [3 /*break*/, 4];
+                        _c = token;
+                        return [4 /*yield*/, this.authTokenToXBL(token.auth_token).catch(function (reason) { throw Error("Error during XBL refresh."); })];
+                    case 3:
+                        _c.xbox_token = _g.sent();
+                        refreshNeeded = true;
+                        _g.label = 4;
+                    case 4:
+                        xstsDate = new Date(token.xsts_token.NotAfter);
+                        if (!(now > xstsDate || refreshNeeded)) return [3 /*break*/, 6];
+                        _d = token;
+                        return [4 /*yield*/, this.xblToXsts(token.xbox_token).catch(function (reason) { throw Error("Error during XSTS refresh."); })];
+                    case 5:
+                        _d.xsts_token = _g.sent();
+                        refreshNeeded = true;
+                        _g.label = 6;
+                    case 6:
+                        if (!token.xsts_br_token) return [3 /*break*/, 8];
+                        xstsBrDate = new Date(token.xsts_br_token.NotAfter);
+                        if (!(now > xstsBrDate || refreshNeeded)) return [3 /*break*/, 8];
+                        _e = token;
+                        return [4 /*yield*/, this.xblToXsts(token.xbox_token, false).catch(function (reason) { throw Error("Error during XSTS (Br) refresh."); })];
+                    case 7:
+                        _e.xsts_br_token = _g.sent();
+                        refreshNeeded = true;
+                        _g.label = 8;
+                    case 8:
+                        mcDate = new Date(token.mc_token.expires_in * 1000 + aqDate.valueOf());
+                        if (!(now > mcDate || refreshNeeded)) return [3 /*break*/, 10];
+                        _f = token;
+                        return [4 /*yield*/, this.xstsToMc(token.xsts_token).catch(function (reason) { throw Error("Error during MC Token refresh."); })];
+                    case 9:
+                        _f.mc_token = _g.sent();
+                        refreshNeeded = true;
+                        _g.label = 10;
+                    case 10:
+                        if (refreshNeeded)
+                            console.log("refresh was needed");
+                        return [2 /*return*/, token];
                 }
             });
         });
