@@ -39,6 +39,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthenticationHandler = void 0;
 //@ts-expect-error
 var xmlhttprequest_1 = require("xmlhttprequest");
+var RelyingParty;
+(function (RelyingParty) {
+    RelyingParty["xbox"] = "http://xboxlive.com";
+    RelyingParty["java"] = "rp://api.minecraftservices.com/";
+    RelyingParty["bedrock"] = "https://pocket.realms.minecraft.net/";
+})(RelyingParty || (RelyingParty = {}));
 var AuthenticationHandler = /** @class */ (function () {
     function AuthenticationHandler(clientID, clientSecret, redirectUri) {
         if (!clientID)
@@ -62,7 +68,7 @@ var AuthenticationHandler = /** @class */ (function () {
     AuthenticationHandler.prototype.getAuthCodes = function (code, refresh) {
         if (refresh === void 0) { refresh = false; }
         return __awaiter(this, void 0, void 0, function () {
-            var authToken, xbl, xsts, mcToken, mcInfo, xstsBR;
+            var authToken, xbl, xstsJava, mcToken, mcInfo, xstsBR, xstsXBox;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -74,26 +80,32 @@ var AuthenticationHandler = /** @class */ (function () {
                         return [4 /*yield*/, this.authTokenToXBL(authToken).catch(function (reason) { throw Error("Error during XBL Auth."); })];
                     case 2:
                         xbl = _a.sent();
-                        return [4 /*yield*/, this.xblToXsts(xbl).catch(function (reason) { throw Error("Error during XSTS Auth."); })];
+                        return [4 /*yield*/, this.xblToXsts(xbl, RelyingParty.java).catch(function (reason) { throw Error("Error during XSTS (Java) Auth."); })];
                     case 3:
-                        xsts = _a.sent();
-                        return [4 /*yield*/, this.xstsToMc(xsts).catch(function (reason) { throw Error("Error during Mojang Auth."); })];
+                        xstsJava = _a.sent();
+                        return [4 /*yield*/, this.xstsToMc(xstsJava).catch(function (reason) { throw Error("Error during Mojang Auth."); })];
                     case 4:
                         mcToken = _a.sent();
                         return [4 /*yield*/, this.getMCInfo(mcToken).catch(function (reason) { throw Error("Error during Minecraft Info Fetch. Does the user own Minecraft?"); })];
                     case 5:
                         mcInfo = _a.sent();
-                        return [4 /*yield*/, this.xblToXsts(xbl, false).catch(function (reason) { throw Error("Error during XSTS Auth."); })];
+                        return [4 /*yield*/, this.xblToXsts(xbl, RelyingParty.bedrock).catch(function (reason) { throw Error("Error during XSTS (Bedrock) Auth."); })];
                     case 6:
                         xstsBR = _a.sent();
+                        return [4 /*yield*/, this.xblToXsts(xbl, RelyingParty.xbox).catch(function (reason) { throw Error("Error during XSTS (Xbox) Auth."); })];
+                    case 7:
+                        xstsXBox = _a.sent();
                         return [2 /*return*/, {
                                 aquired: Date.now(),
                                 auth_token: authToken,
                                 mc_info: mcInfo,
                                 mc_token: mcToken,
                                 xbox_token: xbl,
-                                xsts_token: xsts,
-                                xsts_br_token: xstsBR,
+                                xsts_tokens: {
+                                    java: xstsJava,
+                                    bedrock: xstsBR,
+                                    xbox: xstsXBox,
+                                },
                             }];
                 }
             });
@@ -102,7 +114,7 @@ var AuthenticationHandler = /** @class */ (function () {
     AuthenticationHandler.prototype.refreshTokenIfNeeded = function (token) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var refreshNeeded, now, aqDate, authDate, _b, xboxDate, _c, xstsDate, _d, xstsBrDate, _e, mcDate, _f;
+            var refreshNeeded, now, aqDate, authDate, _b, xboxDate, _c, _loop_1, this_1, _d, _e, _i, xsts, mcDate, _f;
             return __generator(this, function (_g) {
                 switch (_g.label) {
                     case 0:
@@ -128,37 +140,50 @@ var AuthenticationHandler = /** @class */ (function () {
                         refreshNeeded = true;
                         _g.label = 4;
                     case 4:
-                        xstsDate = new Date(token.xsts_token.NotAfter);
-                        if (!(now > xstsDate || refreshNeeded)) return [3 /*break*/, 6];
-                        _d = token;
-                        return [4 /*yield*/, this.xblToXsts(token.xbox_token).catch(function (reason) { throw Error("Error during XSTS refresh."); })];
+                        _loop_1 = function (xsts) {
+                            var xstsToken, xstsDate;
+                            return __generator(this, function (_h) {
+                                switch (_h.label) {
+                                    case 0:
+                                        xstsToken = token.xsts_tokens[xsts];
+                                        xstsDate = new Date(xstsToken.NotAfter);
+                                        if (!(now > xstsDate || refreshNeeded)) return [3 /*break*/, 2];
+                                        return [4 /*yield*/, this_1.xblToXsts(token.xbox_token, RelyingParty[xsts]).catch(function (reason) { throw Error("Error during XSTS (" + xsts + ") refresh."); })];
+                                    case 1:
+                                        //@ts-expect-error
+                                        xstsToken = _h.sent();
+                                        refreshNeeded = true;
+                                        _h.label = 2;
+                                    case 2: return [2 /*return*/];
+                                }
+                            });
+                        };
+                        this_1 = this;
+                        _d = [];
+                        for (_e in token.xsts_tokens)
+                            _d.push(_e);
+                        _i = 0;
+                        _g.label = 5;
                     case 5:
-                        _d.xsts_token = _g.sent();
-                        refreshNeeded = true;
-                        _g.label = 6;
+                        if (!(_i < _d.length)) return [3 /*break*/, 8];
+                        xsts = _d[_i];
+                        return [5 /*yield**/, _loop_1(xsts)];
                     case 6:
-                        if (!token.xsts_br_token) return [3 /*break*/, 8];
-                        xstsBrDate = new Date(token.xsts_br_token.NotAfter);
-                        if (!(now > xstsBrDate || refreshNeeded)) return [3 /*break*/, 8];
-                        _e = token;
-                        return [4 /*yield*/, this.xblToXsts(token.xbox_token, false).catch(function (reason) { throw Error("Error during XSTS (Br) refresh."); })];
+                        _g.sent();
+                        _g.label = 7;
                     case 7:
-                        _e.xsts_br_token = _g.sent();
-                        refreshNeeded = true;
-                        _g.label = 8;
+                        _i++;
+                        return [3 /*break*/, 5];
                     case 8:
                         mcDate = new Date(token.mc_token.expires_in * 1000 + aqDate.valueOf());
                         if (!(now > mcDate || refreshNeeded)) return [3 /*break*/, 10];
                         _f = token;
-                        return [4 /*yield*/, this.xstsToMc(token.xsts_token).catch(function (reason) { throw Error("Error during MC Token refresh."); })];
+                        return [4 /*yield*/, this.xstsToMc(token.xsts_tokens.java).catch(function (reason) { throw Error("Error during MC Token refresh."); })];
                     case 9:
                         _f.mc_token = _g.sent();
                         refreshNeeded = true;
                         _g.label = 10;
-                    case 10:
-                        if (refreshNeeded)
-                            console.log("refresh was needed");
-                        return [2 /*return*/, token];
+                    case 10: return [2 /*return*/, token];
                 }
             });
         });
@@ -202,13 +227,12 @@ var AuthenticationHandler = /** @class */ (function () {
             });
         });
     };
-    AuthenticationHandler.prototype.xblToXsts = function (token, forJava) {
-        if (forJava === void 0) { forJava = true; }
+    AuthenticationHandler.prototype.xblToXsts = function (token, relyingParty) {
         return __awaiter(this, void 0, void 0, function () {
             var request, data, promise;
             return __generator(this, function (_a) {
                 request = new xmlhttprequest_1.XMLHttpRequest();
-                data = "{\n\t\t\t\"Properties\": {\n\t\t\t\t\"SandboxId\": \"RETAIL\",\n\t\t\t\t\"UserTokens\": [\n\t\t\t\t\t\t\"" + token.Token + "\"\n\t\t\t\t]\n\t\t\t},\n\t\t\t\"RelyingParty\": \"" + (forJava ? "rp://api.minecraftservices.com/" : "https://pocket.realms.minecraft.net/") + "\",\n\t\t\t\"TokenType\": \"JWT\"\n\t\t}";
+                data = "{\n\t\t\t\"Properties\": {\n\t\t\t\t\"SandboxId\": \"RETAIL\",\n\t\t\t\t\"UserTokens\": [\n\t\t\t\t\t\t\"" + token.Token + "\"\n\t\t\t\t]\n\t\t\t},\n\t\t\t\"RelyingParty\": \"" + relyingParty + "\",\n\t\t\t\"TokenType\": \"JWT\"\n\t\t}";
                 request.open("POST", "https://xsts.auth.xboxlive.com/xsts/authorize");
                 request.setRequestHeader("Content-Type", "application/json");
                 request.setRequestHeader("Accept", "application/json");

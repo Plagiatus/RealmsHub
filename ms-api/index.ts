@@ -49,8 +49,11 @@ export interface AuthInfo {
 	aquired: number,
 	auth_token: AuthorizationTokenResponse,
 	xbox_token: XboxServiceTokenResponse,
-	xsts_token: XboxServiceTokenResponse,
-	xsts_br_token?: XboxServiceTokenResponse,
+	xsts_tokens: {
+		bedrock: XboxServiceTokenResponse,
+		java: XboxServiceTokenResponse,
+		xbox: XboxServiceTokenResponse,
+	}
 	mc_token: MCTokenResponse,
 	mc_info: MCUserInfo,
 }
@@ -59,6 +62,12 @@ interface DisplayClaim {
 	xui: {
 		uhs: string;
 	}[]
+}
+
+enum RelyingParty {
+	xbox = "http://xboxlive.com",
+	java = "rp://api.minecraftservices.com/",
+	bedrock = "https://pocket.realms.minecraft.net/",
 }
 
 export class AuthenticationHandler {
@@ -85,11 +94,12 @@ export class AuthenticationHandler {
 		if (!code) throw Error("No Code provided.");
 		let authToken: AuthorizationTokenResponse = await this.authCodeToAuthToken(code, refresh).catch(reason => { throw Error("Code is invalid.") });
 		let xbl: XboxServiceTokenResponse = await this.authTokenToXBL(authToken).catch(reason => { throw Error("Error during XBL Auth.") });
-		let xsts: XboxServiceTokenResponse = await this.xblToXsts(xbl).catch(reason => { throw Error("Error during XSTS Auth.") });
-		let mcToken: MCTokenResponse = await this.xstsToMc(xsts).catch(reason => { throw Error("Error during Mojang Auth.") });
+		let xstsJava: XboxServiceTokenResponse = await this.xblToXsts(xbl, RelyingParty.java).catch(reason => { throw Error("Error during XSTS (Java) Auth.") });
+		let mcToken: MCTokenResponse = await this.xstsToMc(xstsJava).catch(reason => { throw Error("Error during Mojang Auth.") });
 		let mcInfo: MCUserInfo = await this.getMCInfo(mcToken).catch(reason => { throw Error("Error during Minecraft Info Fetch. Does the user own Minecraft?") });
 
-		let xstsBR: XboxServiceTokenResponse = await this.xblToXsts(xbl, false).catch(reason => { throw Error("Error during XSTS Auth.") });
+		let xstsBR: XboxServiceTokenResponse = await this.xblToXsts(xbl, RelyingParty.bedrock).catch(reason => { throw Error("Error during XSTS (Bedrock) Auth.") });
+		let xstsXBox: XboxServiceTokenResponse = await this.xblToXsts(xbl, RelyingParty.xbox).catch(reason => { throw Error("Error during XSTS (Xbox) Auth.") });
 
 		return {
 			aquired: Date.now(),
@@ -97,8 +107,11 @@ export class AuthenticationHandler {
 			mc_info: mcInfo,
 			mc_token: mcToken,
 			xbox_token: xbl,
-			xsts_token: xsts,
-			xsts_br_token: xstsBR,
+			xsts_tokens: {
+				java: xstsJava,
+				bedrock: xstsBR,
+				xbox: xstsXBox,
+			},
 		}
 	}
 
@@ -119,26 +132,22 @@ export class AuthenticationHandler {
 			refreshNeeded = true;
 		}
 
-		let xstsDate: Date = new Date(token.xsts_token.NotAfter);
-		if(now > xstsDate || refreshNeeded) {
-			token.xsts_token = await this.xblToXsts(token.xbox_token).catch(reason => { throw Error("Error during XSTS refresh.")});
-			refreshNeeded = true;
-		}
-		
-		if(token.xsts_br_token){
-			let xstsBrDate: Date = new Date(token.xsts_br_token.NotAfter);
-			if(now > xstsBrDate || refreshNeeded) {
-				token.xsts_br_token = await this.xblToXsts(token.xbox_token, false).catch(reason => { throw Error("Error during XSTS (Br) refresh.")});
+		for(let xsts in token.xsts_tokens){
+			//@ts-ignore
+			let xstsToken: XboxServiceTokenResponse = token.xsts_tokens[xsts];
+			let xstsDate: Date = new Date(xstsToken.NotAfter);
+			if(now > xstsDate || refreshNeeded) {
+				//@ts-expect-error
+				xstsToken = await this.xblToXsts(token.xbox_token, (<string>RelyingParty[xsts])).catch(reason => { throw Error(`Error during XSTS (${xsts}) refresh.`)});
 				refreshNeeded = true;
 			}
 		}
 		
 		let mcDate: Date = new Date(token.mc_token.expires_in * 1000 + aqDate.valueOf());
 		if(now > mcDate || refreshNeeded) {
-			token.mc_token = await this.xstsToMc(token.xsts_token).catch(reason => { throw Error("Error during MC Token refresh.")});
+			token.mc_token = await this.xstsToMc(token.xsts_tokens.java).catch(reason => { throw Error("Error during MC Token refresh.")});
 			refreshNeeded = true;	
 		}
-		if(refreshNeeded) console.log("refresh was needed");
 		
 		return token;
 	}
@@ -181,7 +190,7 @@ export class AuthenticationHandler {
 		return promise;
 	}
 
-	private async xblToXsts(token: XboxServiceTokenResponse, forJava: boolean = true): Promise<XboxServiceTokenResponse> {
+	private async xblToXsts(token: XboxServiceTokenResponse, relyingParty: RelyingParty): Promise<XboxServiceTokenResponse> {
 		let request = new XMLHttpRequest();
 		let data = `{
 			"Properties": {
@@ -190,7 +199,7 @@ export class AuthenticationHandler {
 						"${token.Token}"
 				]
 			},
-			"RelyingParty": "${forJava ? "rp://api.minecraftservices.com/" : "https://pocket.realms.minecraft.net/"}",
+			"RelyingParty": "${relyingParty}",
 			"TokenType": "JWT"
 		}`;
 		request.open("POST", "https://xsts.auth.xboxlive.com/xsts/authorize");
