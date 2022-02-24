@@ -2,6 +2,7 @@ import * as mongo from "mongodb";
 import { config } from "./index";
 import { AuthInfo } from "../../ms-api";
 
+//@ts-expect-error
 const options: mongo.MongoClientOptions = { useNewUrlParser: true, useUnifiedTopology: true };
 
 export class DB {
@@ -27,7 +28,7 @@ export class DB {
 	}
 
 	public async saveToken(_token: AuthTokenInDB): Promise<void> {
-		this.tokens?.updateOne({ id: _token.id }, { $set: { id: _token.id, auth_token: _token.auth_token, mc_info: _token.mc_info, mc_token: _token.mc_token, xbox_token: _token.xbox_token, xsts_token: _token.xsts_token } }, { upsert: true });
+		this.tokens?.updateOne({ id: _token.id }, { $set: { id: _token.id, auth_token: _token.auth_token, mc_info: _token.mc_info, mc_token: _token.mc_token, xbox_token: _token.xbox_token, xsts_tokens: _token.xsts_tokens } }, { upsert: true });
 	}
 
 	public async getToken(_id: string): Promise<AuthTokenInDB | null | undefined> {

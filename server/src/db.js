@@ -58,6 +58,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DB = void 0;
 var mongo = __importStar(require("mongodb"));
 var index_1 = require("./index");
+//@ts-expect-error
 var options = { useNewUrlParser: true, useUnifiedTopology: true };
 var DB = /** @class */ (function () {
     function DB() {
@@ -92,7 +93,7 @@ var DB = /** @class */ (function () {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_b) {
-                (_a = this.tokens) === null || _a === void 0 ? void 0 : _a.updateOne({ id: _token.id }, { $set: { id: _token.id, auth_token: _token.auth_token, mc_info: _token.mc_info, mc_token: _token.mc_token, xbox_token: _token.xbox_token, xsts_token: _token.xsts_token } }, { upsert: true });
+                (_a = this.tokens) === null || _a === void 0 ? void 0 : _a.updateOne({ id: _token.id }, { $set: { id: _token.id, auth_token: _token.auth_token, mc_info: _token.mc_info, mc_token: _token.mc_token, xbox_token: _token.xbox_token, xsts_tokens: _token.xsts_tokens } }, { upsert: true });
                 return [2 /*return*/];
             });
         });
