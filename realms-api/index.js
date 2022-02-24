@@ -1,4 +1,19 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,40 +51,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.RealmsClientBedrock = exports.RealmsClientJava = void 0;
 //@ts-expect-error
 var xmlhttprequest_1 = require("xmlhttprequest");
 var RealmsClient = /** @class */ (function () {
-    function RealmsClient(_gameVersion, _accessToken, _uuid, _name, _pe) {
-        if (_pe === void 0) { _pe = false; }
-        this.accessToken = _accessToken;
-        this.playerUuid = _uuid;
-        this.playerName = _name;
+    function RealmsClient(_gameVersion) {
         this.gameVersion = _gameVersion;
-        this.pe = _pe;
     }
-    Object.defineProperty(RealmsClient.prototype, "cookie", {
-        get: function () {
-            return "sid=token:" + this.accessToken + ":" + this.playerUuid + ";user=" + this.playerName + ";version=" + this.gameVersion;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    RealmsClient.prototype.sendGetRequest = function (_url) {
+    RealmsClient.prototype.sendGetRequest = function (_path) {
         return __awaiter(this, void 0, void 0, function () {
             var request, promise;
             return __generator(this, function (_a) {
-                request = this.createRequest(_url, "GET");
+                request = this.createRequest(_path, "GET");
                 promise = this.waitForRequestResponse(request);
                 request.send();
                 return [2 /*return*/, promise];
             });
         });
     };
-    RealmsClient.prototype.sendPostRequest = function (_url, _data) {
+    RealmsClient.prototype.sendPostRequest = function (_path, _data) {
         return __awaiter(this, void 0, void 0, function () {
             var request, promise;
             return __generator(this, function (_a) {
-                request = this.createRequest(_url, "POST");
+                request = this.createRequest(_path, "POST");
                 promise = this.waitForRequestResponse(request);
                 if (_data)
                     request.send(JSON.stringify(_data));
@@ -79,57 +83,30 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.sendPutRequest = function (_url) {
+    RealmsClient.prototype.sendPutRequest = function (_path, _data) {
         return __awaiter(this, void 0, void 0, function () {
             var request, promise;
             return __generator(this, function (_a) {
-                request = this.createRequest(_url, "PUT");
+                request = this.createRequest(_path, "PUT");
+                promise = this.waitForRequestResponse(request);
+                if (_data)
+                    request.send(JSON.stringify(_data));
+                else
+                    request.send();
+                return [2 /*return*/, promise];
+            });
+        });
+    };
+    RealmsClient.prototype.sendDeleteRequest = function (_path) {
+        return __awaiter(this, void 0, void 0, function () {
+            var request, promise;
+            return __generator(this, function (_a) {
+                request = this.createRequest(_path, "DELETE");
                 promise = this.waitForRequestResponse(request);
                 request.send();
                 return [2 /*return*/, promise];
             });
         });
-    };
-    RealmsClient.prototype.sendDeleteRequest = function (_url) {
-        return __awaiter(this, void 0, void 0, function () {
-            var request, promise;
-            return __generator(this, function (_a) {
-                request = this.createRequest(_url, "DELETE");
-                promise = this.waitForRequestResponse(request);
-                request.send();
-                return [2 /*return*/, promise];
-            });
-        });
-    };
-    RealmsClient.prototype.createRequest = function (_url, _method) {
-        if (!this.pe) {
-            var url = "https://pc.realms.minecraft.net" + _url;
-            var request = new xmlhttprequest_1.XMLHttpRequest();
-            request.open(_method, url);
-            request.setDisableHeaderCheck(true);
-            request.setRequestHeader("Cookie", this.cookie);
-            if (_method == "POST")
-                request.setRequestHeader("Content-Type", "application/json");
-            return request;
-        }
-        else {
-            var url = "https://pocket.realms.minecraft.net" + _url;
-            var request = new xmlhttprequest_1.XMLHttpRequest();
-            request.open(_method, url);
-            request.setDisableHeaderCheck(true);
-            request.setRequestHeader("Authorization", "XBL3.0 " + this.accessToken);
-            request.setRequestHeader("User-Agent", "MCPE/UWP");
-            request.setRequestHeader("Client-Version", this.gameVersion);
-            // request.setRequestHeader("Accept-Language", "en-GB");
-            // request.setRequestHeader("Accept-Encoding", "gzip, deflate, br");
-            // request.setRequestHeader("Accept", "*/*")
-            // request.setRequestHeader("Cache-Control", "no-cache")
-            // request.setRequestHeader("Charset", "utf-8")
-            request.withCredentials = true;
-            if (_method == "POST")
-                request.setRequestHeader("Content-Type", "application/json");
-            return request;
-        }
     };
     RealmsClient.prototype.waitForRequestResponse = function (req) {
         return __awaiter(this, void 0, void 0, function () {
@@ -157,9 +134,39 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
+    return RealmsClient;
+}());
+var RealmsClientJava = /** @class */ (function (_super) {
+    __extends(RealmsClientJava, _super);
+    function RealmsClientJava(_gameVersion, _accessToken, _uuid, _name, _pe) {
+        if (_pe === void 0) { _pe = false; }
+        var _this = _super.call(this, _gameVersion) || this;
+        _this.accessToken = _accessToken;
+        _this.playerUuid = _uuid;
+        _this.playerName = _name;
+        _this.pe = _pe;
+        return _this;
+    }
+    Object.defineProperty(RealmsClientJava.prototype, "cookie", {
+        get: function () {
+            return "sid=token:" + this.accessToken + ":" + this.playerUuid + ";user=" + this.playerName + ";version=" + this.gameVersion;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    RealmsClientJava.prototype.createRequest = function (_path, _method) {
+        var url = "https://pc.realms.minecraft.net" + _path;
+        var request = new xmlhttprequest_1.XMLHttpRequest();
+        request.open(_method, url);
+        request.setDisableHeaderCheck(true);
+        request.setRequestHeader("Cookie", this.cookie);
+        if (_method == "POST")
+            request.setRequestHeader("Content-Type", "application/json");
+        return request;
+    };
     //#region CORE requests
     //#region GET requests
-    RealmsClient.prototype.compatible = function () {
+    RealmsClientJava.prototype.compatible = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -172,7 +179,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.worlds = function () {
+    RealmsClientJava.prototype.worlds = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -185,7 +192,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.world = function (_worldId) {
+    RealmsClientJava.prototype.world = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -198,7 +205,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.ip = function (_worldId) {
+    RealmsClientJava.prototype.ip = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -213,7 +220,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.backups = function (_worldId) {
+    RealmsClientJava.prototype.backups = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -226,7 +233,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.downloadLatestBackup = function (_worldId, _slot) {
+    RealmsClientJava.prototype.downloadLatestBackup = function (_worldId, _slot) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -239,7 +246,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.getOps = function (_worldId) {
+    RealmsClientJava.prototype.getOps = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -252,7 +259,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.subscriptions = function (_worldId) {
+    RealmsClientJava.prototype.subscriptions = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -265,7 +272,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.inviteCount = function () {
+    RealmsClientJava.prototype.inviteCount = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -278,7 +285,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.invites = function () {
+    RealmsClientJava.prototype.invites = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -291,7 +298,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.templates = function (_type, _page, _pageSize) {
+    RealmsClientJava.prototype.templates = function (_type, _page, _pageSize) {
         if (_pageSize === void 0) { _pageSize = 10; }
         return __awaiter(this, void 0, void 0, function () {
             var result;
@@ -307,7 +314,7 @@ var RealmsClient = /** @class */ (function () {
     };
     //#endregion
     //#region POST requests
-    RealmsClient.prototype.makeOP = function (_worldId, _playerUUID) {
+    RealmsClientJava.prototype.makeOP = function (_worldId, _playerUUID) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -320,7 +327,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.invitePlayer = function (_worldId, _playerName, _playerUUID) {
+    RealmsClientJava.prototype.invitePlayer = function (_worldId, _playerName, _playerUUID) {
         return __awaiter(this, void 0, void 0, function () {
             var data, result;
             return __generator(this, function (_a) {
@@ -339,7 +346,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.resetWorld = function (_worldId, _settings) {
+    RealmsClientJava.prototype.resetWorld = function (_worldId, _settings) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -352,21 +359,21 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.resetWorldToSeed = function (_worldId, _seed, _levelType, _generateStructures) {
+    RealmsClientJava.prototype.resetWorldToSeed = function (_worldId, _seed, _levelType, _generateStructures) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.resetWorld(_worldId, { generateStructures: _generateStructures, levelType: _levelType, seed: _seed, worldTemplateId: -1 })];
             });
         });
     };
-    RealmsClient.prototype.resetWorldToTemplate = function (_worldId, _templateId) {
+    RealmsClientJava.prototype.resetWorldToTemplate = function (_worldId, _templateId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.resetWorld(_worldId, { generateStructures: false, levelType: -1, seed: "", worldTemplateId: _templateId })];
             });
         });
     };
-    RealmsClient.prototype.setWorldSettings = function (_worldId, _settings) {
+    RealmsClientJava.prototype.setWorldSettings = function (_worldId, _settings) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -379,7 +386,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.setSlotSettings = function (_worldId, _slot, _settings) {
+    RealmsClientJava.prototype.setSlotSettings = function (_worldId, _slot, _settings) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -394,7 +401,7 @@ var RealmsClient = /** @class */ (function () {
     };
     //#endregion
     //#region PUT requests
-    RealmsClient.prototype.acceptInvite = function (_invitationId) {
+    RealmsClientJava.prototype.acceptInvite = function (_invitationId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -407,7 +414,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.rejectInvite = function (_invitationId) {
+    RealmsClientJava.prototype.rejectInvite = function (_invitationId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -420,7 +427,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.openRealm = function (_worldId) {
+    RealmsClientJava.prototype.openRealm = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -433,7 +440,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.closeRealm = function (_worldId) {
+    RealmsClientJava.prototype.closeRealm = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -446,7 +453,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.setToMinigame = function (_worldId, _minigameId) {
+    RealmsClientJava.prototype.setToMinigame = function (_worldId, _minigameId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -459,7 +466,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.setToSlot = function (_worldId, _slot) {
+    RealmsClientJava.prototype.setToSlot = function (_worldId, _slot) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -475,7 +482,7 @@ var RealmsClient = /** @class */ (function () {
     /**
      * Closes the world to allow you to upload a new world.
      */
-    RealmsClient.prototype.uploadInfo = function (_worldId) {
+    RealmsClientJava.prototype.uploadInfo = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -490,7 +497,7 @@ var RealmsClient = /** @class */ (function () {
     };
     //#endregion
     //#region DELETE requests
-    RealmsClient.prototype.kickPlayer = function (_worldId, _playerUUID) {
+    RealmsClientJava.prototype.kickPlayer = function (_worldId, _playerUUID) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -503,7 +510,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.deopPlayer = function (_worldId, _playerUUID) {
+    RealmsClientJava.prototype.deopPlayer = function (_worldId, _playerUUID) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -516,7 +523,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.leaveServer = function (_worldId) {
+    RealmsClientJava.prototype.leaveServer = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -532,7 +539,7 @@ var RealmsClient = /** @class */ (function () {
     //#endregion
     //#endregion
     //#region OTHER requests
-    RealmsClient.prototype.getNews = function () {
+    RealmsClientJava.prototype.getNews = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -546,7 +553,7 @@ var RealmsClient = /** @class */ (function () {
         });
     };
     /** No idea what this does. */
-    RealmsClient.prototype.regionPingResult = function () {
+    RealmsClientJava.prototype.regionPingResult = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -559,7 +566,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.getLiveStats = function (_worldId) {
+    RealmsClientJava.prototype.getLiveStats = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -576,7 +583,7 @@ var RealmsClient = /** @class */ (function () {
     // 	let result = await this.sendPostRequest("/worlds/" + _worldId + "/initialize");
     // 	return result;
     // }
-    RealmsClient.prototype.mcoAvailable = function () {
+    RealmsClientJava.prototype.mcoAvailable = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -589,7 +596,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.stageAvailable = function () {
+    RealmsClientJava.prototype.stageAvailable = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -606,7 +613,7 @@ var RealmsClient = /** @class */ (function () {
     // 	let result = await this.sendPutRequest("/worlds/" + _worldId + "/backups");
     // 	return result;
     // }
-    RealmsClient.prototype.agreeToTos = function () {
+    RealmsClientJava.prototype.agreeToTos = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -619,7 +626,7 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    RealmsClient.prototype.trialAvailable = function () {
+    RealmsClientJava.prototype.trialAvailable = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -633,7 +640,7 @@ var RealmsClient = /** @class */ (function () {
         });
     };
     /** Doesn't seem to be doing anything. */
-    RealmsClient.prototype.deleteWorld = function (_worldId) {
+    RealmsClientJava.prototype.deleteWorld = function (_worldId) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
@@ -646,6 +653,557 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
-    return RealmsClient;
-}());
-exports.default = RealmsClient;
+    return RealmsClientJava;
+}(RealmsClient));
+exports.RealmsClientJava = RealmsClientJava;
+var RealmsClientBedrock = /** @class */ (function (_super) {
+    __extends(RealmsClientBedrock, _super);
+    function RealmsClientBedrock(_gameVersion, _xstsBr, _xstsXbox) {
+        var _this = _super.call(this, _gameVersion) || this;
+        _this.xstsBedrock = { token: _xstsBr.Token, userhash: _xstsBr.DisplayClaims.xui[0].uhs };
+        _this.xstsXbox = { token: _xstsXbox.Token, userhash: _xstsXbox.DisplayClaims.xui[0].uhs };
+        return _this;
+    }
+    RealmsClientBedrock.prototype.accessToken = function (xsts) {
+        if (xsts === void 0) { xsts = this.xstsBedrock; }
+        return "XBL3.0 x=" + xsts.userhash + ";" + xsts.token;
+    };
+    RealmsClientBedrock.prototype.createRequest = function (_url, _method, _xsts) {
+        if (_xsts === void 0) { _xsts = this.xstsBedrock; }
+        var url = "https://pocket.realms.minecraft.net" + _url;
+        var request = new xmlhttprequest_1.XMLHttpRequest();
+        request.open(_method, url);
+        request.setDisableHeaderCheck(true);
+        request.setRequestHeader("Authorization", this.accessToken(_xsts));
+        request.setRequestHeader("User-Agent", "MCPE/UWP");
+        request.setRequestHeader("Client-Version", this.gameVersion);
+        request.setRequestHeader("Accept-Language", "en_us");
+        // request.setRequestHeader("Accept-Encoding", "gzip, deflate, br");
+        // request.setRequestHeader("Accept", "*/*")
+        // request.setRequestHeader("Cache-Control", "no-cache")
+        // request.setRequestHeader("Charset", "utf-8")
+        request.withCredentials = true;
+        if (_method == "POST")
+            request.setRequestHeader("Content-Type", "application/json");
+        return request;
+    };
+    RealmsClientBedrock.prototype.getPlayerInformation = function () {
+        var xuids = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            xuids[_i] = arguments[_i];
+        }
+        return __awaiter(this, void 0, void 0, function () {
+            var url, request;
+            return __generator(this, function (_a) {
+                if (xuids.length == 0)
+                    return [2 /*return*/, []];
+                url = "https://peoplehub.xboxlive.com/users/me/people/xuids(" + xuids.toString() + ")";
+                request = new xmlhttprequest_1.XMLHttpRequest();
+                request.open("GET", url);
+                request.setRequestHeader("Authorization", this.accessToken(this.xstsXbox));
+                request.setRequestHeader("x-xbl-contract-version", 4);
+                request.setRequestHeader("Accept", "application/json");
+                request.setRequestHeader("Accept-Language", "en_us");
+                return [2 /*return*/, this.waitForRequestResponse(request)];
+            });
+        });
+    };
+    //#region CORE requests
+    //#region GET requests
+    RealmsClientBedrock.prototype.compatible = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/mco/client/compatible")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.worlds = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/worlds")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.world = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/worlds/" + _worldId)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.ip = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/server/" + _worldId + "/join")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.backups = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/worlds/" + _worldId + "/backups")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.downloadBackup = function (_worldId, _backupId, _slot) {
+        if (_backupId === void 0) { _backupId = "latest"; }
+        if (_slot === void 0) { _slot = 1; }
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/archive/download/world/" + _worldId + "/" + _slot + "/" + _backupId)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.inviteLinks = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/links/v1?worldId=" + _worldId)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.infoAboutInviteCode = function (_code) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/worlds/v1/link/" + _code)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.blockedPlayers = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/worlds/" + _worldId + "/blocklist")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.subscriptions = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/worlds/" + _worldId + "/blocklist")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.inviteCount = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/invites/count/pending")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.invites = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/invites/")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    //#endregion
+    //#region POST requests
+    RealmsClientBedrock.prototype.joinRealmThroughCode = function (_code) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/invites/v1/link/accept/" + _code)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.applyContent = function (_worldId, _packUUIDs) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/world/" + _worldId + "/content/", _packUUIDs)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.setWorldSettings = function (_worldId, _settings) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/world/" + _worldId + "/configuration/", _settings)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.blockUser = function (_worldId, _xuid) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/world/" + _worldId + "/blocklist/" + _xuid)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    //#endregion
+    //#region PUT requests
+    RealmsClientBedrock.prototype.kickPlayers = function (_worldId, _xuids) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, _i, _xuids_1, xuid, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        data = { invites: {} };
+                        for (_i = 0, _xuids_1 = _xuids; _i < _xuids_1.length; _i++) {
+                            xuid = _xuids_1[_i];
+                            data.invites[xuid] = "REMOVE";
+                        }
+                        return [4 /*yield*/, this.sendPutRequest("/invites/" + _worldId + "/invite/update", data)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.invitePlayers = function (_worldId, _xuids) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, _i, _xuids_2, xuid, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        data = { invites: {} };
+                        for (_i = 0, _xuids_2 = _xuids; _i < _xuids_2.length; _i++) {
+                            xuid = _xuids_2[_i];
+                            data.invites[xuid] = "ADD";
+                        }
+                        return [4 /*yield*/, this.sendPutRequest("/invites/" + _worldId + "/invite/update", data)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.defaultPermission = function (_worldId, _permission) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/worlds/" + _worldId + "/defaultPermission", { permission: _permission })];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.changeUserPermission = function (_worldId, _xuid, _permission) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/worlds/" + _worldId + "/userPermission", { permission: _permission, xuid: _xuid })];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.setToSlot = function (_worldId, _slot) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/worlds/" + _worldId + "/slot/" + _slot)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.openRealm = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/worlds/" + _worldId + "/open")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.closeRealm = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/worlds/" + _worldId + "/close")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.resetRealm = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/worlds/" + _worldId + "/reset")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.forceResourcepackOnJoin = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/world/" + _worldId + "/content/texturePacksRequired")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.acceptInvite = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/invites/accept/" + _worldId)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    //#endregion
+    //#region DELETE requests
+    RealmsClientBedrock.prototype.unblockUser = function (_worldId, _xuid) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendDeleteRequest("/worlds/" + _worldId + "/blocklist/" + _xuid)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.rejectInvite = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendDeleteRequest("/invites/" + _worldId)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.leaveServer = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendDeleteRequest("/worlds/" + _worldId)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.dontForceResourcepackOnJoin = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendDeleteRequest("/world/" + _worldId + "/content/texturePacksRequired")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    //#endregion
+    //#endregion
+    //#region OTHER requests
+    //#region GET requests
+    RealmsClientBedrock.prototype.trial = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/trial/new")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.livePlayers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendGetRequest("/activities/live/players")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    //#endregion
+    //#region POST requests
+    RealmsClientBedrock.prototype.validateClubs = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/clubs/validate")];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.clearMembers = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/invites/" + _worldId + "/invite/update", { invites: null })];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.initializeDEV = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/worlds/" + _worldId + "/initialize", { invites: null })];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    RealmsClientBedrock.prototype.editConfigDEV = function (_worldId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPostRequest("/worlds/" + _worldId + "/configuration/dev", { invites: null })];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    return RealmsClientBedrock;
+}(RealmsClient));
+exports.RealmsClientBedrock = RealmsClientBedrock;
