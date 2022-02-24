@@ -41,7 +41,7 @@ var _1 = require(".");
 var shared_1 = require("./shared");
 function registerJavaPaths(app) {
     var _this = this;
-    var prefix = "/java";
+    var prefix = "/jv";
     app.route(prefix + "/templates/:type/:page/:size")
         .get(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
         var type, page, size, _a, _b;

@@ -1,7 +1,7 @@
 import express from "express";
 import { authHandler, clients, db, latestVersion, tokens, tokenTimestamps } from ".";
 import { AuthInfo } from "../../ms-api";
-import RealmsClient from "../../realms-api";
+import { RealmsClientJava} from "../../realms-api";
 import { AuthTokenInDB } from "./db";
 
 export function wrongMethod(req: express.Request, res: express.Response) {
@@ -45,7 +45,7 @@ export async function checkAndInitAuth(req: express.Request, res: express.Respon
 export function initAuth(_id: string, _token: AuthInfo) {
 	tokenTimestamps.set(_id, Date.now());
 	tokens.set(_id, _token);
-	clients.set(_id, new RealmsClient(latestVersion, _token.mc_token.access_token, _token.mc_info.id, _token.mc_info.name));
+	clients.set(_id, new RealmsClientJava(latestVersion, _token.mc_token.access_token, _token.mc_info.id, _token.mc_info.name));
 	let tokenInDB: AuthTokenInDB = { ..._token, id: _id };
 	db.saveToken(tokenInDB);
 }

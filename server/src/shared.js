@@ -46,13 +46,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initAuth = exports.checkAndInitAuth = exports.anErrorOccured = exports.wrongMethod = void 0;
 var _1 = require(".");
-var realms_api_1 = __importDefault(require("../../realms-api"));
+var realms_api_1 = require("../../realms-api");
 function wrongMethod(req, res) {
     res.sendStatus(405);
 }
@@ -109,7 +106,7 @@ exports.checkAndInitAuth = checkAndInitAuth;
 function initAuth(_id, _token) {
     _1.tokenTimestamps.set(_id, Date.now());
     _1.tokens.set(_id, _token);
-    _1.clients.set(_id, new realms_api_1.default(_1.latestVersion, _token.mc_token.access_token, _token.mc_info.id, _token.mc_info.name));
+    _1.clients.set(_id, new realms_api_1.RealmsClientJava(_1.latestVersion, _token.mc_token.access_token, _token.mc_info.id, _token.mc_info.name));
     var tokenInDB = __assign(__assign({}, _token), { id: _id });
     _1.db.saveToken(tokenInDB);
 }

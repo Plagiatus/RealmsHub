@@ -1,10 +1,10 @@
 import express, { NextFunction } from "express";
 import { clients } from ".";
-import RealmsClient, { SlotNumber, Template, Templates, TemplateType } from "../../realms-api";
+import { RealmsClientJava, SlotNumber, Template, Templates, TemplateType } from "../../realms-api";
 import { checkAndInitAuth, wrongMethod } from "./shared";
 
 export function registerJavaPaths(app: express.Express) {
-	let prefix: string = "/java";
+	let prefix: string = "/jv";
 
 
 	app.route(prefix + "/templates/:type/:page/:size")
@@ -24,7 +24,7 @@ export function registerJavaPaths(app: express.Express) {
 
 	app.route(prefix + "/invites/:command")
 		.post(checkAndInitAuth, async (req, res) => {
-			let client: RealmsClient = <RealmsClient>clients.get(req.body.id);
+			let client: RealmsClientJava = <RealmsClientJava>clients.get(req.body.id);
 			let command: string = req.params.command;
 
 			if (command == "get") {
@@ -55,7 +55,7 @@ export function registerJavaPaths(app: express.Express) {
 				return;
 			}
 
-			let client: RealmsClient = <RealmsClient>clients.get(req.body.id);
+			let client: RealmsClientJava = <RealmsClientJava>clients.get(req.body.id);
 			let command: string = req.params.command;
 
 			switch (command) {
@@ -85,7 +85,7 @@ export function registerJavaPaths(app: express.Express) {
 				res.sendStatus(400);
 				return;
 			}
-			let client: RealmsClient = <RealmsClient>clients.get(req.body.id);
+			let client: RealmsClientJava = <RealmsClientJava>clients.get(req.body.id);
 			let command: string = req.params.command;
 
 			switch (command) {
@@ -115,7 +115,7 @@ export function registerJavaPaths(app: express.Express) {
 				res.sendStatus(400);
 				return;
 			}
-			let client: RealmsClient = <RealmsClient>clients.get(req.body.id);
+			let client: RealmsClientJava = <RealmsClientJava>clients.get(req.body.id);
 			let command = req.params.command;
 			switch (command) {
 				case "get-one":
@@ -201,7 +201,7 @@ export function registerJavaPaths(app: express.Express) {
 	app.route(prefix + "/:command")
 		.post(checkAndInitAuth, async (req, res) => {
 			let command: string = req.params.command;
-			let client: RealmsClient = <RealmsClient>clients.get(req.body.id);
+			let client: RealmsClientJava = <RealmsClientJava>clients.get(req.body.id);
 			switch (command) {
 				case "worlds":
 					res.send(await client.worlds());
@@ -240,7 +240,7 @@ let lastTemplateCheck: number = 0;
 async function getTemplates(type: TemplateType, page: number, size: number, clientId?: string): Promise<Templates> {
 	let templates = templateMap.get(type);
 	let hoursSinceLastCheck: number = (Date.now() - lastTemplateCheck) / 1000 / 60 / 60;
-	if (!(clientId && clients.has(clientId) && hoursSinceLastCheck > 24)){	//if there is no client ID and the last check was less than 24 hours ago check if templates exist, otherwise reload templates
+	if (!(clientId && clients.has(clientId) && hoursSinceLastCheck > 24)) {	//if there is no client ID and the last check was less than 24 hours ago check if templates exist, otherwise reload templates
 		if (templates) {
 			let result: Templates = {
 				page,
@@ -251,13 +251,13 @@ async function getTemplates(type: TemplateType, page: number, size: number, clie
 			return result;
 		}
 	}
-	
+
 	let types: TemplateType[] = ["MINIGAME", "ADVENTUREMAP", "EXPERIENCE", "NORMAL", "INSPIRATION"];
 	if (!clientId || !clients.has(clientId) || !types.includes(type)) {
 		return { page: -1, size: -1, total: -1, templates: [] };
 	}
 
-	let client: RealmsClient = <RealmsClient>clients.get(clientId);
+	let client: RealmsClientJava = <RealmsClientJava>clients.get(clientId);
 	for (let type of types) {
 		let oneTemp = await client.templates(type, 0, 1);
 		let allTemps = await client.templates(type, 0, oneTemp.total);

@@ -2,7 +2,7 @@ import express from "express";
 import *  as bodyParser from "body-parser";
 import { configProduction, configTesting, Config } from "./config";
 import { AuthenticationHandler, AuthInfo } from "../../ms-api";
-import RealmsClient from "../../realms-api";
+import {RealmsClientJava} from "../../realms-api";
 import { DB } from "./db";
 import * as https from "https";
 import hat from "hat";
@@ -21,7 +21,7 @@ if (process.argv[2] == "--local") {
 export const db = new DB();
 export const tokenTimestamps: Map<string, number> = new Map<string, number>();
 export const tokens: Map<string, AuthInfo> = new Map<string, AuthInfo>();
-export const clients: Map<string, RealmsClient> = new Map<string, RealmsClient>();
+export const clients: Map<string, RealmsClientJava> = new Map<string, RealmsClientJava>();
 export let latestVersion: string;
 
 const app = express();
