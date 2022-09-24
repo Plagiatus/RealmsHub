@@ -254,7 +254,7 @@ app.route("/worlds/:command")
 			case "reset":
 				let seed = req.body.seed;
 				let worldType = req.body.worldType;
-				let genStructures = !!req.body.generateStructures;
+				let genStructures = !!req.body.genStructures;
 				if (seed == undefined || worldType == undefined) {
 					res.sendStatus(400);
 					break;
