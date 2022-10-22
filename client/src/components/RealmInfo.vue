@@ -1,7 +1,7 @@
 <template>
 	<div id="realm-info" class="gray-block">
 		<img class="realm-owner" :src="'https://crafatar.com/renders/head/' + realm.ownerUUID + '?scale=4&overlay'" :alt="realm.owner + '\'s head'">
-		<div>
+		<div style="overflow: hidden;">
 			<span class="realm-status">
 			<div class="realm-status-dot" :style="{background: statusColorVariable}"></div>
 			{{status}}
