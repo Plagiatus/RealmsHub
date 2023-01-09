@@ -56,7 +56,7 @@ export default defineComponent({
 				diffMonths = 12 + diffMonths;
 				diffYears -= 1;
 			}
-			if(diffDays < 0 && diffMonths > 0) {
+			if(diffDays < 0 && diffMonths >= 0) {
 				diffDays = new Date(now.getUTCFullYear(), now.getUTCMonth() + 1, 0).getDate() + diffDays;
 				diffMonths -= 1;
 			}
@@ -68,7 +68,7 @@ export default defineComponent({
 				duration += diffMonths + " month" + (diffMonths != 1 ? "s": "") + ", ";
 			}
 			if(diffMonths > 0 || diffYears > 0 || diffDays > 0){
-				duration += diffDays + " day" + (diffMonths != 1 ? "s": "");
+				duration += diffDays + " day" + (diffDays != 1 ? "s": "");
 			}
 			return duration;
 		},
