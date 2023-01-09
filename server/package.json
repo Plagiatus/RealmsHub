@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node ./src/index.js",
     "local": "node ./src/index.js --local",
+    "debug": "node ./src/index.js --local --inspect",
     "nodemon": "npx nodemon ./src/index.js --local",
     "db": "D:\\Programme\\MongoDB\\4.0\\bin\\mongod.exe --dbpath ./db"
   },
@@ -20,7 +21,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "hat": "^0.0.3",
-    "mongodb": "^4.1.2"
+    "mongodb": "^4.1.2",
+    "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
     "@types/hat": "^0.0.1",
