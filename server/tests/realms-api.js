@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var ms_api_1 = require("../../ms-api");
 var realms_api_1 = __importDefault(require("../../realms-api"));
-var app = express_1.default();
+var app = (0, express_1.default)();
 var clientId = "cf8b68fc-eb1a-442f-ae01-5fa94adce065";
 var clientSecret = "Kn7e34~A0-_Yu__u8KTn295OtC5vZW30-E";
 var redirectUri = "http://localhost:3000/login-redirect";

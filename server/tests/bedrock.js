@@ -41,11 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var ms_api_1 = require("../../ms-api");
-// @ts-expect-error
-var xmlhttprequest_1 = require("xmlhttprequest");
 var app = (0, express_1.default)();
-// const clientId = "cf8b68fc-eb1a-442f-ae01-5fa94adce065";
-// const clientSecret = "Kn7e34~A0-_Yu__u8KTn295OtC5vZW30-E";
 var clientId = "6f26d7ba-f750-4876-a812-a8efcd652e8e";
 var clientSecret = "L597Q~dzRru3whr-hqVzg4YvmSwiY8rqoKw0l";
 var redirectUri = "http://localhost:3000/redirect";
@@ -54,7 +50,7 @@ app.get("/", function (req, res) {
     res.redirect(ah.forwardUrl);
 });
 app.get("/redirect", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var code, result, request, responsePromise, response;
+    var code, result;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -67,46 +63,8 @@ app.get("/redirect", function (req, res) { return __awaiter(void 0, void 0, void
             case 1:
                 result = _a.sent();
                 res.json(result);
-                console.log("done");
-                request = new xmlhttprequest_1.XMLHttpRequest();
-                request.open("GET", "https://pocket.realms.minecraft.net/worlds");
-                request.setRequestHeader("Authorization", "XBL3.0 x=" + result.xsts_tokens.bedrock.DisplayClaims.xui[0].uhs + ";" + result.xsts_tokens.bedrock.Token);
-                request.setRequestHeader("Client-Version", "1.18.120");
-                request.setRequestHeader("User-Agent", "MCPE/UWP");
-                responsePromise = waitForRequestResponse(request);
-                request.send();
-                return [4 /*yield*/, responsePromise];
-            case 2:
-                response = _a.sent();
-                console.log(response);
                 return [2 /*return*/];
         }
     });
 }); });
 app.listen(3000);
-function waitForRequestResponse(req) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            return [2 /*return*/, new Promise(function (resolve, reject) {
-                    req.addEventListener("readystatechange", function () {
-                        if (req.readyState == 4) {
-                            if (req.status == 200) {
-                                resolve(req.responseText);
-                            }
-                            else if (req.status == 204) {
-                                resolve(true);
-                            }
-                            else {
-                                var re = { code: req.status, message: req.statusText };
-                                console.error(req.status, req.statusText);
-                                if (req.responseText != "")
-                                    resolve(req.responseText);
-                                else
-                                    resolve(JSON.stringify(re));
-                            }
-                        }
-                    });
-                })];
-        });
-    });
-}

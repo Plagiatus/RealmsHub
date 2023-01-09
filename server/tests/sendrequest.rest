@@ -1,0 +1,100 @@
+# send test auth request
+
+@baseurl = https://pocket.realms.minecraft.net
+@userhash = 17793252019106539751
+@token = eyJlbmMiOiJBMTI4Q0JDK0hTMjU2IiwiYWxnIjoiUlNBLU9BRVAiLCJjdHkiOiJKV1QiLCJ6aXAiOiJERUYiLCJ4NXQiOiJfd3lzeEV6dHY4UmdGLWl4cjltdy1LTTNaUG8ifQ.CfeVpo0UmKbpEQ8zOwQaZwdIA_C2FTJkrwAlc5dLBxKblF1AAKLiBuyiu_kFEon1wc6C8MNj1WaSWB-Pls38Yz5Gqzce3FMHRF2II-LNRnYggTJV3olJ6zhr1N8uplthVVX8pyhZcL2x0P-egZq5pJJB3jVtJAbo7v08bOsOGmzDg87wtcad7D-HQrCazBxgHNaXVQuoZWp6Nyw1S6jpbGzp0uTMB2Shv0NvJdJhUWJ-8hxFUizGMIKYKRE0Siukxy8nZR0hK-670hzEKFw0jSyZUaAAq4xuzuObC4Fua6jQvhdkGIodQua7WoqVdpTV_3XHRLys7R8ecACygZe64g.zBR_Qng-DLpFH-DO7d98jA.kO0UJFKIyK0Xmdic6QwD7Cjsr71_ulB7lNZc7qMyXnCEQ4_8QFMRcrD1Kj3bGUGppq4bxvTCLtVDfCLXLjuz1j5vP-Bd1CUwVDcEL2ys5DpxCfUrUK2I3e6pd-QRKBjk-ZVEE_vt1nNtUJkl5kbniqP2QaQYPAFNYje3UR8FFARbQ3Uwt3Kgm5lhVgy9zVCIOug4hRt-Ne2VMmX3GkwrqSpOk-T5kWdRLrhisGj12-9huo9bN3hq2zQmrep2s2U4t-FHVvr78p5_S7xpIHKkZpu8XQuaXHDLnErmgvCb0Dkk7EBQ23GtqCKqLCkosIPKh7j3-RSsVHsr5CjpzLuGqA4C0nWo54U3AWjy8oxN-FuQ1c8bOBoX7lu8pb3lCBFyloCRc7OCfOf4dYEpqaujb-i2XsJ5-HPWcTiw6wTdCOoniBYUwCLPcHfaom_2ee00vGqVBM2256HBx-XN5F_nbeUv-xrFfJum8NOAeUQ3SURfU0orSQe4CXwYqDu4C8R97XgAcH16_hE_uaSp7X8O-CVpOcqwh3FHAcKOPT7QMN2XRV4UtfGgiveT6Sp1aVJG46v197mThQy3Oa_o51h7rw8bFZa7HNTc5GhxfvvEflA3P6mhxJmPOLn2gfZYeVfVnmGeigePxsKj26jG3c7gATBqaLZz3EiC9fwtcrve0O5uBbk2Z5mS--0Y9L74oM7ZM-ZRM3SXEetc-2f1kqmOSjbKXv_VYhhUZlqrYk4vNg82h02NHPFbjUoWw5JT_50FUvBCxCK7IRqp_eDoDiFEy5GGorF_v_pldu3cTzIb2IFFPHW4rz_NzpnejBnjGicswfTTUT4AmkaAAbrulI4QDByojFeXdeUd3ItahAY-O4xdzSLgAdMIaPJYeutOqPpNVVlkG7P83ocxk6rJbm9v0tDN9yIYKUyBWTAVsXQMgvazb_aITM9nagSOyAZEjMKJvEI8XrpM4DMh-FiG9bsQuAXoOK3y51Vt_z4vWObsUVMsFQx3BR_gvBrmqN0ybTs6nEiF5hyVNn78K5H6iuS6Dy2oTGuhO122_jnZiOLXAR3jy-dftpDjneknozw6Fw5tv5YJdpCpheYLpcFFp05tlMiM_ijcTLwbPiOU-l8DUbuXnaUZkkl9J_AhpmaLYDLo-KMzs4_A8OZwxOmQ-ZL_U76RzeMuWD9mrRmGFChIe3H4dBISAvWjUdAEuGDOY5p-YQjkJX3diIKnszCdJHaEfe5slzXnKe7pwH9mJtqSPfOv7030JbGsbGoqEpEnCZFk48S-hwD_7VSuiq6-2C42I_Snk8-IRVfDi_j-h2IVIYSNrexQ73YtpkGp8tnHb2Ax1LCIDz3wm_YPERTvd86ZJZIW2qpGFbUm9-o0-wggh_KCn_tDDybiklfarg_iWvcrI3Omxfgm2opaOOdjr9kwZa5TKOa3MOJOqvzBGLJYUV_6SDd3jjiMTrtWK4VlEkJ18H16GcpYvNvqr3byEtH7vw.AffovML5AztoHnTzKRGnUkdI1GLjddlRLor2MYXgW_8
+
+GET {{baseurl}}/mco/client/compatible
+Authorization: XBL3.0 x={{userhash}};{{token}}
+Client-Version: 1.18.12
+User-Agent: MCPE/UWP
+
+###
+
+GET {{baseurl}}/worlds
+Authorization: XBL3.0 x={{userhash}};{{token}}
+Client-Version: 1.18.12
+Accept-Language: en_us
+# User-Agent: MCPE/UWP
+###
+
+GET {{baseurl}}/worlds/2421730/join
+Authorization: XBL3.0 x={{userhash}};{{token}}
+Client-Version: 1.18.12
+User-Agent: MCPE/UWP
+###
+
+GET {{baseurl}}/worlds/2421730
+Authorization: XBL3.0 x={{userhash}};{{token}}
+Client-Version: 1.18.12
+User-Agent: MCPE/UWP
+
+###
+
+GET {{baseurl}}/worlds/2421730/content/
+Authorization: XBL3.0 x={{userhash}};{{token}}
+Client-Version: 1.18.12
+User-Agent: MCPE/UWP
+###
+
+GET {{baseurl}}/activities/live/players
+Authorization: XBL3.0 x={{userhash}};{{token}}
+Client-Version: 1.18.12
+User-Agent: MCPE/UWP
+###
+
+GET {{baseurl}}/clubs/membercount
+Authorization: XBL3.0 x={{userhash}};{{token}}
+Client-Version: 1.18.12
+User-Agent: MCPE/UWP
+
+
+###
+
+POST https://api.mojang.com/orders/statistics
+
+{
+  "metricKeys": [
+    "item_sold_minecraft", 
+    "prepaid_card_redeemed_minecraft"
+  ]
+}
+
+###
+
+GET https://xbl.io/api/v2/account/2535469005454064
+X-Authorization: c8kgsk0ocg44k4w4ssk0socwsckw0s80cks
+
+### 
+
+@xsts_token_for_userlookup=eyJlbmMiOiJBMTI4Q0JDK0hTMjU2IiwiYWxnIjoiUlNBLU9BRVAiLCJjdHkiOiJKV1QiLCJ6aXAiOiJERUYiLCJ4NXQiOiIxZlVBejExYmtpWklFaE5KSVZnSDFTdTVzX2cifQ.bBBQKCFobpY9Gkkz-I8wGUWFkrwOuzvwhyyGVhlVWnFWL4NmD72KR47INZch7YT5LUJKfHtylfao_7HX1Pq39LjRf0ogT5QJlRk978-c8X3pQOF3jepYyqu81tIwheKqEGL9tJXDYQcFkzp_aJl54mXTiOZ5T5XbWHtnYWPSMSI.a5bqkC9P03utpshf6Lm9DA.CV9-iGy7osAmMHOHBQn50jjQflq0V1c40zcLwDq-gZ_PMcB14cAyiM0yTYw0_EZ8-Xv_tCoVqb64A2quV8PVVz0XsfYaAc3_G1jdKD-0I_BbL081WK1CDUMJCmP0CMPppK-mJQMcxM1I-8cZuglPi8qgUuj5ksMwzEe8KVT40zfJdhEh8EGeuVZMCspbYglBiPwlXgksqBLNUtflt9mBGo04SIwZGG1YE-C2Kp1jdSXaor6rugXUKUpNs7rZkmOjOHVE9pjssQ18HSK3bkNMs6pwWFntRCsrmUfDNYiknPiSN7ndWx7AcAzhzKtMRBiQJ18eHvahy0oPPEDkdBTIVxnXNtUi23ZYmvtO1VDqpLXdW0nGMNoNLPDJsi7tK8ToYJ8ynRWuC9iuLG8wkI6sblO87kMHTM8pgefCHkr95rIwQwd0_6P5rXJbVawV4QFnuuW6ulppQ1XF3dHDgMIWidABkZSBp75PCanHI9SlZ0yeLoTD3rt0OD42FtqVaWy7I_fIUaARD6Cqj8svLAXiUjLd2aNECVp0in9DJXC4w9GqxqvMQ4cQD91VJR0uK5v3QRfEptcAbWSO6E2NwHFieuwZaazEX4QBlRxD_DlbQ5MNitSsrzaUGEihidyMnY_fb3wa8-kTcrf4LNcaAJkysWPI9RVGDyjzfQZK-J3VcpJ4CIvMU2g-XoL1qjQYkEg8lL-8Ur_QzKR1-jDGR6ZeirxOul_jQbbrmlznv2Liud8cQs4lwiO4Rl05JfCof6v1Ss3fg90vIuhYtolxQlTkGAESzkKbw8gNSOBR0euDGVyM2_1fHYYt6XQjyCL-aiNJOgdnCH5MFBX0hAQt_wNCnOeOCnhTUW7Irr4yM_iDvA8QMTlJ8_nCBXvVAe7woNDegGxoGSzTEomS_GTZcnGmDQWiaw1XmZ7_7gaC6goBuCDbUW_teGrfax3Qo9l2BUAwWhMQHlxETe_NDwnvOU5Ksf4xCf3Ew1Kd8sKslsKtUT-kYnUoFq7kLu9iYvZpH9hSOGZ8nQ8pwxCIHYKa07i6uvFmuEYpi_H8EspVvCi9kxFf-McayqqAnd2Nt20_wnhUIZPC1bGd4E8ddCiRvJCjAqIxkEo0ho_WmTxOIoX5do3fiHIT5cQNwto8U07qGH-9z1jSmsRDzld7fEPLIB2vG3FFC3ZvS73Ydnz43EtBw3iznz0F-Fc-w4lSYB0AnlGejvp-DucISeJ6K5xTMtShD8s7LL_ZHC0f1HC-syTzUpu2gTKzDtPm_fH2hYGrfX5rHj_fNBPs5VUqrmatGRM-7DZSJ56Ir4CGeBIcesgFkwRarHjDhQP0S6u3M-NnTZ3uq7gjS4UskyGW3M4_AimxG3VABYaE3FkUXsVd3zXimNiV-j03uH9QoN2szk4TeAFSB-Bp-TRgtHwfJper7xQOpdGMmz6D2Oy_OhH1z2v1UT_sf6u6kNM0rDa4h6ajh-7d.iO1sHt-v39fCMx-XTKlUG9L0oNv4Qz3Os4jpd-gMIso
+
+GET https://peoplehub.xboxlive.com/users/me/people/xuids(2535469005454064,2535408552081007,2533274797012201)
+Authorization: XBL3.0 x={{userhash}};{{xsts_token_for_userlookup}}
+x-xbl-contract-version: 4
+Accept: 'application/json'
+# Connection: Keep-Alive
+# User-Agent: 'okhttp/4.9.1'
+Accept-Language: en_us
+
+# {
+# 	"userIds": ["2535408552081007", "2535469005454064", "2535408552081007"]
+# }
+
+###
+
+@xbox_token= eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkExMjhDQkMtSFMyNTYiLCJ6aXAiOiJERUYiLCJ4NXQiOiJxcEQtU2ZoOUg3NFFHOXlMN1hSZXJ5RmZvbk0iLCJjdHkiOiJKV1QifQ.jfoS43hzbfkS5Xhj-2A6G-grBlGQf9pjxetHs_andczU08eUq9MceUMl9TSuGqWiqxxjtN-xfb7Ff9-4WxOY_K_rK8xCZeusW4AjD2-gxgRz0IACp0IjqR4ZTAzskCQdlyyZivQ23VrW_sygLepQQWDS4bbarj77N8OWttJxfDE-gLSqAXbk7KiEDqM4zv_Ls56hgZ3slVcnCqg_VU4raX1fwLHmsjiGgyMmj_xpfmbRkFeB5dmGNc8qvdRfOebmQdCKZDEtn4GuZoJBrs1n8JKKTNOs3trJOp8kfxYpdaApK8IINh05NCGtY_wrlSuWrIQ-t-0ANk1CnQYSBF_4aQ.PzjnjP4HIjaD-WiCkH5SFA.0oSdgAXfyzLTbd6DU3tkHd_MQLqB68y0s2vI6anXYoyypLvdDXJ4TVzFe9XX0t8ndeJjUOCFTrXfVOHO7B98Rz4udr1J3-4qKsLMsbpZWaXQGElaiEUeJ6_3AWHEjstkFZ9jm0C33CpIDXxfQHfdBFgZGxyKd2FrnFc2ViURXCuU8povMqv_lJ33xFE6-mTbvm62OPKVK0cIemglanrM67q-0AnnGMfbbJ5e1oOncin4eaHrL_0fw8ZgaA1JNwmNM1ojmFeVBA2jKqRgeKkkX_O9DnhAgNo83hJYzH6v31BF8r3zcIwCahbR1Ux8VViAtLb69A7X2F_1fpphGmF6lj9rx990B9L7TJH-DDpddvzKv1mFNCVWvv37eafl5xdRsRJFObdZdK7bGFw0kjV1lqOl2CDxqJpU7jxSpP_qFpWR_l6m3tq0_wgRMy9f_wRePtnxki6rwOpfyv7MKI6m8LX0jjstU_et1IcCciLiyCV0UauIO3EUIlp5jXKMCpUgK4WcDFaKiJQ7vHKx0uhGKLxNdYqEeraqVAqCIDwIqgF1_qBfkje3qBErd4sYbO1w9H-sph29HhLRRD-va-IMRInO8uEYf68mOHKGKHY-Bob5K-Ftv9Jit9xIr80KM55C-MKdKUuOcN3GBpAzwXU8vxohFjdzkQB7jy0BrewL8V48ApSGgf93Lu9Skq30a-sf8dNZgmKSqa2chsBmX5W54j9LX_tUmlBvvTD2gh9gPxxcMbjPQP7FLyDP5TbcMZks10J5ugNog9BsYHg6Mdjy_XZ4gosAcF7uk6-XgqCYf_MiHwr9NlDokq9wnW7Ir8XXOguNn2zM43asu_AY51zmUTIu1l3Is4EBJGQFR0uhOYF0G7BlywxMnjeU3oGL-6hSQR-CiNf-oifIv2VexoslDytEh5JM8GjtgcsNg9kb2ORzRlTs-NvFbP9vCodFu11nWhydJA9XtkC8NTVHENlZEAQtxCAFOMwEkoHO72nuTlM.5HsRAquFleSDRkc827VAhQ
+
+POST https://xsts.auth.xboxlive.com/xsts/authorize
+# User-Agent: XboxServicesAPI/2017.08.0.0 Chrome/89.0.4389.105 Mozilla Safari/537.36
+
+{
+	"RelyingParty": "http://xboxlive.com",
+	"TokenType": "JWT",
+	"Properties": {
+		"SandboxId": "RETAIL",
+		"UserTokens": [ "{{xbox_token}}" ]
+	}
+}
+
+@plag_xuid=2535408552081007
