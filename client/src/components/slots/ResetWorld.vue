@@ -7,7 +7,7 @@
 				<button class="reset-option-title btn light" @click="openNewWorldSettings">New World</button>
 			</div>
 			<div class="reset-option">
-				<button class="reset-option-title btn light" disabled="disabled">Upload World</button>
+				<button class="reset-option-title btn light" disabled>Upload World</button>
 			</div>
 			<div class="reset-option">
 				<button class="reset-option-title btn light" @click="openTemplate('NORMAL')">World Template</button>
@@ -92,6 +92,7 @@ export default defineComponent({
 		},
 		async confirmNewWorld() {
 			this.loading = true;
+			this.timeElapsed = 0;
 			setTimeout(this.updateTime, 1000);
 			let result = await this.sendRequest("/worlds/reset", "POST", {worldId: this.worldId, seed: this.newWorldSettings.seed, worldType: this.newWorldSettings.levelType, genStructures: this.newWorldSettings.generateStructures});
 			this.loading = false;
