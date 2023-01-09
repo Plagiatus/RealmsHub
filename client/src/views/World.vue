@@ -19,7 +19,7 @@
 			<transition name="grow">
 				<templates v-if="templateSelection!=''" :type="templateSelection" @close="closeTemplateSettings" @set-template="setTemplate" :worldId="worldId"/>
 			</transition>
-			<realm-players :players="realm.players" :worldId="worldId" @remove-player="removePlayer" @update-realm="reloadRealm" @update-ops="updateOPs"/>
+			<realm-players :players="realm.players" :worldId="worldId" @remove-player="removePlayer" @update-realm="reloadRealm" @update-players="updatePlayers" @update-ops="updateOPs"/>
     </div>
     <p><em>More features are being worked on and coming soon!</em></p>
   </div>
@@ -66,12 +66,8 @@ export default defineComponent({
     this.reloadRealm();
   },
   methods: {
-    async reloadRealm(_realm?: Realm) {
+    async reloadRealm() {
       if (this.reloadingRealm) return;
-			if (_realm){
-				this.realm = _realm;
-				return;
-			}
       this.reloadingRealm = true;
       let result = await this.sendRequest("/worlds/get-one", "POST", { worldId: this.worldId });
       if (!result) {
@@ -81,10 +77,15 @@ export default defineComponent({
       this.realm = JSON.parse(result) as Realm;
       this.reloadingRealm = false;
 			console.log(this.realm);
-			
     },
 		removePlayer(uuid: string){
 			this.realm.players = this.realm?.players?.filter(p => p.uuid != uuid) || [];
+		},
+		updatePlayers(_realm?: Realm){
+			if(!_realm?.players) {
+				return;
+			}
+			this.realm.players = _realm.players;
 		},
 		updateOPs(newOPs: Ops) {
 			let ops = newOPs.ops;

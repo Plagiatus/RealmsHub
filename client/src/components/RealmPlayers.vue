@@ -114,7 +114,7 @@ export default defineComponent({
 			let result = await this.sendRequest("/worlds/player/invite", "POST", {worldId: this.worldId, uuid: "1", name: this.playername}, "Could not invite player. Are you sure you spelled the name correctly?");
 			this.loading = false;
 			if(!result) return;
-			this.$emit("updateRealm", JSON.parse(result));
+			this.$emit("updatePlayers", JSON.parse(result));
 		},
 		toggleBulkVisible() {
 			this.bulkOpen = !this.bulkOpen;
