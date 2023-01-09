@@ -11,7 +11,7 @@ interface AuthorizationTokenResponse {
 	foci: string
 }
 
-interface XboxServiceTokenResponse {
+export interface XboxServiceTokenResponse {
 	IssueInstant: string,
 	NotAfter: string,
 	Token: string,
