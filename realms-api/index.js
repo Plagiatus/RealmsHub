@@ -472,6 +472,19 @@ var RealmsClient = /** @class */ (function () {
             });
         });
     };
+    RealmsClient.prototype.restoreBackup = function (_worldId, _backupId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sendPutRequest("/worlds/" + _worldId + "/backups?backupId=" + _backupId)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
     /**
      * Closes the world to allow you to upload a new world.
      */

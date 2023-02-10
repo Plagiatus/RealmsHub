@@ -4,10 +4,15 @@
         <div v-if="loading" class="loading"></div>
         <div id="backups-list" v-if="(backups.length > 0)">
             <div class="single-backup" v-for="(backup, index) in backups" v-bind:key="backup.backupId">
-                <span class="backup-title">Backup #{{index+1}}</span>
-                <span class="backup-size">{{beautifySize(backup.size)}}</span>
-                <button class="btn backup-button" v-if="(index === 0)" @click="downloadLatest">Download</button>
-                <span class="backup-date">{{new Date(backup.lastModifiedDate).toLocaleString()}}</span>
+                <div class="backup-info">
+                    <span class="backup-title">Backup #{{index+1}}</span>
+                    <span class="backup-size">{{beautifySize(backup.size)}}</span>
+                    <span class="backup-date">{{new Date(backup.lastModifiedDate).toLocaleString()}}</span>
+                    <button class="btn backup-button-dl" v-if="(index === 0)" @click="downloadLatest">Download</button>
+                </div>
+                <div class="backup-buttons">
+                    <loading-button :red="true" :text="'Restore'" :successText="'Restored!'" :loading="restoring" @click="restoreBackup(backup.backupId)"/>
+                </div>
             </div>
         </div>
 		<span @click="close" class="close"><img src="../../assets/x.svg" alt="close"></span>
@@ -17,16 +22,20 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import request from "../request-mixin";
+import LoadingButton from '../LoadingButton.vue';
 
 export default defineComponent({  
     props: ["worldId", "slotId"],
     mixins: [request],
     
-	components: {},
+	components: {
+        LoadingButton
+    },
     data() {
         return {
             backups: [] as Backup[],
             loading: false,
+            restoring: false,
         }
     },
     methods: {
@@ -42,6 +51,25 @@ export default defineComponent({
             if(!result) return;
             let link = JSON.parse(result).downloadLink;
             window.open(link, "_blank")
+        },
+        async restoreBackup(backupId: string){
+            this.restoring = true;
+            let result: string | undefined = "";
+            let counter = 0;
+            while(result !== "true"){
+                result = await this.sendRequest("/worlds/restore-backup", "POST", {worldId: this.worldId, backupId});
+                if(!result) return;
+                counter++;
+                if(counter > 5){
+                    window.dispatchEvent(new CustomEvent("displayError", {
+					detail: {
+						code: 500,
+						message: "Couldn't restore backup. Try again later.",
+					}
+				}));
+                }
+            }
+            this.restoring = false;
         },
         beautifySize(size: number){
             const suffixes = ["B", "kB", "MB", "GB"];
@@ -87,6 +115,9 @@ interface Backup {
 .single-backup {
     border-top: 2px solid var(--foreground);
     padding: 0.5em 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .backup-date {
@@ -103,8 +134,7 @@ interface Backup {
     font-size: 1.25em;
     line-height: 2;
 }
-
-.backup-button {
-    float: right;
+.backup-button-dl {
+    margin-top: 0.5em;
 }
 </style>

@@ -236,6 +236,14 @@ app.route("/worlds/:command")
 			case "backups":
 				res.send(await client.backups(worldId));
 				break;
+			case "restore-backup":
+				let backupId: string = req.body.backupId;
+				if(!backupId || backupId.length == 0){
+					res.sendStatus(400);
+					return;
+				}
+				res.send(await client.restoreBackup(worldId, backupId))
+				break;
 			case "close":
 				res.send(await client.closeRealm(worldId));
 				break;

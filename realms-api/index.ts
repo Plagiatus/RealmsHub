@@ -51,8 +51,8 @@ export default class RealmsClient {
 	}
 
 	private createRequest(_url: string, _method: RequestMethod): XMLHttpRequest {
-		if(!this.pe){
-			let url = "https://pc.realms.minecraft.net" + _url; 
+		if (!this.pe) {
+			let url = "https://pc.realms.minecraft.net" + _url;
 			let request = new XMLHttpRequest();
 			request.open(_method, url);
 			request.setDisableHeaderCheck(true);
@@ -74,7 +74,7 @@ export default class RealmsClient {
 			// request.setRequestHeader("Cache-Control", "no-cache")
 			// request.setRequestHeader("Charset", "utf-8")
 			request.withCredentials = true;
-			
+
 			if (_method == "POST")
 				request.setRequestHeader("Content-Type", "application/json");
 			return request;
@@ -224,6 +224,10 @@ export default class RealmsClient {
 	}
 	public async setToSlot(_worldId: number, _slot: SlotNumber): Promise<boolean> {
 		let result = await this.sendPutRequest("/worlds/" + _worldId + "/slot/" + _slot);
+		return result;
+	}
+	public async restoreBackup(_worldId: number, _backupId: string){
+		let result = await this.sendPutRequest("/worlds/" + _worldId + "/backups?backupId=" + _backupId);
 		return result;
 	}
 	/**

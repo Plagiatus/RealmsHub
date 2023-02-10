@@ -394,9 +394,9 @@ app.route("/worlds/player/:command")
     .all(wrongMethod);
 app.route("/worlds/:command")
     .post(checkAndInitAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var worldId, client, command, _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, seed, worldType, genStructures, _t, _u, template, _v, _w, minigame, _x, _y, slot, _z, _0, settings, _1, _2, _3, _4, _5, _6;
-    return __generator(this, function (_7) {
-        switch (_7.label) {
+    var worldId, client, command, _a, _b, _c, _d, _e, backupId, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, seed, worldType, genStructures, _v, _w, template, _x, _y, minigame, _z, _0, slot, _1, _2, settings, _3, _4, _5, _6, _7, _8;
+    return __generator(this, function (_9) {
+        switch (_9.label) {
             case 0:
                 worldId = parseInt(req.body.worldId);
                 if (!worldId || isNaN(worldId)) {
@@ -409,142 +409,154 @@ app.route("/worlds/:command")
                 switch (_a) {
                     case "get-one": return [3 /*break*/, 1];
                     case "backups": return [3 /*break*/, 3];
-                    case "close": return [3 /*break*/, 5];
-                    case "livestats": return [3 /*break*/, 7];
-                    case "ops": return [3 /*break*/, 9];
-                    case "ip": return [3 /*break*/, 11];
-                    case "leave": return [3 /*break*/, 13];
-                    case "open": return [3 /*break*/, 15];
-                    case "reset": return [3 /*break*/, 17];
-                    case "reset-template": return [3 /*break*/, 19];
-                    case "minigame": return [3 /*break*/, 21];
-                    case "slot": return [3 /*break*/, 23];
-                    case "settings": return [3 /*break*/, 25];
-                    case "subscriptions": return [3 /*break*/, 27];
-                    case "uploadinfo": return [3 /*break*/, 29];
+                    case "restore-backup": return [3 /*break*/, 5];
+                    case "close": return [3 /*break*/, 7];
+                    case "livestats": return [3 /*break*/, 9];
+                    case "ops": return [3 /*break*/, 11];
+                    case "ip": return [3 /*break*/, 13];
+                    case "leave": return [3 /*break*/, 15];
+                    case "open": return [3 /*break*/, 17];
+                    case "reset": return [3 /*break*/, 19];
+                    case "reset-template": return [3 /*break*/, 21];
+                    case "minigame": return [3 /*break*/, 23];
+                    case "slot": return [3 /*break*/, 25];
+                    case "settings": return [3 /*break*/, 27];
+                    case "subscriptions": return [3 /*break*/, 29];
+                    case "uploadinfo": return [3 /*break*/, 31];
                 }
-                return [3 /*break*/, 31];
+                return [3 /*break*/, 33];
             case 1:
                 _c = (_b = res).send;
                 return [4 /*yield*/, client.world(worldId)];
             case 2:
-                _c.apply(_b, [_7.sent()]);
-                return [3 /*break*/, 32];
+                _c.apply(_b, [_9.sent()]);
+                return [3 /*break*/, 34];
             case 3:
                 _e = (_d = res).send;
                 return [4 /*yield*/, client.backups(worldId)];
             case 4:
-                _e.apply(_d, [_7.sent()]);
-                return [3 /*break*/, 32];
+                _e.apply(_d, [_9.sent()]);
+                return [3 /*break*/, 34];
             case 5:
+                backupId = req.body.backupId;
+                if (!backupId || backupId.length == 0) {
+                    res.sendStatus(400);
+                    return [2 /*return*/];
+                }
                 _g = (_f = res).send;
-                return [4 /*yield*/, client.closeRealm(worldId)];
+                return [4 /*yield*/, client.restoreBackup(worldId, backupId)];
             case 6:
-                _g.apply(_f, [_7.sent()]);
-                return [3 /*break*/, 32];
+                _g.apply(_f, [_9.sent()]);
+                return [3 /*break*/, 34];
             case 7:
                 _j = (_h = res).send;
-                return [4 /*yield*/, client.getLiveStats(worldId)];
+                return [4 /*yield*/, client.closeRealm(worldId)];
             case 8:
-                _j.apply(_h, [_7.sent()]);
-                return [3 /*break*/, 32];
+                _j.apply(_h, [_9.sent()]);
+                return [3 /*break*/, 34];
             case 9:
                 _l = (_k = res).send;
-                return [4 /*yield*/, client.getOps(worldId)];
+                return [4 /*yield*/, client.getLiveStats(worldId)];
             case 10:
-                _l.apply(_k, [_7.sent()]);
-                return [3 /*break*/, 32];
+                _l.apply(_k, [_9.sent()]);
+                return [3 /*break*/, 34];
             case 11:
                 _o = (_m = res).send;
-                return [4 /*yield*/, client.ip(worldId)];
+                return [4 /*yield*/, client.getOps(worldId)];
             case 12:
-                _o.apply(_m, [_7.sent()]);
-                return [3 /*break*/, 32];
+                _o.apply(_m, [_9.sent()]);
+                return [3 /*break*/, 34];
             case 13:
                 _q = (_p = res).send;
-                return [4 /*yield*/, client.leaveServer(worldId)];
+                return [4 /*yield*/, client.ip(worldId)];
             case 14:
-                _q.apply(_p, [_7.sent()]);
-                return [3 /*break*/, 32];
+                _q.apply(_p, [_9.sent()]);
+                return [3 /*break*/, 34];
             case 15:
                 _s = (_r = res).send;
-                return [4 /*yield*/, client.openRealm(worldId)];
+                return [4 /*yield*/, client.leaveServer(worldId)];
             case 16:
-                _s.apply(_r, [_7.sent()]);
-                return [3 /*break*/, 32];
+                _s.apply(_r, [_9.sent()]);
+                return [3 /*break*/, 34];
             case 17:
+                _u = (_t = res).send;
+                return [4 /*yield*/, client.openRealm(worldId)];
+            case 18:
+                _u.apply(_t, [_9.sent()]);
+                return [3 /*break*/, 34];
+            case 19:
                 seed = req.body.seed;
                 worldType = req.body.worldType;
                 genStructures = !!req.body.genStructures;
                 if (seed == undefined || worldType == undefined) {
                     res.sendStatus(400);
-                    return [3 /*break*/, 32];
+                    return [3 /*break*/, 34];
                 }
-                _u = (_t = res).send;
+                _w = (_v = res).send;
                 return [4 /*yield*/, client.resetWorldToSeed(worldId, seed, worldType, genStructures)];
-            case 18:
-                _u.apply(_t, [_7.sent()]);
-                return [3 /*break*/, 32];
-            case 19:
+            case 20:
+                _w.apply(_v, [_9.sent()]);
+                return [3 /*break*/, 34];
+            case 21:
                 template = parseInt(req.body.template);
                 if (isNaN(template) || template < 0) {
                     res.sendStatus(400);
-                    return [3 /*break*/, 32];
+                    return [3 /*break*/, 34];
                 }
-                _w = (_v = res).send;
+                _y = (_x = res).send;
                 return [4 /*yield*/, client.resetWorldToTemplate(worldId, template)];
-            case 20:
-                _w.apply(_v, [_7.sent()]);
-                return [3 /*break*/, 32];
-            case 21:
+            case 22:
+                _y.apply(_x, [_9.sent()]);
+                return [3 /*break*/, 34];
+            case 23:
                 minigame = parseInt(req.body.minigame);
                 if (isNaN(minigame) || minigame < 0) {
                     res.sendStatus(400);
-                    return [3 /*break*/, 32];
+                    return [3 /*break*/, 34];
                 }
-                _y = (_x = res).send;
+                _0 = (_z = res).send;
                 return [4 /*yield*/, client.setToMinigame(worldId, minigame)];
-            case 22:
-                _y.apply(_x, [_7.sent()]);
-                return [3 /*break*/, 32];
-            case 23:
+            case 24:
+                _0.apply(_z, [_9.sent()]);
+                return [3 /*break*/, 34];
+            case 25:
                 slot = parseInt(req.body.slot);
                 if (isNaN(slot) || slot < 1 || slot > 3) {
                     res.sendStatus(400);
-                    return [3 /*break*/, 32];
+                    return [3 /*break*/, 34];
                 }
-                _0 = (_z = res).send;
+                _2 = (_1 = res).send;
                 return [4 /*yield*/, client.setToSlot(worldId, slot)];
-            case 24:
-                _0.apply(_z, [_7.sent()]);
-                return [3 /*break*/, 32];
-            case 25:
+            case 26:
+                _2.apply(_1, [_9.sent()]);
+                return [3 /*break*/, 34];
+            case 27:
                 settings = req.body.settings;
                 if (!settings.name || !settings.description) {
                     res.sendStatus(400);
-                    return [3 /*break*/, 32];
+                    return [3 /*break*/, 34];
                 }
-                _2 = (_1 = res).send;
-                return [4 /*yield*/, client.setWorldSettings(worldId, settings)];
-            case 26:
-                _2.apply(_1, [_7.sent()]);
-                return [3 /*break*/, 32];
-            case 27:
                 _4 = (_3 = res).send;
-                return [4 /*yield*/, client.subscriptions(worldId)];
+                return [4 /*yield*/, client.setWorldSettings(worldId, settings)];
             case 28:
-                _4.apply(_3, [_7.sent()]);
-                return [3 /*break*/, 32];
+                _4.apply(_3, [_9.sent()]);
+                return [3 /*break*/, 34];
             case 29:
                 _6 = (_5 = res).send;
-                return [4 /*yield*/, client.uploadInfo(worldId)];
+                return [4 /*yield*/, client.subscriptions(worldId)];
             case 30:
-                _6.apply(_5, [_7.sent()]);
-                return [3 /*break*/, 32];
+                _6.apply(_5, [_9.sent()]);
+                return [3 /*break*/, 34];
             case 31:
+                _8 = (_7 = res).send;
+                return [4 /*yield*/, client.uploadInfo(worldId)];
+            case 32:
+                _8.apply(_7, [_9.sent()]);
+                return [3 /*break*/, 34];
+            case 33:
                 res.sendStatus(404);
-                return [3 /*break*/, 32];
-            case 32: return [2 /*return*/];
+                return [3 /*break*/, 34];
+            case 34: return [2 /*return*/];
         }
     });
 }); })
