@@ -1,6 +1,6 @@
 <template>
 	<div id="slots">
-		<slots v-for="slot in realm.slots" :slots="slot" :key="slot" :selectedSlot="realm.activeSlot" :worldId="worldId" :minigameActive="realm.worldType=='MINIGAME'" @select-slot="selectSlot" @open-settings="openSettings" @openResetWorld="openResetWorld" />
+		<slots v-for="slot in realm.slots" :slots="slot" :key="slot" :selectedSlot="realm.activeSlot" :worldId="worldId" :minigameActive="realm.worldType=='MINIGAME'" @select-slot="selectSlot" @open-settings="openSettings" @openResetWorld="openResetWorld" @openBackups="openBackups" />
 		<minigame-slot :name="realm.minigameName" :image="realm.minigameImage" :active="realm.worldType=='MINIGAME'" @open-minigame="openMinigame" />
 	</div>
 </template>
@@ -29,6 +29,9 @@ export default defineComponent({
 		},
 		openResetWorld() {
 			this.$emit("openResetWorld");
+		},
+		openBackups(){
+			this.$emit("openBackups");
 		},
 	}
 })

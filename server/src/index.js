@@ -288,9 +288,9 @@ app.route("/invites/:command")
     .all(wrongMethod);
 app.route("/worlds/slot/:command")
     .post(checkAndInitAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var worldId, slot, client, command, _a, settings, _b, _c, _d, _e;
-    return __generator(this, function (_f) {
-        switch (_f.label) {
+    var worldId, slot, client, command, _a, settings, _b, _c, _d, _e, _f, _g;
+    return __generator(this, function (_h) {
+        switch (_h.label) {
             case 0:
                 worldId = parseInt(req.body.worldId);
                 slot = parseInt(req.body.slot);
@@ -304,8 +304,9 @@ app.route("/worlds/slot/:command")
                 switch (_a) {
                     case "settings": return [3 /*break*/, 1];
                     case "set": return [3 /*break*/, 3];
+                    case "download": return [3 /*break*/, 5];
                 }
-                return [3 /*break*/, 5];
+                return [3 /*break*/, 7];
             case 1:
                 settings = req.body.settings;
                 if (!settings) {
@@ -315,18 +316,24 @@ app.route("/worlds/slot/:command")
                 _c = (_b = res).send;
                 return [4 /*yield*/, client.setSlotSettings(worldId, slot, settings)];
             case 2:
-                _c.apply(_b, [_f.sent()]);
-                return [3 /*break*/, 6];
+                _c.apply(_b, [_h.sent()]);
+                return [3 /*break*/, 8];
             case 3:
                 _e = (_d = res).send;
                 return [4 /*yield*/, client.setToSlot(worldId, slot)];
             case 4:
-                _e.apply(_d, [_f.sent()]);
-                return [3 /*break*/, 6];
+                _e.apply(_d, [_h.sent()]);
+                return [3 /*break*/, 8];
             case 5:
+                _g = (_f = res).send;
+                return [4 /*yield*/, client.downloadLatestBackup(worldId, slot)];
+            case 6:
+                _g.apply(_f, [_h.sent()]);
+                return [3 /*break*/, 8];
+            case 7:
                 res.sendStatus(404);
-                return [3 /*break*/, 6];
-            case 6: return [2 /*return*/];
+                return [3 /*break*/, 8];
+            case 8: return [2 /*return*/];
         }
     });
 }); })

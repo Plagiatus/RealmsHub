@@ -9,7 +9,10 @@
 			<transition name="grow">
 				<realm-settings v-if="realmSettingsOpen" :realmName="realm.name" :realmDescription="realm.motd" :worldId="worldId" @close="closeRealmSettings" />
 			</transition>
-			<slots :realm="realm" :worldId="worldId" @select-slot="selectSlot" @open-settings="openSlotSettings" @open-reset-world="openSlotResetSettings" @open-minigame="openMinigame"/>
+			<slots :realm="realm" :worldId="worldId" @select-slot="selectSlot" @open-settings="openSlotSettings" @open-reset-world="openSlotResetSettings" @open-minigame="openMinigame" @open-backups="openBackups"/>
+			<transition name="grow">
+				<world-backups v-if="backupsOpen" :worldId="worldId" :slotId="realm.activeSlot" @close="closeBackups"/>
+			</transition>
 			<transition name="grow">
 				<slot-setting v-if="slotSettingsOpen" :worldId="worldId" :slotId="realm.activeSlot" :settings="realm.slots[realm.activeSlot - 1].options" @update-slot-settings="updateSlotSettings" @close="closeSlotSettings"/>
 			</transition>
@@ -35,6 +38,7 @@ import RealmSubscription from "../components/RealmSubscription.vue";
 import Slots from "../components/Slots.vue";
 import SlotSetting from "../components/slots/SlotSettings.vue";
 import ResetWorld from "../components/slots/ResetWorld.vue";
+import WorldBackups from "../components/slots/WorldBackups.vue";
 import Templates from "../components/slots/Templates.vue";
 
 export default defineComponent({
@@ -47,6 +51,7 @@ export default defineComponent({
 		Slots,
 		SlotSetting,
 		ResetWorld,
+		WorldBackups,
 		Templates,
   },
   props: {
@@ -56,10 +61,11 @@ export default defineComponent({
     return {
       realm: null as unknown as Realm,
       reloadingRealm: false,
-			slotSettingsOpen: false,
-			slotResetSettingsOpen: false,
-			realmSettingsOpen: false,
-			templateSelection: "",
+      slotSettingsOpen: false,
+      slotResetSettingsOpen: false,
+      realmSettingsOpen: false,
+      backupsOpen: false,
+      templateSelection: "",
     }
   },
   async mounted() {
@@ -105,6 +111,7 @@ export default defineComponent({
 			this.slotSettingsOpen = true;
 			this.slotResetSettingsOpen = false;
 			this.templateSelection = "";
+			this.backupsOpen = false;
 		},
 		closeSlotSettings(){
 			this.slotSettingsOpen = false;
@@ -115,6 +122,7 @@ export default defineComponent({
 			}
 			this.slotResetSettingsOpen = true;
 			this.slotSettingsOpen = false;
+			this.backupsOpen = false;
 		},
 		closeSlotResetSettings(){
 			this.slotResetSettingsOpen = false;
@@ -125,6 +133,14 @@ export default defineComponent({
 		closeRealmSettings() {
 			this.realmSettingsOpen = false;
 		},
+		openBackups() {
+			this.backupsOpen = true;
+			this.slotSettingsOpen = false;
+			this.slotResetSettingsOpen = false;
+		},
+		closeBackups() {
+			this.backupsOpen = false;
+		},
 		updateSlotSettings(settings: SlotSettings, slot: number): void {
 			slot -= 1;
 			if(this.realm?.slots && this.realm?.slots[slot]){
@@ -134,6 +150,7 @@ export default defineComponent({
 		openMinigame(){
 			this.slotSettingsOpen = false;
 			this.slotResetSettingsOpen = false;
+			this.backupsOpen = false;
 			this.templateSelection = "MINIGAME";
 		},
 		openTemplateSettings(_type: TemplateType){

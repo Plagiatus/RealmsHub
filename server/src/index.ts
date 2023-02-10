@@ -179,6 +179,9 @@ app.route("/worlds/slot/:command")
 			case "set":
 				res.send(await client.setToSlot(worldId, slot));
 				break;
+			case "download":
+				res.send(await client.downloadLatestBackup(worldId, slot));
+				break;
 			default:
 				res.sendStatus(404);
 				break;

@@ -8,6 +8,7 @@
 				<loading-button v-if="!this.selected" class="btn light" @click="selectSlot" :text="'Select Slot'" :successText="''" :loading="this.loadingSlotChange"/>
 				<button v-if="this.selected" class="btn light" @click="openSettings">Settings</button>
 				<button v-if="this.selected" class="btn" @click="openResetWorld">Reset World</button>
+				<button v-if="this.selected" class="btn" @click="openBackups">Backups</button>
 			</div>
 		</div>
 	</div>
@@ -82,7 +83,10 @@ export default defineComponent({
 		},
 		openResetWorld() {
 			this.$emit("openResetWorld");
-		}
+		},
+		openBackups() {
+			this.$emit("openBackups");
+		},
 	}
 })
 </script>
