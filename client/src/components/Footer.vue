@@ -6,7 +6,7 @@
 			<span>Minecraft Avatars provided by <a href="https://crafatar.com/" target="_blank" rel="noopener noreferrer">Crafatar</a></span>
 		</div>
 		<div id="footer-copyright" class="italic">
-			<span>&copy; Realmshub.com 2020-2021</span>
+			<span>&copy; Realmshub.com 2020-2023</span>
 		</div>
 		<div id="footer-settings">
 			<div id="footer-settings-inner" @click="toggleSettings">
