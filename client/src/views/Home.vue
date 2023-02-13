@@ -3,7 +3,7 @@
 		<h1>Realms Hub</h1>
 		<span class="affiliation">Not affiliated to or endorsed by Mojang or Microsoft.</span>
     <img class="logo" alt="Vue logo" src="../assets/logo.png">
-		<div class="preview-note"><span><strong>Please note:</strong><br> This Page is currently under active development and considered to be in <strong>BETA</strong>.<br>That means everything should work, but sometimes might not.<br>Expect things to occasionally break or not be finished. If you find a bug, please <a href="https://github.com/Plagiatus/RealmsHub/issues" target="_blank" rel="noopener noreferrer">report it.</a></span></div>
+		<!-- <div class="preview-note"><span><strong>Please note:</strong><br> This Page is currently under active development and considered to be in <strong>BETA</strong>.<br>That means everything should work, but sometimes might not.<br>Expect things to occasionally break or not be finished. If you find a bug, please <a href="https://github.com/Plagiatus/RealmsHub/issues" target="_blank" rel="noopener noreferrer">report it.</a></span></div> -->
 		<div>
 			<div id="login">
 				<h3>Login</h3>
