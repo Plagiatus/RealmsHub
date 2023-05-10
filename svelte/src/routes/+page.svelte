@@ -3,6 +3,10 @@
     import Footer from "../components/Footer.svelte";
     import HeaderFrontpage from "../components/HeaderFrontpage.svelte";
     import { onMount } from "svelte";
+    import Logo from "$lib/assets/images/full-logo.png";
+    import GitHubIcon from "$lib/assets/icons/github.svg";
+    import BulbIcon from "$lib/assets/icons/bulb.svg";
+    import ExtensionIcon from "$lib/assets/icons/extension.svg";
 
     let fadeIn = false;
 
@@ -22,7 +26,7 @@
         {#if fadeIn}
             <img
                 class="hero-image"
-                src="/images/full-logo.png"
+                src={Logo}
                 alt="Realms Hub Logo"
                 transition:fly={{ y: -50, duration: 1000 }}
             />
@@ -33,7 +37,7 @@
                 <a class="fake-button hero-button" href="#about">
                     Learn More
                 </a>
-                <a class="fake-button hero-button" href=""> Sign in </a>
+                <a class="fake-button hero-button" href="#home"> Sign in </a>
             </span>
         {/if}
     </div>
@@ -46,7 +50,7 @@
     <div id="advantages">
         <div class="advantage">
             <div class="advantage-more">
-                <img src="/icons/github.svg" alt="GitHub Logo" />
+                <img src={GitHubIcon} alt="GitHub Logo" />
                 <span class="advantage-info"
                     >The entire code of Realms Hub is <a
                         href="https://github.com/plagiatus/RealmsHub"
@@ -59,7 +63,7 @@
         </div>
         <div class="advantage">
             <div class="advantage-more">
-                <img src="/icons/bulb.svg" alt="ease of use icon" />
+                <img src={BulbIcon} alt="ease of use icon" />
                 <span class="advantage-info"
                     >Use directly in the <span class="highlight">browser</span> from
                     wherever you are, on whatever device you're on.
@@ -69,7 +73,7 @@
         </div>
         <div class="advantage">
             <div class="advantage-more">
-                <img src="/icons/extension.svg" alt="feature rich icon" />
+                <img src={ExtensionIcon} alt="feature rich icon" />
                 <span class="advantage-info"
                     >Realms Hub has features that are missing from the game,
                     such as a <span class="highlight">better map search</span>

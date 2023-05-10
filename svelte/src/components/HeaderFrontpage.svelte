@@ -1,13 +1,18 @@
+<script lang="ts">
+    import LoginIcon from "$lib/assets/icons/login.svg";
+    import Logo from "$lib/assets/images/logo.png";
+</script>
+
 <header>
     <a href="#home">
-        <img class="logo" src="/images/logo.png" alt="Logo" />
+        <img class="logo" src={Logo} alt="Logo" />
     </a>
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
     <span />
-    
-    <a href="" class="login">
-        <img src="/icons/login.svg" class="icon" alt="Login" />
+
+    <a href="#home" class="login">
+        <img src={LoginIcon} class="icon" alt="Login" />
     </a>
 </header>
 
