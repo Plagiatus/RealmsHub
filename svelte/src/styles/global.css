@@ -1,0 +1,67 @@
+@font-face {
+    font-family: KonkhmerSleokchher;
+    src: url("/fonts/KonkhmerSleokchher-Regular.ttf");
+}
+
+@font-face {
+    font-family: Anybody;
+    src: url("/fonts/Anybody-Italic-VariableFont.ttf");
+    font-style: italic;
+}
+
+@font-face {
+    font-family: Anybody;
+    src: url("/fonts/Anybody-VariableFont.ttf");
+    font-style: normal;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Anybody, Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: normal;
+    
+    background-color: var(--background-light-darker);
+    color: var(--text-on-light);
+}
+
+div {
+    scroll-margin-top: 3em;
+}
+
+button,
+a.fake-button {
+    text-decoration: none;
+    outline: none;
+    border: 0.15em solid;
+    padding: 0.25em 0.475em;
+    background-color: none;
+    color: inherit;
+    display: inline-block;
+}
+
+button.highlight,
+a.fake-button.highlight {
+    background-color: var(--highlight);
+}
+
+button.light,
+a.fake-button.light {
+    background-color: var(--background-light-darker);
+    color: var(--text-on-light);
+}
+
+img.icon {
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(106deg) brightness(104%) contrast(101%);
+}
+
+.icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+}

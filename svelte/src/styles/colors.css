@@ -1,0 +1,23 @@
+:root {
+    --background-dark: #232426;
+    --background-dark-light: #323135;
+    --background: #303E83;
+    --background2: #2A4F6B;
+    --highlight: #B5BC31;
+    --text-on-dark: #fff;
+    --text-on-light: #212121;
+    --background-light: #fff;
+    --background-light-darker: #e5e5e5;
+}
+
+body {
+    color: var(--text-on-dark);
+}
+
+a {
+    color: var(--highlight);
+}
+
+.highlight {
+    color: var(--highlight);
+}
