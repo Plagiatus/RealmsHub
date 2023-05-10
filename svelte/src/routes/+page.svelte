@@ -30,38 +30,51 @@
                 class="hero-buttons"
                 transition:fly={{ y: 25, duration: 500, delay: 1000 }}
             >
-                <a class="fake-button hero-button" href="#about"
-                    >Learn More</a
-                >
-                <a class="fake-button hero-button" href="/login"
-                    >Sign in</a
-                >
+                <a class="fake-button hero-button" href="#about">
+                    Learn More
+                </a>
+                <a class="fake-button hero-button" href=""> Sign in </a>
             </span>
         {/if}
     </div>
 </div>
 
 <div class="fp-content" id="about">
-    <h1><span class="highlight">Realms Hub</span> is the easy way manage your Realm.</h1>
+    <h1>
+        <span class="highlight">Realms Hub</span> is the easy way manage your Realm.
+    </h1>
     <div id="advantages">
         <div class="advantage">
             <div class="advantage-more">
-                <img src="/icons/github.svg" alt="GitHub Logo">
-                <span class="advantage-info">The entire code of Realms Hub is <a href="https://github.com/plagiatus/RealmsHub" target="_blank" rel="noopener noreferrer">available on GitHub.</a> Feel free to have a look or even contribute.</span>
+                <img src="/icons/github.svg" alt="GitHub Logo" />
+                <span class="advantage-info"
+                    >The entire code of Realms Hub is <a
+                        href="https://github.com/plagiatus/RealmsHub"
+                        target="_blank"
+                        rel="noopener noreferrer">available on GitHub.</a
+                    > Feel free to have a look or even contribute.</span
+                >
             </div>
             <span class="advantage-tagline">Open Source</span>
         </div>
         <div class="advantage">
             <div class="advantage-more">
-                <img src="/icons/bulb.svg" alt="ease of use icon">
-                <span class="advantage-info">Use directly in the <span class="highlight">browser</span> from wherever you are, on whatever device you're on. </span>
+                <img src="/icons/bulb.svg" alt="ease of use icon" />
+                <span class="advantage-info"
+                    >Use directly in the <span class="highlight">browser</span> from
+                    wherever you are, on whatever device you're on.
+                </span>
             </div>
             <span class="advantage-tagline">Easy To Use</span>
         </div>
         <div class="advantage">
             <div class="advantage-more">
-                <img src="/icons/extension.svg" alt="feature rich icon">
-                <span class="advantage-info">Realms Hub has features that are missing from the game, such as a <span class="highlight">better map search</span> or <span class="highlight">mass invitations</span>.</span>
+                <img src="/icons/extension.svg" alt="feature rich icon" />
+                <span class="advantage-info"
+                    >Realms Hub has features that are missing from the game,
+                    such as a <span class="highlight">better map search</span>
+                    or <span class="highlight">mass invitations</span>.</span
+                >
             </div>
             <span class="advantage-tagline">Feature Rich</span>
         </div>
@@ -107,7 +120,7 @@
     #contact {
         padding-top: 3em;
     }
-    
+
     h2 {
         font-size: 2em;
     }

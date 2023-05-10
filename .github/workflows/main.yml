@@ -1,0 +1,35 @@
+name: Build And Upload Redesign
+on:
+  push:
+    branches: [ redesign ]
+  workflow_dispatch: 
+
+concurrency: 
+  group: "build"
+  cancel-in-progress: true
+
+jobs:
+  builds:
+    name: "Build 🔨"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with: 
+          node-version: 18
+          cache: "npm"
+      - name: Build Sveltekit
+        run: | 
+          npm i
+          npm run build
+      - name: Upload to Server 📁
+        uses: sebastianpopp/ftp-action@releases/v2
+        with:
+          host: ${{ secrets.ftp_server }}
+          user: ${{ secrets.ftp_username }}
+          password: ${{ secrets.ftp_password }}
+          options: "--delete"
+          localDir: "build"
+

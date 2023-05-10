@@ -6,7 +6,7 @@
     <a href="#contact">Contact</a>
     <span />
     
-    <a href="/login" class="login">
+    <a href="" class="login">
         <img src="/icons/login.svg" class="icon" alt="Login" />
     </a>
 </header>
