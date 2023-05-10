@@ -23,6 +23,7 @@ jobs:
       - name: Build Sveltekit
         run: | 
           npm i
+          cd svelte
           npm run build
       - name: Upload to Server 📁
         uses: sebastianpopp/ftp-action@releases/v2
