@@ -32,5 +32,5 @@ jobs:
           user: ${{ secrets.ftp_username }}
           password: ${{ secrets.ftp_password }}
           options: "--delete"
-          localDir: "build"
+          localDir: "svelte/build"
 
