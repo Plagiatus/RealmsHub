@@ -207,4 +207,31 @@
         opacity: 1;
         transform: none;
     }
+
+    @media only screen and (max-width: 1024px) {
+        h1 {
+            font-size: 2em;
+            padding: 0 2em;
+        }
+        #advantages {
+            flex-direction: column;
+            gap: 0.2em;
+            align-items: center;
+        }
+        .hero-buttons {
+            font-size: 2.5em;
+        }
+    }
+    @media only screen and (max-width: 560px) {
+        h1 {
+            font-size: 1.5em;
+            padding: 0;
+        }
+        .advantage {
+            font-size: 1.5em;
+        }
+        .hero-buttons {
+            font-size: 1em;
+        }
+    }
 </style>

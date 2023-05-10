@@ -18,4 +18,11 @@
         display: flex;
         justify-content: space-between;
     }
+    @media only screen and (max-width: 1024px) {
+        footer {
+            flex-direction: column;
+            gap: 0.5em;
+            align-items: center;
+        }
+    }
 </style>
